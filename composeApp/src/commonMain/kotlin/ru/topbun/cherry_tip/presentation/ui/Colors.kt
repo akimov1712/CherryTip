@@ -7,7 +7,8 @@ object Colors {
     val White = Color(255, 255 ,255)
     val Black = Color(32, 32 ,32)
 
-    val GrayLight = Color(153, 153 ,153)
+    val Gray = Color(153, 153 ,153)
+    val GrayLight = Color(237, 241 ,247)
     val GrayDark = Color(88, 96 ,113)
 
     val Purple = Color(114, 101 ,227)
