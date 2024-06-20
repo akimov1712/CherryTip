@@ -39,6 +39,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>sf_regular.ttf</string>
+		<string>hoves_bold.ttf</string>
+		<string>hoves_medium.ttf</string>
+		<string>hoves_regular.ttf</string>
+		<string>sf_bold.ttf</string>
+		<string>hover_light.ttf</string>
+	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
