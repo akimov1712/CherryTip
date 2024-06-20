@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -7,6 +6,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -16,7 +18,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -27,12 +29,14 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -41,9 +45,39 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
+
+            // Ktor
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.negotiation)
+            implementation(libs.ktor.kotlinx.serialization.json)
+            implementation(libs.ktor.logging)
+
+            //Koin
+            implementation(libs.koin.core)
+
+            //Room
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
+            implementation(libs.sqlite)
+
+            // MVIKotlin
+            implementation (libs.mvikotlin)
+            implementation (libs.mvikotlin.main)
+            implementation (libs.mvikotlin.extensions.coroutines)
+
+            //Decompose
+            implementation(libs.decompose)
+            implementation(libs.decompose.compose)
+
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
+
 
 android {
     namespace = "ru.topbun.cherry_tip"
@@ -79,6 +113,17 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+        implementation(libs.kotlinx.coroutines.android)
     }
 }
 
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
