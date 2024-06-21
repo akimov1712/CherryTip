@@ -16,9 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import ru.topbun.cherry_tip.presentation.ui.Colors
-import ru.topbun.cherry_tip.presentation.ui.hovesBoldFont
-import ru.topbun.cherry_tip.presentation.ui.hovesMediumFont
-import ru.topbun.cherry_tip.presentation.ui.hovesRegularFont
+import ru.topbun.cherry_tip.presentation.ui.Fonts
 
 object Text{
 
@@ -30,7 +28,7 @@ object Text{
         fontSize: TextUnit = 22.sp,
         fontStyle: FontStyle? = null,
         fontWeight: FontWeight? = null,
-        fontFamily: FontFamily? = hovesBoldFont,
+        fontFamily: FontFamily? = Fonts.hovesBold,
         letterSpacing: TextUnit = TextUnit.Unspecified,
         textDecoration: TextDecoration? = null,
         textAlign: TextAlign? = null,
@@ -54,7 +52,7 @@ object Text{
         fontSize: TextUnit = 16.sp,
         fontStyle: FontStyle? = null,
         fontWeight: FontWeight? = null,
-        fontFamily: FontFamily? = hovesRegularFont,
+        fontFamily: FontFamily? = Fonts.hovesRegular,
         letterSpacing: TextUnit = TextUnit.Unspecified,
         textDecoration: TextDecoration? = null,
         textAlign: TextAlign? = null,
@@ -78,7 +76,7 @@ object Text{
         fontSize: TextUnit = 16.sp,
         fontStyle: FontStyle? = null,
         fontWeight: FontWeight? = null,
-        fontFamily: FontFamily? = hovesMediumFont,
+        fontFamily: FontFamily? = Fonts.hovesMedium,
         letterSpacing: TextUnit = TextUnit.Unspecified,
         textDecoration: TextDecoration? = null,
         textAlign: TextAlign? = null,
@@ -102,7 +100,7 @@ object Text{
         fontSize: TextUnit = 18.sp,
         fontStyle: FontStyle? = null,
         fontWeight: FontWeight? = null,
-        fontFamily: FontFamily? = hovesMediumFont,
+        fontFamily: FontFamily? = Fonts.hovesMedium,
         letterSpacing: TextUnit = TextUnit.Unspecified,
         textDecoration: TextDecoration? = null,
         textAlign: TextAlign? = null,
@@ -126,7 +124,7 @@ object Text{
         fontSize: TextUnit = 16.sp,
         fontStyle: FontStyle? = null,
         fontWeight: FontWeight? = null,
-        fontFamily: FontFamily? = hovesRegularFont,
+        fontFamily: FontFamily? = Fonts.hovesRegular,
         letterSpacing: TextUnit = TextUnit.Unspecified,
         textDecoration: TextDecoration? = TextDecoration.Underline,
         textAlign: TextAlign? = null,

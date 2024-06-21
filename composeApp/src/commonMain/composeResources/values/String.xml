@@ -1,0 +1,12 @@
+<resources>
+    <string name="welcome_cherry_tip">Welcome to Cherry Tip</string>
+    <string name="welcome_cherry_tip_descr">Start your journey to healthy life with Cherry Tip!Created to support you on the path to a healthy life.</string>
+
+    <string name="sign_apple">Sign up with Apple</string>
+    <string name="sign_facebook">Sign up with Facebook</string>
+    <string name="sign_google">Sign up with Google</string>
+    <string name="sign_email">Sign up with Email</string>
+
+    <string name="have_account">Already have account? </string>
+    <string name="login">Log In</string>
+</resources>

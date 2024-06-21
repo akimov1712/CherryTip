@@ -47,6 +47,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.compottie)
 
             // Ktor
             implementation(libs.ktor.client.core)
@@ -127,3 +128,4 @@ dependencies {
 room {
     schemaDirectory("$projectDir/schemas")
 }
+
