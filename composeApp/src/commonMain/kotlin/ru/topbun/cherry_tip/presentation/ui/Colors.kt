@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 object Colors {
 
+    val Transparent = Color(0, 0 ,0).copy(alpha = 0f)
     val White = Color(255, 255 ,255)
     val Black = Color(32, 32 ,32)
 

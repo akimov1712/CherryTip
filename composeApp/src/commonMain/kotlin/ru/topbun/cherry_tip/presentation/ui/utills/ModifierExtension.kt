@@ -33,7 +33,7 @@ fun Modifier.animateWrapContentHeight(
         .onGloballyPositioned {
             val height = it.size.height
             if (boxHeight == 0.dp){
-                boxHeight = height.dp / 3
+                boxHeight = height.dp /2
             }
         }
 }

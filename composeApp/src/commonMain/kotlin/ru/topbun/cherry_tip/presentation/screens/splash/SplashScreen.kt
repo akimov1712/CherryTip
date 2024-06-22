@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.ripple.rememberRipple
@@ -52,7 +51,9 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.topbun.cherry_tip.presentation.ui.Colors
+import ru.topbun.cherry_tip.presentation.ui.components.Button
 import ru.topbun.cherry_tip.presentation.ui.components.Text
 import ru.topbun.cherry_tip.presentation.ui.utills.animateWrapContentHeight
 import ru.topbun.cherry_tip.presentation.ui.utills.getFileFromResource
@@ -60,8 +61,7 @@ import ru.topbun.cherry_tip.presentation.ui.utills.getFileFromResource
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier.fillMaxSize().background(Colors.Purple),
-        contentAlignment = Alignment.Center
+        modifier = modifier.fillMaxSize().background(Colors.Purple)
     ) {
         Column {
             var isAnimate = remember { mutableStateOf(false) }
@@ -87,7 +87,7 @@ private fun Modal(isAnimate: MutableState<Boolean>) {
         ButtonList()
         Spacer(Modifier.height(20.dp))
         TextHaveAccount()
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(100.dp))
     }
 }
 
@@ -104,10 +104,10 @@ private fun TextHaveAccount() {
 @Composable
 private fun ButtonList() {
     val authItems = listOf(AuthItems.Apple, AuthItems.Facebook, AuthItems.Google, AuthItems.Email)
-    LazyColumn(
+    Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items(items = authItems, key = { it.textRes.key }) {
+        authItems.forEach {
             ButtonAuth(
                 text = stringResource(it.textRes),
                 icon = painterResource(it.iconRes)
@@ -120,13 +120,10 @@ private fun ButtonList() {
 
 @Composable
 private fun ButtonAuth(text: String, icon: Painter, onClick: () -> Unit) {
-    Button(
+    Button.Gray(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Colors.PurpleBackground),
-        elevation = null,
         onClick = onClick,
     ) {
         IconWithText(text, icon)

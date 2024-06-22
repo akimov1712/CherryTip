@@ -1,0 +1,11 @@
+<resources>
+    <string name="reminder_title_1">Search and add own new recipes!</string>
+    <string name="reminder_descr_1">Cherry Tip gives you access to a huge number of recipes so you can vary your diet and discover new tastes. Just enter the name of the dish and we will provide you with a variety of recipes.</string>
+
+    <string name="reminder_title_2">Adding and tracking your nutrition!</string>
+    <string name="reminder_descr_2">Add nutrition and watch your diet. Enter your meal information by specifying foods and use our analytics tools to see your progress and make more informed choices about your diet.</string>
+
+    <string name="reminder_title_3">Get ready to take on the weight loss challenge!</string>
+    <string name="reminder_descr_3">Take on our challenges and achieve your goals with Cherry Tip! We offer challenges to help you gradually eliminate certain foods from your diet, such as sugar or bread.</string>
+
+</resources>
