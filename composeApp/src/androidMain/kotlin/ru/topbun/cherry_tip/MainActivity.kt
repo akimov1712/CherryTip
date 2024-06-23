@@ -17,9 +17,24 @@ import androidx.core.view.WindowInsetsControllerCompat
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
+            TransparentStatusBar()
             AppScreen()
+        }
+    }
+}
+
+@Composable
+private fun TransparentStatusBar() {
+    val context = LocalContext.current
+    val view = LocalView.current
+    LaunchedEffect(Unit) {
+        val window = (context as ComponentActivity).window
+        WindowInsetsControllerCompat(window, view).apply {
+            isAppearanceLightStatusBars = true
+            WindowCompat.getInsetsController(window, view)
+                .isAppearanceLightStatusBars = true
+            window.statusBarColor = Color.Transparent.toArgb()
         }
     }
 }

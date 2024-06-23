@@ -5,6 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -73,7 +74,7 @@ object Text{
         text: String,
         modifier: Modifier = Modifier,
         color: Color = Colors.Purple,
-        fontSize: TextUnit = 16.sp,
+        fontSize: TextUnit = 18.sp,
         fontStyle: FontStyle? = null,
         fontWeight: FontWeight? = null,
         fontFamily: FontFamily? = Fonts.hovesMedium,
@@ -127,6 +128,30 @@ object Text{
         fontFamily: FontFamily? = Fonts.hovesRegular,
         letterSpacing: TextUnit = TextUnit.Unspecified,
         textDecoration: TextDecoration? = TextDecoration.Underline,
+        textAlign: TextAlign? = TextAlign.Center,
+        lineHeight: TextUnit = TextUnit.Unspecified,
+        overflow: TextOverflow = TextOverflow.Clip,
+        softWrap: Boolean = true,
+        maxLines: Int = Int.MAX_VALUE,
+        minLines: Int = 1,
+        onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+        style: TextStyle = LocalTextStyle.current
+    ) = Text(
+        text,modifier,color,fontSize,fontStyle,fontWeight,fontFamily,letterSpacing,textDecoration,
+        textAlign,lineHeight,overflow,softWrap,maxLines,minLines,onTextLayout,style
+    )
+
+    @Composable
+    fun Placeholder(
+        text: String,
+        modifier: Modifier = Modifier,
+        color: Color = Colors.Gray,
+        fontSize: TextUnit = 40.sp,
+        fontStyle: FontStyle? = null,
+        fontWeight: FontWeight? = null,
+        fontFamily: FontFamily? = Fonts.hovesMedium,
+        letterSpacing: TextUnit = TextUnit.Unspecified,
+        textDecoration: TextDecoration? = null,
         textAlign: TextAlign? = TextAlign.Center,
         lineHeight: TextUnit = TextUnit.Unspecified,
         overflow: TextOverflow = TextOverflow.Clip,

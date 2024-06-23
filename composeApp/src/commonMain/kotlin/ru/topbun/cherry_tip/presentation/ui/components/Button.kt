@@ -45,4 +45,31 @@ object Button {
         )
     }
 
+    @Composable
+    fun Purple(
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+        enabled: Boolean = true,
+        interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+        elevation: ButtonElevation? = null,
+        shape: Shape = RoundedCornerShape(16.dp),
+        border: BorderStroke? = null,
+        colors: ButtonColors = ButtonDefaults.buttonColors(backgroundColor = Colors.Purple),
+        contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+        content: @Composable RowScope.() -> Unit
+    ) {
+        Button(
+            onClick = onClick,
+            modifier = modifier,
+            enabled = enabled,
+            interactionSource = interactionSource,
+            elevation = elevation,
+            shape = shape,
+            border = border,
+            colors = colors,
+            contentPadding = contentPadding,
+            content = content,
+        )
+    }
+
 }
