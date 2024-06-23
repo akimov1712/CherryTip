@@ -31,8 +31,8 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.topbun.cherry_tip.presentation.ui.Colors
-import ru.topbun.cherry_tip.presentation.ui.components.Button
-import ru.topbun.cherry_tip.presentation.ui.components.Text
+import ru.topbun.cherry_tip.presentation.ui.components.Buttons
+import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.presentation.ui.utills.getScreenSizeInfo
 
 
@@ -63,18 +63,18 @@ private fun ReminderCard(screens: List<ReminderScreens>, indexSelected: MutableS
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val isLastScreen = screens.last() == screens[indexSelected.value]
-                Text.Title(stringResource(screens[indexSelected.value].titleRes), fontSize = 30.sp)
+                Texts.Title(stringResource(screens[indexSelected.value].titleRes), fontSize = 30.sp)
                 Spacer(Modifier.height(20.dp))
-                Text.General(stringResource(screens[indexSelected.value].descrRes))
+                Texts.General(stringResource(screens[indexSelected.value].descrRes))
                 Spacer(Modifier.weight(1f))
                 IndexState(screens.size, indexSelected.value){indexSelected.value = it}
                 Spacer(Modifier.height(20.dp))
-                Button.Gray(
+                Buttons.Gray(
                     modifier = Modifier.fillMaxWidth().height(60.dp),
                     onClick = { if (!isLastScreen) indexSelected.value += 1 }
                 ) {
                     val text = if(isLastScreen) "Get Started" else "Next"
-                    Text.Button(text, fontSize = 16.sp, color = Colors.Purple)
+                    Texts.Button(text, fontSize = 16.sp, color = Colors.Purple)
                 }
                 Spacer(Modifier.height(42.dp))
             }

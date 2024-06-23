@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import ru.topbun.cherry_tip.presentation.ui.Colors
 
-object ProgressBar{
+object ProgressBars{
 
     @Composable
     fun Default(

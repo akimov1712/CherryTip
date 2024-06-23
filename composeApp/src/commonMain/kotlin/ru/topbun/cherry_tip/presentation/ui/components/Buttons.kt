@@ -16,7 +16,34 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import ru.topbun.cherry_tip.presentation.ui.Colors
 
-object Button {
+object Buttons {
+
+    @Composable
+    fun Default(
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+        enabled: Boolean = true,
+        interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+        elevation: ButtonElevation? = null,
+        shape: Shape = RoundedCornerShape(16.dp),
+        border: BorderStroke? = null,
+        colors: ButtonColors = ButtonDefaults.buttonColors(),
+        contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+        content: @Composable RowScope.() -> Unit
+    ) {
+        Button(
+            onClick = onClick,
+            modifier = modifier,
+            enabled = enabled,
+            interactionSource = interactionSource,
+            elevation = elevation,
+            shape = shape,
+            border = border,
+            colors = colors,
+            contentPadding = contentPadding,
+            content = content,
+        )
+    }
 
     @Composable
     fun Gray(

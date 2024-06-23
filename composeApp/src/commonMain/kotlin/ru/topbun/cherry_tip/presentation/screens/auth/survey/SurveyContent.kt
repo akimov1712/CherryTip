@@ -20,10 +20,11 @@ import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.step
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.NameFragmentContent
+import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.goal.GoalFragmentContent
+import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.name.NameFragmentContent
 import ru.topbun.cherry_tip.presentation.ui.Colors
-import ru.topbun.cherry_tip.presentation.ui.components.ProgressBar
-import ru.topbun.cherry_tip.presentation.ui.components.Text
+import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
+import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
 fun SurveyScreen(modifier: Modifier = Modifier) {
@@ -42,7 +43,7 @@ private fun Header() {
     var progress by rememberSaveable {
         mutableStateOf(0.1f)
     }
-    ProgressBar.Default(
+    ProgressBars.Default(
         modifier = Modifier
             .fillMaxWidth()
             .height(10.dp)
@@ -53,10 +54,11 @@ private fun Header() {
         shapeProgress = CircleShape
     )
     Spacer(Modifier.height(40.dp))
-    Text.Option(stringResource(Res.string.step) + " 1 / 9", fontSize = 16.sp)
+    Texts.Option(stringResource(Res.string.step) + " 1 / 9", fontSize = 16.sp)
     Spacer(Modifier.height(40.dp))
-    NameFragmentContent{
-
-    }
+    GoalFragmentContent(
+        onClickBack = {},
+        onClickContinue = {}
+    )
 }
 

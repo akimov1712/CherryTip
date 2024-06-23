@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments
+package ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.name
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,8 +25,8 @@ import cherrytip.composeapp.generated.resources.what_your_name
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.Fonts
-import ru.topbun.cherry_tip.presentation.ui.components.Button
-import ru.topbun.cherry_tip.presentation.ui.components.Text
+import ru.topbun.cherry_tip.presentation.ui.components.Buttons
+import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
 fun NameFragmentContent(modifier: Modifier = Modifier, onClickContinue: (String) -> Unit) {
@@ -34,7 +34,7 @@ fun NameFragmentContent(modifier: Modifier = Modifier, onClickContinue: (String)
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text.Title(stringResource(Res.string.what_your_name))
+        Texts.Title(stringResource(Res.string.what_your_name))
         Spacer(Modifier.height(40.dp))
         var text by rememberSaveable {
             mutableStateOf("")
@@ -43,7 +43,7 @@ fun NameFragmentContent(modifier: Modifier = Modifier, onClickContinue: (String)
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ){
-            if (text.isBlank()) Text.Placeholder("John")
+            if (text.isBlank()) Texts.Placeholder("John")
             BasicTextField(
                 value = text,
                 onValueChange = {if(it.length <= 16) text = it},
@@ -58,13 +58,13 @@ fun NameFragmentContent(modifier: Modifier = Modifier, onClickContinue: (String)
             )
         }
         Spacer(Modifier.weight(1f))
-        Button.Purple(
+        Buttons.Purple(
             modifier = Modifier.height(60.dp).fillMaxWidth(),
             onClick = {
                 onClickContinue(text)
             }
         ){
-            Text.Button(stringResource(Res.string.continue_string))
+            Texts.Button(stringResource(Res.string.continue_string))
         }
         Spacer(Modifier.height(20.dp))
     }

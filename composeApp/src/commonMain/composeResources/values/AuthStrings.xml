@@ -21,4 +21,9 @@
     <string name="how_active_you">How active are you?</string>
     <string name="dietary_preference">Dietary preference</string>
     <string name="continue_string">Continue</string>
+
+    <string name="lose_weight">Lose weight</string>
+    <string name="stay_healthy">Stay healthy</string>
+    <string name="gain_weight">Gain weight</string>
+
 </resources>
