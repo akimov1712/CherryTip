@@ -5,10 +5,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ButtonElevation
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -54,7 +54,7 @@ object Buttons {
         elevation: ButtonElevation? = null,
         shape: Shape = RoundedCornerShape(16.dp),
         border: BorderStroke? = null,
-        colors: ButtonColors = ButtonDefaults.buttonColors(backgroundColor = Colors.PurpleBackground),
+        colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = Colors.PurpleBackground),
         contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
         content: @Composable RowScope.() -> Unit
     ) {
@@ -81,7 +81,7 @@ object Buttons {
         elevation: ButtonElevation? = null,
         shape: Shape = RoundedCornerShape(16.dp),
         border: BorderStroke? = null,
-        colors: ButtonColors = ButtonDefaults.buttonColors(backgroundColor = Colors.Purple),
+        colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = Colors.Purple),
         contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
         content: @Composable RowScope.() -> Unit
     ) {

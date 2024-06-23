@@ -10,14 +10,14 @@ import cherrytip.composeapp.generated.resources.stay_healthy
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
-sealed class GoalItems(
+sealed class GoalObjects(
     val goal: Goal,
     val textRes: StringResource,
     val iconRes: DrawableResource,
 ) {
 
-    data object Lose: GoalItems(Goal.Lose, Res.string.lose_weight, Res.drawable.ic_scale)
-    data object Stay: GoalItems(Goal.Stay, Res.string.stay_healthy, Res.drawable.ic_apple_fruit)
-    data object Gain: GoalItems(Goal.Gain, Res.string.gain_weight, Res.drawable.ic_gym)
+    data object Lose: GoalObjects(Goal.Lose, Res.string.lose_weight, Res.drawable.ic_scale)
+    data object Stay: GoalObjects(Goal.Stay, Res.string.stay_healthy, Res.drawable.ic_apple_fruit)
+    data object Gain: GoalObjects(Goal.Gain, Res.string.gain_weight, Res.drawable.ic_gym)
 
 }

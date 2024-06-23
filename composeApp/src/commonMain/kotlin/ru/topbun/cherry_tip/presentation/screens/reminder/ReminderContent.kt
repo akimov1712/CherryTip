@@ -14,8 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
@@ -37,7 +36,6 @@ import ru.topbun.cherry_tip.presentation.ui.utills.getScreenSizeInfo
 
 
 @Composable
-@Preview
 fun ReminderScreen(modifier: Modifier = Modifier) {
     Box(modifier) {
         val screens = listOf(ReminderScreens.Reminder1, ReminderScreens.Reminder2, ReminderScreens.Reminder3)
@@ -56,7 +54,8 @@ private fun ReminderCard(screens: List<ReminderScreens>, indexSelected: MutableS
                 .fillMaxWidth()
                 .weight(2.5f),
             shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
-            backgroundColor = Colors.White
+            colors = CardDefaults.cardColors(containerColor = Colors.White),
+
         ) {
             Column(
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp),
@@ -82,7 +81,6 @@ private fun ReminderCard(screens: List<ReminderScreens>, indexSelected: MutableS
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun IndexState(count: Int, indexSelected: Int, onChangeIndex: (Int) -> Unit) {
     Row(
@@ -94,8 +92,8 @@ private fun IndexState(count: Int, indexSelected: Int, onChangeIndex: (Int) -> U
                 modifier = Modifier
                     .size(10.dp),
                 shape = CircleShape,
-                backgroundColor = if (it == indexSelected) Colors.Purple else Colors.PurpleBackground,
-                elevation = 0.dp
+                colors = CardDefaults.cardColors(containerColor = if (it == indexSelected) Colors.Purple else Colors.PurpleBackground),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 0.dp)
             ){}
         }
     }

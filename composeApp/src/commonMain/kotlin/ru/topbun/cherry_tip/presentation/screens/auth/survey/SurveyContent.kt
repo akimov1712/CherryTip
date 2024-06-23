@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.step
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.gender.GenderFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.goal.GoalFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.name.NameFragmentContent
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -34,15 +35,22 @@ fun SurveyScreen(modifier: Modifier = Modifier) {
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header()
+        var progress by rememberSaveable {
+            mutableStateOf(0.1f)
+        }
+        Progress(progress)
+        Spacer(Modifier.height(40.dp))
+        Texts.Option(stringResource(Res.string.step) + " 1 / 9", fontSize = 16.sp)
+        Spacer(Modifier.height(40.dp))
+        GenderFragmentContent(
+            onClickBack = {},
+            onClickContinue = {}
+        )
     }
 }
 
 @Composable
-private fun Header() {
-    var progress by rememberSaveable {
-        mutableStateOf(0.1f)
-    }
+private fun Progress(progress: Float) {
     ProgressBars.Default(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,12 +61,6 @@ private fun Header() {
         progress = progress,
         shapeProgress = CircleShape
     )
-    Spacer(Modifier.height(40.dp))
-    Texts.Option(stringResource(Res.string.step) + " 1 / 9", fontSize = 16.sp)
-    Spacer(Modifier.height(40.dp))
-    GoalFragmentContent(
-        onClickBack = {},
-        onClickContinue = {}
-    )
 }
+
 

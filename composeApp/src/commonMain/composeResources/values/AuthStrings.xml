@@ -26,4 +26,7 @@
     <string name="stay_healthy">Stay healthy</string>
     <string name="gain_weight">Gain weight</string>
 
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+
 </resources>
