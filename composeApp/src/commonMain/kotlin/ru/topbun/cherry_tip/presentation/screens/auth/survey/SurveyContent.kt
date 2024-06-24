@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.step
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.age.AgeFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.gender.GenderFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.goal.GoalFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.name.NameFragmentContent
@@ -42,7 +43,7 @@ fun SurveyScreen(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(40.dp))
         Texts.Option(stringResource(Res.string.step) + " 1 / 9", fontSize = 16.sp)
         Spacer(Modifier.height(40.dp))
-        GenderFragmentContent(
+        AgeFragmentContent(
             onClickBack = {},
             onClickContinue = {}
         )

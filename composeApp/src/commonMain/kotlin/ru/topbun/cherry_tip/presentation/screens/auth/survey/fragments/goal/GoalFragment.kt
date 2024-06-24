@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
+import cherrytip.composeapp.generated.resources.what_your_gender
 import cherrytip.composeapp.generated.resources.what_your_goal
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -30,15 +31,13 @@ fun GoalFragmentContent(
     onClickBack: () -> Unit,
     onClickContinue: () -> Unit
 ) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    FragmentsComponents.FragmentWrapper(
+        modifier = modifier,
+        title = stringResource(Res.string.what_your_goal)
+    ){
         val goals = listOf(GoalObjects.Lose, GoalObjects.Stay, GoalObjects.Gain)
         var selectedItem = remember { mutableStateOf(goals.first().goal) }
 
-        Texts.Title(stringResource(Res.string.what_your_goal))
-        Spacer(Modifier.height(40.dp))
         GoalList(goals, selectedItem)
         Spacer(Modifier.weight(1f))
         FragmentsComponents.ButtonsNavigation(onClickBack, onClickContinue)

@@ -1,7 +1,10 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -9,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -69,6 +73,22 @@ object FragmentsComponents{
         )
         Spacer(Modifier.width(12.dp))
         Texts.Button(text, color = color, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Start)
+    }
+
+    @Composable
+    fun FragmentWrapper(
+        modifier: Modifier = Modifier,
+        title: String,
+        content: @Composable ColumnScope.() -> Unit
+    ) {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Texts.Title(title)
+            Spacer(Modifier.height(40.dp))
+            content()
+        }
     }
 
 

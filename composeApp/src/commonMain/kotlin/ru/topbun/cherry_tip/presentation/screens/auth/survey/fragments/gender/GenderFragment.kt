@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
@@ -12,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
@@ -22,7 +20,6 @@ import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.FragmentsComponents
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
-import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
 fun GenderFragmentContent(
@@ -30,15 +27,12 @@ fun GenderFragmentContent(
     onClickBack: () -> Unit,
     onClickContinue: () -> Unit
 ) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    FragmentsComponents.FragmentWrapper(
+        modifier = modifier,
+        title = stringResource(Res.string.what_your_gender)
+    ){
         val genders = listOf(GenderObjects.Female, GenderObjects.Male)
         var selectedItem = remember { mutableStateOf(genders.first().gender) }
-
-        Texts.Title(stringResource(Res.string.what_your_gender))
-        Spacer(Modifier.height(40.dp))
         GenderList(genders, selectedItem)
         Spacer(Modifier.weight(1f))
         FragmentsComponents.ButtonsNavigation(onClickBack, onClickContinue)

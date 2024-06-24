@@ -47,7 +47,9 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
             implementation(libs.compottie)
+            implementation(libs.datetime.wheel.picker)
 
             // Ktor
             implementation(libs.ktor.client.core)

@@ -21,8 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.continue_string
+import cherrytip.composeapp.generated.resources.what_your_gender
 import cherrytip.composeapp.generated.resources.what_your_name
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.FragmentsComponents
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.Fonts
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
@@ -30,12 +32,10 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
 fun NameFragmentContent(modifier: Modifier = Modifier, onClickContinue: (String) -> Unit) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Texts.Title(stringResource(Res.string.what_your_name))
-        Spacer(Modifier.height(40.dp))
+    FragmentsComponents.FragmentWrapper(
+        modifier = modifier,
+        title = stringResource(Res.string.what_your_name)
+    ){
         var text by rememberSaveable {
             mutableStateOf("")
         }
