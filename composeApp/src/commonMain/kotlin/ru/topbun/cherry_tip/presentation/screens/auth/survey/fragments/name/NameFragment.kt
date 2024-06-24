@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,24 +41,11 @@ fun NameFragmentContent(modifier: Modifier = Modifier, onClickContinue: (String)
         var text by rememberSaveable {
             mutableStateOf("")
         }
-        Box (
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ){
-            if (text.isBlank()) Texts.Placeholder("John")
-            BasicTextField(
-                value = text,
-                onValueChange = {if(it.length <= 16) text = it},
-                singleLine = true,
-                textStyle = TextStyle(
-                    color = Colors.GrayDark,
-                    fontSize = 40.sp,
-                    fontFamily = Fonts.hovesMedium,
-                    textAlign = TextAlign.Center
-                ),
-                cursorBrush = SolidColor(Colors.Purple),
-            )
-        }
+        FragmentsComponents.TextField(
+            text = text,
+            onValueChange = { if(it.length <= 16) text = it },
+            placeholder = "John"
+        )
         Spacer(Modifier.weight(1f))
         Buttons.Purple(
             modifier = Modifier.height(60.dp).fillMaxWidth(),
