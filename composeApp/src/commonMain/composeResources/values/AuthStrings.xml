@@ -29,7 +29,7 @@
     <string name="female">Female</string>
     <string name="male">Male</string>
 
-    <string name="height_warning">Don’t worry if you don’t know it precisely - you can change this later.</string>
+    <string name="warning_about_changing_values">Don’t worry if you don’t know it precisely - you can change this later.</string>
 
 
 </resources>

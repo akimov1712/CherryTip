@@ -17,12 +17,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -54,7 +56,9 @@ import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.continue_string
 import cherrytip.composeapp.generated.resources.ic_back
+import cherrytip.composeapp.generated.resources.ic_info
 import cherrytip.composeapp.generated.resources.ic_pointer
+import cherrytip.composeapp.generated.resources.warning_about_changing_values
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -273,6 +277,29 @@ object FragmentsComponents{
                 painter = painterResource(Res.drawable.ic_pointer),
                 contentDescription = null,
                 tint = Color(114, 101, 227)
+            )
+        }
+    }
+
+    @Composable
+    fun WarningAboutChangingValues() {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Colors.PurpleBackground, RoundedCornerShape(16.dp))
+                .padding(18.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_info),
+                contentDescription = null,
+                tint = Colors.GrayDark
+            )
+            Spacer(Modifier.width(10.dp))
+            Texts.Option(
+                text = stringResource(Res.string.warning_about_changing_values),
+                color = Colors.GrayDark,
+                textAlign = TextAlign.Start
             )
         }
     }

@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.height
+package ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.weight
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -12,28 +12,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.what_your_height
+import cherrytip.composeapp.generated.resources.what_your_weight
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.FragmentsComponents
 
 @Composable
-fun HeightFragmentContent(
+fun WeightFragmentContent(
     modifier: Modifier = Modifier,
     onClickBack: () -> Unit,
     onClickContinue: () -> Unit,
 ) {
     FragmentsComponents.FragmentWrapper(
         modifier = modifier,
-        title = stringResource(Res.string.what_your_height)
+        title = stringResource(Res.string.what_your_weight)
     ){
-        var height by rememberSaveable{ mutableStateOf(100) }
+        var weight by rememberSaveable{ mutableStateOf(20) }
         Spacer(Modifier.weight(1f))
         FragmentsComponents.NumberSlidePicker(
             modifier = Modifier.padding(horizontal = 20.dp),
-            minValue = 100,
-            maxValue = 250,
-            unit = "cm"
+            minValue = 20,
+            maxValue = 300,
+            unit = "kg"
         ){
-            height = it
+            weight = it
         }
         Spacer(Modifier.height(20.dp))
         FragmentsComponents.WarningAboutChangingValues()
