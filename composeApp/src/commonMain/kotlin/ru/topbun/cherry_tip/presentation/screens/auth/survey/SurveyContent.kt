@@ -25,6 +25,7 @@ import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.gender.Ge
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.goal.GoalFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.height.HeightFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.name.NameFragmentContent
+import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.targetWeight.TargetWeightFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.weight.WeightFragmentContent
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
@@ -45,7 +46,7 @@ fun SurveyScreen(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(40.dp))
         Texts.Option(stringResource(Res.string.step) + " 1 / 9", fontSize = 16.sp)
         Spacer(Modifier.height(40.dp))
-        WeightFragmentContent(
+        TargetWeightFragmentContent(
             onClickBack = {},
             onClickContinue = {}
         )
