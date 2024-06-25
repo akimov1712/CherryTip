@@ -31,5 +31,11 @@
 
     <string name="warning_about_changing_values">Don’t worry if you don’t know it precisely - you can change this later.</string>
 
+    <string name="inactive_title">Not very active</string>
+    <string name="inactive_descr">I have a sedentary lifestyle.</string>
+    <string name="moderate_title">Moderately active</string>
+    <string name="moderate_descr">I spend a good part of the day on my feet.</string>
+    <string name="active_title">Active</string>
+    <string name="active_descr">I spend most of the day doing heavy physical work.</string>
 
 </resources>
