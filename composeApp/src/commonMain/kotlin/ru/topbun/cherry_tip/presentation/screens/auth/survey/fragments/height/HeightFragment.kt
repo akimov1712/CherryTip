@@ -40,6 +40,7 @@ fun HeightFragmentContent(
         title = stringResource(Res.string.what_your_height)
     ){
         var height by rememberSaveable{ mutableStateOf(100) }
+        Spacer(Modifier.weight(1f))
         FragmentsComponents.NumberSlidePicker(
             modifier = Modifier.padding(horizontal = 20.dp),
             minValue = 100,
