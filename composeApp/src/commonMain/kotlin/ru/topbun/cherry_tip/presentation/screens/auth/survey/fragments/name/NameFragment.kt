@@ -47,14 +47,10 @@ fun NameFragmentContent(modifier: Modifier = Modifier, onClickContinue: (String)
             placeholder = "John"
         )
         Spacer(Modifier.weight(1f))
-        Buttons.Purple(
-            modifier = Modifier.height(60.dp).fillMaxWidth(),
-            onClick = {
-                onClickContinue(text)
-            }
-        ){
-            Texts.Button(stringResource(Res.string.continue_string))
-        }
+        FragmentsComponents.ButtonsNavigation(
+            onClickNext = {onClickContinue(text)},
+            isEnableBack = false
+        )
         Spacer(Modifier.height(20.dp))
     }
 }

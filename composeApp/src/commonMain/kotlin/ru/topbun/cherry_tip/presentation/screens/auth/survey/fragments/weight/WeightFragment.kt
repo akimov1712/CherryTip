@@ -41,7 +41,7 @@ fun WeightFragmentContent(
         Spacer(Modifier.weight(1f))
         FragmentsComponents.ButtonsNavigation(
             onClickBack = onClickBack,
-            onClickContinue = onClickContinue
+            onClickNext = onClickContinue
         )
         Spacer(Modifier.height(20.dp))
     }

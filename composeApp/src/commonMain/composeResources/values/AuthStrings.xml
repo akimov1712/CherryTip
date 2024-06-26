@@ -20,7 +20,9 @@
     <string name="what_your_target_weight">What is your target weight?</string>
     <string name="how_active_you">How active are you?</string>
     <string name="dietary_preference">Dietary preference</string>
+
     <string name="continue_string">Continue</string>
+    <string name="start_now">Start Now</string>
 
     <string name="lose_weight">Lose weight</string>
     <string name="stay_healthy">Stay healthy</string>

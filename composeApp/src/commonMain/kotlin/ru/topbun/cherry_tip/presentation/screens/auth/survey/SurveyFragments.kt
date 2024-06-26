@@ -10,6 +10,5 @@ sealed interface SurveyFragments{
     data object Weight: SurveyFragments
     data object TargetWeight: SurveyFragments
     data object Active: SurveyFragments
-    data object DietaryPreference: SurveyFragments
 
 }

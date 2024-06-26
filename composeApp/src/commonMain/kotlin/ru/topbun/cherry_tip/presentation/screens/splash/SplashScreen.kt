@@ -52,18 +52,18 @@ fun SplashScreen(modifier: Modifier = Modifier) {
         Column {
             var isAnimate = rememberSaveable { mutableStateOf(false) }
             Logo(isAnimate)
-            Modal(isAnimate)
+            Modal(isAnimate.value)
         }
     }
 }
 
 @Composable
-private fun Modal(isAnimate: MutableState<Boolean>) {
+private fun Modal(isAnimate: Boolean) {
     Column(
         Modifier
             .fillMaxWidth()
             .background(Colors.White, RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-            .animateWrapContentHeight(isAnimate.value)
+            .animateWrapContentHeight(isAnimate)
             .padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

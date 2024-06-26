@@ -1,6 +1,7 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.height
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -28,7 +29,7 @@ fun HeightFragmentContent(
         var height by rememberSaveable{ mutableStateOf(100) }
         Spacer(Modifier.weight(1f))
         FragmentsComponents.NumberSlidePicker(
-            modifier = Modifier.padding(horizontal = 20.dp),
+            modifier = Modifier.fillMaxWidth(),
             minValue = 100,
             maxValue = 250,
             unit = "cm"
@@ -40,7 +41,7 @@ fun HeightFragmentContent(
         Spacer(Modifier.weight(1f))
         FragmentsComponents.ButtonsNavigation(
             onClickBack = onClickBack,
-            onClickContinue = onClickContinue
+            onClickNext = onClickContinue
         )
         Spacer(Modifier.height(20.dp))
     }

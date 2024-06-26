@@ -1,9 +1,6 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.active
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,10 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.how_active_you
+import cherrytip.composeapp.generated.resources.start_now
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.FragmentsComponents
-import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.goal.Goal
-import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.goal.GoalObjects
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
@@ -32,21 +28,25 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 fun ActiveFragmentContent(
     modifier: Modifier = Modifier,
     onClickBack: () -> Unit,
-    onClickContinue: () -> Unit
+    onClickStart: () -> Unit
 ) {
     FragmentsComponents.FragmentWrapper(
         modifier = modifier,
         title = stringResource(Res.string.how_active_you)
     ){
         val actives = listOf(ActiveObjects.Inactive, ActiveObjects.Moderate, ActiveObjects.Active)
-        var selectedType = remember { mutableStateOf(ActiveType.MODERATE) }
+        var selectedType = remember { mutableStateOf(ActiveType.MEDIUM) }
         ActiveList(
             modifier = Modifier.fillMaxWidth(),
             actives = actives,
             selectedType = selectedType,
         )
         Spacer(Modifier.weight(1f))
-        FragmentsComponents.ButtonsNavigation(onClickBack, onClickContinue)
+        FragmentsComponents.ButtonsNavigation(
+            onClickBack = onClickBack,
+            onClickNext = onClickStart,
+            nextButtonText = stringResource(Res.string.start_now)
+        )
         Spacer(Modifier.height(20.dp))
     }
 }

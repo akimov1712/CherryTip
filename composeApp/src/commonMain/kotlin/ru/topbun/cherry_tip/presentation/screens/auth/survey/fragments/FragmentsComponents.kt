@@ -71,24 +71,30 @@ import kotlin.math.round
 object FragmentsComponents{
 
     @Composable
-    fun ButtonsNavigation(onClickBack: () -> Unit, onClickContinue: () -> Unit, onEnableContinue: Boolean = true) {
+    fun ButtonsNavigation(
+        onClickBack: () -> Unit = {},
+        onClickNext: () -> Unit = {},
+        nextButtonText: String = stringResource(Res.string.continue_string),
+        isEnableBack: Boolean = true
+    ) {
         Row {
-            Buttons.Purple(
-                modifier = Modifier.size(60.dp),
-                onClick = onClickBack,
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_back),
-                    contentDescription = null,
-                    tint = Colors.White
-                )
+            if (isEnableBack){
+                Buttons.Purple(
+                    modifier = Modifier.size(60.dp),
+                    onClick = onClickBack,
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_back),
+                        contentDescription = null,
+                        tint = Colors.White
+                    )
+                }
+                Spacer(Modifier.width(10.dp))
             }
-            Spacer(Modifier.width(10.dp))
             Buttons.Purple(
                 modifier = Modifier.height(60.dp).fillMaxWidth(),
-                onClick = onClickContinue,
-                enabled = onEnableContinue,
+                onClick = onClickNext,
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Colors.Purple,
@@ -96,7 +102,7 @@ object FragmentsComponents{
                 )
             ) {
                 Texts.Button(
-                    stringResource(Res.string.continue_string),
+                    nextButtonText,
                 )
             }
         }
@@ -197,7 +203,7 @@ object FragmentsComponents{
         val visibleSize by remember {
             derivedStateOf {
                 val visibleSize = state.layoutInfo.visibleItemsInfo.size
-                difference = round(visibleSize / 2f).toInt() - 1
+                difference = visibleSize / 2 - 1
                 visibleSize
             }
         }
