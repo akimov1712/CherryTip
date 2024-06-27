@@ -1,5 +1,8 @@
 package ru.topbun.cherry_tip.presentation.screens.splash
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -41,39 +45,44 @@ import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
-import ru.topbun.cherry_tip.presentation.ui.utills.animateWrapContentHeight
 import ru.topbun.cherry_tip.presentation.ui.utills.getFileFromResource
 
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
+    val isAnimate = rememberSaveable { mutableStateOf(false) }
+    val showModal = rememberSaveable { mutableStateOf(false) }
+
     Box(
         modifier = modifier.fillMaxSize().background(Colors.Purple)
     ) {
         Column {
-            var isAnimate = rememberSaveable { mutableStateOf(false) }
-            Logo(isAnimate)
-            Modal(isAnimate.value)
+            Logo(isAnimate, showModal)
+            AnimatedModal(showModal.value)
         }
     }
 }
 
 @Composable
-private fun Modal(isAnimate: Boolean) {
+private fun AnimatedModal(show: Boolean) {
+    val targetHeight = if (show) Modifier.wrapContentHeight() else Modifier.height(0.dp)
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .background(Colors.White, RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-            .animateWrapContentHeight(isAnimate)
+            .then(targetHeight)
+            .animateContentSize(animationSpec = tween(500))
             .padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(24.dp))
-        ModalText()
-        Spacer(Modifier.height(20.dp))
-        ButtonList()
-        Spacer(Modifier.height(20.dp))
-        TextHaveAccount()
-        Spacer(Modifier.height(100.dp))
+        if (show) {
+            Spacer(Modifier.height(24.dp))
+            ModalText()
+            Spacer(Modifier.height(20.dp))
+            ButtonList()
+            Spacer(Modifier.height(20.dp))
+            TextHaveAccount()
+            Spacer(Modifier.height(20.dp))
+        }
     }
 }
 
@@ -140,19 +149,22 @@ private fun ModalText() {
     Texts.General(stringResource(Res.string.welcome_cherry_tip_descr), textAlign = TextAlign.Center)
 }
 
-
 @Composable
-private fun ColumnScope.Logo(isAnimate: MutableState<Boolean>) {
+private fun ColumnScope.Logo(isAnimate: MutableState<Boolean>, showModal: MutableState<Boolean>) {
     val lottie by getFileFromResource("files/anim_splash_logo.json")
     val composition by rememberLottieComposition(LottieCompositionSpec.JsonString(lottie))
     val progress by animateLottieCompositionAsState(composition)
     LaunchedEffect(progress) {
-        if (progress >= 1f) isAnimate.value = true
+        if (progress >= 1f) {
+            isAnimate.value = true
+            showModal.value = true
+        }
     }
     LottieAnimation(
-        modifier = Modifier.fillMaxWidth().weight(1f),
+        modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f),
         composition = composition,
         progress = { progress }
     )
 }
-
