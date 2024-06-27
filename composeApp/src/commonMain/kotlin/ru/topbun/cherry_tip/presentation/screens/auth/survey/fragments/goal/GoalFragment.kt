@@ -29,7 +29,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 fun GoalFragmentContent(
     modifier: Modifier = Modifier,
     onClickBack: () -> Unit,
-    onClickContinue: () -> Unit
+    onClickContinue: (Goal) -> Unit
 ) {
     FragmentsComponents.FragmentWrapper(
         modifier = modifier,
@@ -40,7 +40,7 @@ fun GoalFragmentContent(
 
         GoalList(goals, selectedItem)
         Spacer(Modifier.weight(1f))
-        FragmentsComponents.ButtonsNavigation(onClickBack, onClickContinue)
+        FragmentsComponents.ButtonsNavigation(onClickBack, { onClickContinue(selectedItem.value) } )
         Spacer(Modifier.height(20.dp))
     }
 }

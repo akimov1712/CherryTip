@@ -20,7 +20,7 @@ import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.Fragments
 fun HeightFragmentContent(
     modifier: Modifier = Modifier,
     onClickBack: () -> Unit,
-    onClickContinue: () -> Unit,
+    onClickContinue: (Int) -> Unit,
 ) {
     FragmentsComponents.FragmentWrapper(
         modifier = modifier,
@@ -41,7 +41,7 @@ fun HeightFragmentContent(
         Spacer(Modifier.weight(1f))
         FragmentsComponents.ButtonsNavigation(
             onClickBack = onClickBack,
-            onClickNext = onClickContinue
+            onClickNext = { onClickContinue(height) }
         )
         Spacer(Modifier.height(20.dp))
     }

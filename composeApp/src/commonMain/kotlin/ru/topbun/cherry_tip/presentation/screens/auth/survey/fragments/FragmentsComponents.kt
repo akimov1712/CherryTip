@@ -203,7 +203,7 @@ object FragmentsComponents{
         val visibleSize by remember {
             derivedStateOf {
                 val visibleSize = state.layoutInfo.visibleItemsInfo.size
-                difference = visibleSize / 2 - 1
+                difference = round(visibleSize / 2f).toInt() - 1
                 visibleSize
             }
         }

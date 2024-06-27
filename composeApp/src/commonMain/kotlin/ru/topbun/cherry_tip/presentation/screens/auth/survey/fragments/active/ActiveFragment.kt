@@ -28,7 +28,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 fun ActiveFragmentContent(
     modifier: Modifier = Modifier,
     onClickBack: () -> Unit,
-    onClickStart: () -> Unit
+    onClickStart: (ActiveType) -> Unit
 ) {
     FragmentsComponents.FragmentWrapper(
         modifier = modifier,
@@ -44,7 +44,7 @@ fun ActiveFragmentContent(
         Spacer(Modifier.weight(1f))
         FragmentsComponents.ButtonsNavigation(
             onClickBack = onClickBack,
-            onClickNext = onClickStart,
+            onClickNext = { onClickStart(selectedType.value) },
             nextButtonText = stringResource(Res.string.start_now)
         )
         Spacer(Modifier.height(20.dp))

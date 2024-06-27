@@ -24,6 +24,7 @@ import io.ktor.util.date.getTimeMillis
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.FragmentsComponents
+import ru.topbun.cherry_tip.presentation.screens.auth.survey.fragments.gender.Gender
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.Fonts
 import ru.topbun.cherry_tip.utills.Log
@@ -34,7 +35,7 @@ import ru.topbun.cherry_tip.utills.toGMTDate
 fun AgeFragmentContent(
     modifier: Modifier = Modifier,
     onClickBack: () -> Unit,
-    onClickContinue: () -> Unit
+    onClickContinue: (GMTDate) -> Unit
 ) {
     FragmentsComponents.FragmentWrapper(
         modifier = modifier,
@@ -61,7 +62,7 @@ fun AgeFragmentContent(
         Spacer(Modifier.weight(1f))
         FragmentsComponents.ButtonsNavigation(
             onClickBack = onClickBack,
-            onClickNext = onClickContinue
+            onClickNext = { onClickContinue(date) }
         )
         Spacer(Modifier.height(20.dp))
     }
