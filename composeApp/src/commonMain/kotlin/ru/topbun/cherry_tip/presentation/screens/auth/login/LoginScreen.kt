@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.auth.signUp
+package ru.topbun.cherry_tip.presentation.screens.auth.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,8 +33,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
-import cherrytip.composeapp.generated.resources.confirm_password
-import cherrytip.composeapp.generated.resources.confirm_password_error
 import cherrytip.composeapp.generated.resources.email
 import cherrytip.composeapp.generated.resources.email_error
 import cherrytip.composeapp.generated.resources.have_account
@@ -48,13 +46,10 @@ import cherrytip.composeapp.generated.resources.login
 import cherrytip.composeapp.generated.resources.or_login
 import cherrytip.composeapp.generated.resources.password
 import cherrytip.composeapp.generated.resources.password_error
-import cherrytip.composeapp.generated.resources.sign_up
-import cherrytip.composeapp.generated.resources.sign_up_descr
-import cherrytip.composeapp.generated.resources.username
-import cherrytip.composeapp.generated.resources.username_error
+import cherrytip.composeapp.generated.resources.login_descr
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.domain.entity.SignUpEntity
+import ru.topbun.cherry_tip.domain.entity.LoginEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
@@ -63,7 +58,7 @@ import ru.topbun.cherry_tip.utills.validEmail
 
 
 @Composable
-fun SignUpContent(modifier: Modifier = Modifier.statusBarsPadding()) {
+fun LoginContent(modifier: Modifier = Modifier.statusBarsPadding()) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -77,14 +72,14 @@ fun SignUpContent(modifier: Modifier = Modifier.statusBarsPadding()) {
         ) {}
         Spacer(Modifier.height(40.dp))
         Texts.Title(
-            stringResource(Res.string.sign_up_descr),
+            stringResource(Res.string.login_descr),
             fontSize = 30.sp,
             textAlign = TextAlign.Start
         )
         Spacer(Modifier.height(40.dp))
         val (login, isValid) = LoginFields()
         Spacer(Modifier.height(40.dp))
-        ButtonSignUp(isValid){}
+        ButtonLogin(isValid){}
         Spacer(Modifier.height(40.dp))
         SeparateText{}
         Spacer(Modifier.height(20.dp))
@@ -142,62 +137,39 @@ private fun SeparateText(onClick: () -> Unit) {
 }
 
 @Composable
-private fun ButtonSignUp(isValid: Boolean, onClick: () -> Unit) {
+private fun ButtonLogin(isValid: Boolean, onClick: () -> Unit) {
     Buttons.Purple(
         modifier = Modifier.fillMaxWidth().height(60.dp),
         onClick = onClick,
         enabled = isValid
-    ) { Texts.Button(stringResource(Res.string.sign_up)) }
+    ) { Texts.Button(stringResource(Res.string.login)) }
 }
 
 @Composable
-fun LoginFields(): Pair<SignUpEntity, Boolean> {
-    var username by rememberSaveable { mutableStateOf("") }
-    var usernameError by rememberSaveable { mutableStateOf(false) }
+fun LoginFields(): Pair<LoginEntity, Boolean> {
     var email by rememberSaveable { mutableStateOf("") }
-    var emailError by rememberSaveable { mutableStateOf(false) }
     var password by rememberSaveable { mutableStateOf("") }
-    var passwordError by rememberSaveable { mutableStateOf(false) }
-    var confirmPassword by rememberSaveable { mutableStateOf("") }
-    var confirmPasswordError by rememberSaveable { mutableStateOf(false) }
     var isVisiblePassword by rememberSaveable{ mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        TextFields.OutlinedTextField(
-            value = username,
-            isError = usernameError,
-            onValueChange = {
-                usernameError = it.length > 20 || it.length < 2
-                username = it
-            },
-            supportingText = { if (usernameError) Texts.Error(stringResource(Res.string.username_error)) },
-            placeholderText = stringResource(Res.string.username)
-        )
 
         TextFields.OutlinedTextField(
             value = email,
-            isError = emailError,
             onValueChange = {
-                emailError = !it.validEmail()
                 email = it
             },
-            supportingText = { if (emailError) Texts.Error(stringResource(Res.string.email_error)) },
             placeholderText = stringResource(Res.string.email),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next)
         )
 
         TextFields.OutlinedTextField(
             value = password,
-            isError = passwordError,
             onValueChange = {
-                passwordError = it.length > 24 || it.length < 4
-                confirmPasswordError = it != confirmPassword
                 password = it
             },
             visualTransformation = if (isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
-            supportingText = { if (passwordError) Texts.Error(stringResource(Res.string.password_error)) },
             placeholderText = stringResource(Res.string.password),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
             trailingIcon = {
@@ -211,38 +183,9 @@ fun LoginFields(): Pair<SignUpEntity, Boolean> {
             }
         )
 
-        TextFields.OutlinedTextField(
-            value = confirmPassword,
-            isError = confirmPasswordError,
-            onValueChange = {
-                confirmPasswordError = it != password
-                confirmPassword = it
-            },
-            visualTransformation = if (isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
-            supportingText = { if (confirmPasswordError) Texts.Error(stringResource(Res.string.confirm_password_error)) },
-            placeholderText = stringResource(Res.string.confirm_password),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-            trailingIcon = {
-                IconButton(
-                    onClick = {isVisiblePassword = !isVisiblePassword}
-                ){ Icon(
-                    painterResource(if(isVisiblePassword) Res.drawable.ic_show else Res.drawable.ic_hide),
-                    contentDescription = null,
-                    tint = Colors.Gray
-                ) }
-            }
-        )
     }
 
-    val isValid =
-        !usernameError &&
-                !emailError &&
-                !passwordError &&
-                !confirmPasswordError &&
-                username.isNotBlank() &&
-                email.isNotBlank() &&
-                password.isNotBlank() &&
-                confirmPassword.isNotBlank()
-    val signUp = SignUpEntity(username, email, password)
-    return signUp to isValid
+    val isValid = email.isNotBlank() && password.isNotBlank()
+    val login = LoginEntity(email, password)
+    return login to isValid
 }
