@@ -1,13 +1,20 @@
 package ru.topbun.cherry_tip.presentation.screens
 
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import ru.topbun.cherry_tip.presentation.screens.auth.survey.SurveyScreen
-import ru.topbun.cherry_tip.presentation.screens.splash.SplashScreen
+import androidx.compose.ui.Modifier
+import ru.topbun.cherry_tip.presentation.screens.auth.signUp.SignUpContent
+import ru.topbun.cherry_tip.presentation.ui.Colors
 
 @Composable
 fun AppScreen() {
-    MaterialTheme {
-        SurveyScreen()
+    Scaffold(
+        modifier = Modifier
+            .background(Colors.White)
+            .navigationBarsPadding()
+    ) {
+        SignUpContent()
     }
 }

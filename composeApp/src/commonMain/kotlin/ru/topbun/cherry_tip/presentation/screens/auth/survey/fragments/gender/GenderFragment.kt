@@ -50,7 +50,7 @@ private fun GenderList(
     ) {
         genders.forEach {
             val isSelected = selectedItem.value == it.gender
-            Buttons.Default(
+            Buttons.Button(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     if (isSelected) Colors.Purple else Colors.PurpleBackground

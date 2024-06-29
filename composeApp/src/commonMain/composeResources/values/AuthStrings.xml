@@ -8,7 +8,7 @@
     <string name="sign_email">Sign up with Email</string>
 
     <string name="have_account">Already have account? </string>
-    <string name="login">Log In</string>
+    <string name="dont_have_account">Don't have on account? </string>
 
     <string name="step">Step</string>
     <string name="what_your_name">What is your name?</string>
@@ -39,5 +39,25 @@
     <string name="moderate_descr">I spend a good part of the day on my feet.</string>
     <string name="active_title">Active</string>
     <string name="active_descr">I spend most of the day doing heavy physical work.</string>
+
+    <string name="sign_up">Sign up</string>
+    <string name="login">Login</string>
+
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+
+    <string name="sign_up_descr">Hello! Sign up to get started</string>
+    <string name="login_descr">Welcome back! Glad to see you!</string>
+
+    <string name="or_sign_up">Or Sign up with</string>
+    <string name="or_login">Or Login with</string>
+
+    <string name="username_error">Username must contain from 2 to 20 characters</string>
+    <string name="email_error">Invalid email format</string>
+    <string name="password_error">Password must contain from 4 to 24 characters</string>
+    <string name="confirm_password_error">Password mismatch</string>
+
 
 </resources>
