@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.domain
+package ru.topbun.cherry_tip.utills
 
 open class AppException: RuntimeException()
 

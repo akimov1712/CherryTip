@@ -3,6 +3,7 @@ package ru.topbun.cherry_tip.data.source.local.dataStore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import okio.Path.Companion.toPath
@@ -22,5 +23,7 @@ object AppSettings {
         }
     }
 
+
+    val KEY_TOKEN = stringPreferencesKey(name = "token")
 
 }
