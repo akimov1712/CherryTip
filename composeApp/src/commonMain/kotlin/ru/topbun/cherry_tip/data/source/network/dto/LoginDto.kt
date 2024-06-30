@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.data.remote.dto
+package ru.topbun.cherry_tip.data.source.network.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

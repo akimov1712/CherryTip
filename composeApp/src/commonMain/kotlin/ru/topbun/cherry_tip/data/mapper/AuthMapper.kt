@@ -1,7 +1,7 @@
 package ru.topbun.cherry_tip.data.mapper
 
-import ru.topbun.cherry_tip.data.remote.dto.LoginDto
-import ru.topbun.cherry_tip.data.remote.dto.SignUpDto
+import ru.topbun.cherry_tip.data.source.network.dto.LoginDto
+import ru.topbun.cherry_tip.data.source.network.dto.SignUpDto
 import ru.topbun.cherry_tip.domain.entity.LoginEntity
 import ru.topbun.cherry_tip.domain.entity.SignUpEntity
 
