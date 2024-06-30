@@ -47,10 +47,14 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.coroutines.core)
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+            implementation(libs.serialization)
             implementation(libs.kotlinx.datetime)
             implementation(libs.compottie)
             implementation(libs.datetime.wheel.picker)
+            implementation(libs.datetime.wheel.picker)
+            implementation(libs.datastore.preferences)
+            implementation(libs.datastore.preferences.core)
+            implementation(libs.atomicfu)
 
             // Ktor
             implementation(libs.ktor.client.core)
