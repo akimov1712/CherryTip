@@ -6,5 +6,5 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.room) apply (false)
     alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.serialization) apply false
+    kotlin("plugin.serialization") version "2.0.0" apply false
 }

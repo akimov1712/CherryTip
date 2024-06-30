@@ -6,9 +6,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
-    id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.plugin.serialization")
     alias(libs.plugins.room)
+    id("com.google.devtools.ksp")
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
 kotlin {
@@ -36,6 +36,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
@@ -46,7 +47,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
             implementation(libs.kotlinx.datetime)
             implementation(libs.compottie)
             implementation(libs.datetime.wheel.picker)
@@ -59,6 +60,7 @@ kotlin {
 
             //Koin
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
 
             //Room
             implementation(libs.androidx.room.runtime)
@@ -132,9 +134,4 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-}
 

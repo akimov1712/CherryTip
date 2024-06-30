@@ -17,11 +17,12 @@ decompose = "3.1.0"
 junit = "4.13.2"
 kotlin = "2.0.20-Beta1"
 kotlinxDatetime = "0.6.0"
-serialization = "1.7.0-RC"
+serialization = "1.7.1"
 ktor = "2.3.11"
 coroutines = "1.8.0"
-koin = "3.2.0"
-ksp = "2.0.0-1.0.21"
+koin = "3.5.6"
+koin-compose = "1.0.4"
+ksp = "2.0.20-Beta1-1.0.22"
 androidxRoom = "2.7.0-alpha04"
 sqlite = "2.5.0-alpha04"
 mvi = "4.1.0"
@@ -52,8 +53,10 @@ ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-kotlinx-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose"}
 
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
@@ -77,4 +80,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "androidxRoom" }
-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization" }
+serialization = { id = "plugin.serialization", version.ref = "kotlin" }

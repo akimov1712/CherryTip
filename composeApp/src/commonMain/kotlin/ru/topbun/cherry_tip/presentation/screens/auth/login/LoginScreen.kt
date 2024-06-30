@@ -19,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,8 +34,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
+import cherrytip.composeapp.generated.resources.dont_have_account
 import cherrytip.composeapp.generated.resources.email
-import cherrytip.composeapp.generated.resources.email_error
 import cherrytip.composeapp.generated.resources.have_account
 import cherrytip.composeapp.generated.resources.ic_apple
 import cherrytip.composeapp.generated.resources.ic_back
@@ -45,20 +46,25 @@ import cherrytip.composeapp.generated.resources.ic_show
 import cherrytip.composeapp.generated.resources.login
 import cherrytip.composeapp.generated.resources.or_login
 import cherrytip.composeapp.generated.resources.password
-import cherrytip.composeapp.generated.resources.password_error
 import cherrytip.composeapp.generated.resources.login_descr
+import cherrytip.composeapp.generated.resources.sign_up
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import ru.topbun.cherry_tip.domain.entity.LoginEntity
+import ru.topbun.cherry_tip.domain.repository.AuthRepository
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
-import ru.topbun.cherry_tip.utills.validEmail
 
 
 @Composable
 fun LoginContent(modifier: Modifier = Modifier.statusBarsPadding()) {
+    val repository = koinInject<AuthRepository>()
+    LaunchedEffect(Unit){
+        repository.login(LoginEntity("",""))
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -85,19 +91,19 @@ fun LoginContent(modifier: Modifier = Modifier.statusBarsPadding()) {
         Spacer(Modifier.height(20.dp))
         AuthMethods()
         Spacer(Modifier.weight(1f))
-        TextHaveAccount{}
+        TextDontHaveAccount{}
         Spacer(Modifier.height(20.dp))
     }
 }
 
 @Composable
-private fun TextHaveAccount(onClick: () -> Unit) {
+private fun TextDontHaveAccount(onClick: () -> Unit) {
     Row(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Texts.General(stringResource(Res.string.have_account))
-        Texts.Link(stringResource(Res.string.login),
+        Texts.General(stringResource(Res.string.dont_have_account))
+        Texts.Link(stringResource(Res.string.sign_up),
             modifier = Modifier.clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick))
     }
 }
