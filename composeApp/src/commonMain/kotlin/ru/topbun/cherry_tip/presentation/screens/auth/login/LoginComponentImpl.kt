@@ -15,13 +15,12 @@ class LoginComponentImpl(
 ) : LoginComponent, ComponentContext by componentContext {
 
     private lateinit var store: LoginStore
-    private val scope = componentScope
 
     override val state: StateFlow<LoginStore.State>
         get() = store.stateFlow
 
     init {
-        scope.launch {
+        componentScope.launch {
             store.labels.collect{
                 when(it){
                     LoginStore.Label.ClickBack -> onClickBack()
@@ -32,11 +31,8 @@ class LoginComponentImpl(
     }
 
     override fun clickBack() = store.accept(LoginStore.Intent.ClickBack)
-    override fun clickApple() = store.accept(LoginStore.Intent.ClickApple)
-    override fun clickGoogle() = store.accept(LoginStore.Intent.ClickGoogle)
-    override fun clickFacebook() = store.accept(LoginStore.Intent.ClickFacebook)
     override fun clickSignUp() = store.accept(LoginStore.Intent.ClickSignUp)
-    override fun clickLogin(login: LoginEntity) = store.accept(LoginStore.Intent.ClickLogin)
+    override fun onLogin(login: LoginEntity) = store.accept(LoginStore.Intent.OnLogin(login))
     override fun changeEmail(email: String) = store.accept(LoginStore.Intent.ChangeEmail(email))
     override fun changePassword(password: String) = store.accept(LoginStore.Intent.ChangePassword(password))
 
