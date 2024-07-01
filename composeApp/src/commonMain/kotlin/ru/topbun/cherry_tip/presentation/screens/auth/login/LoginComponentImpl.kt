@@ -1,11 +1,9 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.login
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.LoginEntity
 import ru.topbun.cherry_tip.utills.componentScope
@@ -33,13 +31,13 @@ class LoginComponentImpl(
         }
     }
 
-    override fun onClickBack() = store.accept(LoginStore.Intent.ClickBack)
-    override fun onClickApple() = store.accept(LoginStore.Intent.ClickApple)
-    override fun onClickGoogle() = store.accept(LoginStore.Intent.ClickGoogle)
-    override fun onClickFacebook() = store.accept(LoginStore.Intent.ClickFacebook)
-    override fun onClickSignUp() = store.accept(LoginStore.Intent.ClickSignUp)
-    override fun onClickLogin(login: LoginEntity) = store.accept(LoginStore.Intent.ClickLogin)
-    override fun onChangeEmail(email: String) = store.accept(LoginStore.Intent.ChangeEmail(email))
-    override fun onChangePassword(password: String) = store.accept(LoginStore.Intent.ChangePassword(password))
+    override fun clickBack() = store.accept(LoginStore.Intent.ClickBack)
+    override fun clickApple() = store.accept(LoginStore.Intent.ClickApple)
+    override fun clickGoogle() = store.accept(LoginStore.Intent.ClickGoogle)
+    override fun clickFacebook() = store.accept(LoginStore.Intent.ClickFacebook)
+    override fun clickSignUp() = store.accept(LoginStore.Intent.ClickSignUp)
+    override fun clickLogin(login: LoginEntity) = store.accept(LoginStore.Intent.ClickLogin)
+    override fun changeEmail(email: String) = store.accept(LoginStore.Intent.ChangeEmail(email))
+    override fun changePassword(password: String) = store.accept(LoginStore.Intent.ChangePassword(password))
 
 }
