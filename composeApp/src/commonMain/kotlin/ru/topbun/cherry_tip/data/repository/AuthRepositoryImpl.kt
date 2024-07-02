@@ -39,6 +39,6 @@ class AuthRepositoryImpl(
 
 
     override suspend fun singUp(signUp: SignUpEntity): Unit = exceptionWrapper{
-        authApi.signUp(signUp.toDto())
+        authApi.signUp(signUp.toDto()).codeResultWrapper()
     }
 }

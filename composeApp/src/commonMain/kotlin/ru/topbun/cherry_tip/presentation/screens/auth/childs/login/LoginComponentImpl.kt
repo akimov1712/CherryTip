@@ -32,7 +32,6 @@ class LoginComponentImpl(
         }
     }
 
-    override fun changeValidPassword() = store.accept(LoginStore.Intent.ChangeValidPassword)
     override fun changeVisiblePassword(value: Boolean) = store.accept(LoginStore.Intent.ChangeVisiblePassword(value))
     override fun clickBack() = store.accept(LoginStore.Intent.ClickBack)
     override fun clickSignUp() = store.accept(LoginStore.Intent.ClickSignUp)

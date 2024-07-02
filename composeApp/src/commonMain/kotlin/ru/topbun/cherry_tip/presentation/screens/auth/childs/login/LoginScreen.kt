@@ -19,9 +19,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -57,7 +55,6 @@ import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.LoginEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
-import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
@@ -101,14 +98,14 @@ fun LoginContent(
             onChangeEmail = component::changeEmail,
             onChangePassword = component::changePassword,
             onChangeVisiblePassword = component::changeVisiblePassword,
-            onChangeValidPassword = component::changeValidPassword
         )
         Spacer(Modifier.height(20.dp))
         errorText?.let { Texts.Error(it) }
         Spacer(Modifier.height(20.dp))
         ButtonLogin(
-            state.isValidPassword,
-            state.loginState == LoginStore.State.LoginState.Loading
+            isEnabled = state.email.isNotBlank() && state.password.isNotBlank() &&
+                    state.loginState != LoginStore.State.LoginState.Loading,
+            isLoading = state.loginState == LoginStore.State.LoginState.Loading
         ){
             component.onLogin(
                 LoginEntity(state.email, state.password)
@@ -179,16 +176,16 @@ private fun SeparateText() {
 
 @Composable
 private fun ButtonLogin(
-    isVisiblePassword: Boolean,
+    isEnabled: Boolean,
     isLoading: Boolean,
     onLogin: () -> Unit
 ) {
     Buttons.Purple(
         modifier = Modifier.fillMaxWidth().height(60.dp),
         onClick = onLogin,
-        enabled = isVisiblePassword
+        enabled = isEnabled,
     ) {
-        if (isLoading) CircularProgressIndicator(color = Colors.Purple)
+        if (isLoading) CircularProgressIndicator(color = Colors.GrayLight, modifier = Modifier.size(24.dp), strokeCap = StrokeCap.Round, strokeWidth = 3.dp)
         else Texts.Button(stringResource(Res.string.login))
     }
 }
@@ -201,7 +198,6 @@ fun LoginFields(
     onChangeEmail: (String) -> Unit,
     onChangePassword: (String) -> Unit,
     onChangeVisiblePassword: (Boolean) -> Unit,
-    onChangeValidPassword: () -> Unit,
 ){
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -235,6 +231,4 @@ fun LoginFields(
         )
 
     }
-
-    onChangeValidPassword()
 }

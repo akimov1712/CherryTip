@@ -26,8 +26,6 @@ interface LoginStore: Store<Intent, State, Label> {
         data class ChangeEmail(val email: String): Intent
         data class ChangePassword(val password: String): Intent
         data class ChangeVisiblePassword(val value: Boolean): Intent
-        data object ChangeValidPassword: Intent
-
     }
 
     data class State(
@@ -82,7 +80,6 @@ class LoginStoreFactory(
         data class ChangeEmail(val email: String): Msg
         data class ChangePassword(val password: String): Msg
         data class ChangeVisiblePassword(val value: Boolean): Msg
-        data object ChangeValidPassword: Msg
     }
 
     private inner class ExecutorImpl: CoroutineExecutor<Intent, Action, State, Msg, Label>(){
@@ -125,9 +122,6 @@ class LoginStoreFactory(
                 is Intent.ChangeVisiblePassword -> {
                     dispatch(Msg.ChangeVisiblePassword(intent.value))
                 }
-                is Intent.ChangeValidPassword -> {
-                    dispatch(Msg.ChangeValidPassword)
-                }
             }
         }
     }
@@ -151,12 +145,6 @@ class LoginStoreFactory(
             }
             is Msg.ChangeVisiblePassword -> {
                 copy(isVisiblePassword = msg.value)
-            }
-            is Msg.ChangeValidPassword -> {
-                copy(
-                    isValidPassword = email.isNotBlank() && password.isNotBlank() &&
-                            loginState != State.LoginState.Loading
-                )
             }
         }
     }

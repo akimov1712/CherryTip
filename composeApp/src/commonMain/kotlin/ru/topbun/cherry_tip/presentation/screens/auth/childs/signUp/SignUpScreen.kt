@@ -16,15 +16,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -55,6 +60,7 @@ import cherrytip.composeapp.generated.resources.username_error
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.SignUpEntity
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
@@ -63,7 +69,18 @@ import ru.topbun.cherry_tip.utills.validEmail
 
 
 @Composable
-fun SignUpContent(modifier: Modifier = Modifier.statusBarsPadding()) {
+fun SignUpContent(
+    component: SignUpComponent,
+    modifier: Modifier = Modifier.statusBarsPadding()
+) {
+    val state by component.state.collectAsState()
+    var errorText by rememberSaveable{ mutableStateOf<String?>(null) }
+    LaunchedEffect(state.signUpState){
+        errorText = when(val loginState = state.signUpState){
+            is SignUpStore.State.SignUpState.Error -> loginState.errorText
+            else -> null
+        }
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -74,7 +91,7 @@ fun SignUpContent(modifier: Modifier = Modifier.statusBarsPadding()) {
         Buttons.Icon(
             painterResource(Res.drawable.ic_back),
             Modifier.size(60.dp)
-        ) {}
+        ) { component.clickBack() }
         Spacer(Modifier.height(40.dp))
         Texts.Title(
             stringResource(Res.string.sign_up_descr),
@@ -82,15 +99,34 @@ fun SignUpContent(modifier: Modifier = Modifier.statusBarsPadding()) {
             textAlign = TextAlign.Start
         )
         Spacer(Modifier.height(40.dp))
-        val (login, isValid) = LoginFields()
+        LoginFields(component, state)
+        Spacer(Modifier.height(20.dp))
+        errorText?.let { Texts.Error(it) }
+        Spacer(Modifier.height(20.dp))
+        ButtonSignUp(
+            isValid =
+                !state.usernameIsError &&
+                !state.emailIsError &&
+                !state.passwordIsError &&
+                !state.confirmPasswordIsError &&
+                state.username.isNotBlank() &&
+                state.email.isNotBlank() &&
+                state.password.isNotBlank() &&
+                state.confirmPassword.isNotBlank() && state.signUpState != SignUpStore.State.SignUpState.Loading,
+            isLoading = state.signUpState == SignUpStore.State.SignUpState.Loading
+        ){ component.onSignUp(
+            SignUpEntity(
+                username = state.username,
+                email = state.email,
+                password = state.password,
+            )
+        ) }
         Spacer(Modifier.height(40.dp))
-        ButtonSignUp(isValid){}
-        Spacer(Modifier.height(40.dp))
-        SeparateText{}
+        SeparateText()
         Spacer(Modifier.height(20.dp))
         AuthMethods()
         Spacer(Modifier.weight(1f))
-        TextHaveAccount{}
+        TextHaveAccount{ component.clickLogin() }
         Spacer(Modifier.height(20.dp))
     }
 }
@@ -128,83 +164,82 @@ private fun AuthMethods() {
 }
 
 @Composable
-private fun SeparateText(onClick: () -> Unit) {
+private fun SeparateText() {
     Box(
         contentAlignment = Alignment.Center
     ) {
         Box(Modifier.fillMaxWidth().height(2.dp).background(Colors.PurpleBackground, CircleShape))
         Texts.General(
-            modifier = Modifier.clickable(indication = null, interactionSource = MutableInteractionSource()){
-                onClick() }.background(Colors.White).padding(horizontal = 10.dp),
+            modifier = Modifier.background(Colors.White).padding(horizontal = 10.dp),
             text = stringResource(Res.string.or_login),
         )
     }
 }
 
 @Composable
-private fun ButtonSignUp(isValid: Boolean, onClick: () -> Unit) {
+private fun ButtonSignUp(
+    isValid: Boolean,
+    isLoading: Boolean,
+    onClick: () -> Unit
+) {
     Buttons.Purple(
         modifier = Modifier.fillMaxWidth().height(60.dp),
         onClick = onClick,
         enabled = isValid
-    ) { Texts.Button(stringResource(Res.string.sign_up)) }
+    ) {
+        if (isLoading) CircularProgressIndicator(color = Colors.GrayLight, modifier = Modifier.size(24.dp), strokeCap = StrokeCap.Round, strokeWidth = 3.dp)
+        else Texts.Button(stringResource(Res.string.sign_up))
+    }
 }
 
 @Composable
-fun LoginFields(): Pair<SignUpEntity, Boolean> {
-    var username by rememberSaveable { mutableStateOf("") }
-    var usernameError by rememberSaveable { mutableStateOf(false) }
-    var email by rememberSaveable { mutableStateOf("") }
-    var emailError by rememberSaveable { mutableStateOf(false) }
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordError by rememberSaveable { mutableStateOf(false) }
-    var confirmPassword by rememberSaveable { mutableStateOf("") }
-    var confirmPasswordError by rememberSaveable { mutableStateOf(false) }
-    var isVisiblePassword by rememberSaveable{ mutableStateOf(false) }
-
+fun LoginFields(
+    component: SignUpComponent,
+    state: SignUpStore.State
+){
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         TextFields.OutlinedTextField(
-            value = username,
-            isError = usernameError,
+            value = state.username,
+            isError = state.usernameIsError,
             onValueChange = {
-                usernameError = it.length > 20 || it.length < 2
-                username = it
+                component.changeUsernameError(it.length > 20 || it.length < 2)
+                component.changeUsername(it)
             },
-            supportingText = { if (usernameError) Texts.Error(stringResource(Res.string.username_error)) },
+            supportingText = { if (state.usernameIsError) Texts.Error(stringResource(Res.string.username_error)) },
             placeholderText = stringResource(Res.string.username)
         )
 
         TextFields.OutlinedTextField(
-            value = email,
-            isError = emailError,
+            value = state.email,
+            isError = state.emailIsError,
             onValueChange = {
-                emailError = !it.validEmail()
-                email = it
+                component.changeEmailError(!it.validEmail())
+                component.changeEmail(it)
             },
-            supportingText = { if (emailError) Texts.Error(stringResource(Res.string.email_error)) },
+            supportingText = { if (state.emailIsError) Texts.Error(stringResource(Res.string.email_error)) },
             placeholderText = stringResource(Res.string.email),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next)
         )
 
         TextFields.OutlinedTextField(
-            value = password,
-            isError = passwordError,
+            value = state.password,
+            isError = state.passwordIsError,
             onValueChange = {
-                passwordError = it.length > 24 || it.length < 4
-                confirmPasswordError = it != confirmPassword
-                password = it
+                component.changePasswordError(it.length > 24 || it.length < 4)
+                component.changeConfirmPasswordError(it != state.confirmPassword)
+                component.changePassword(it)
             },
-            visualTransformation = if (isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
-            supportingText = { if (passwordError) Texts.Error(stringResource(Res.string.password_error)) },
+            visualTransformation = if (state.isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
+            supportingText = { if (state.passwordIsError) Texts.Error(stringResource(Res.string.password_error)) },
             placeholderText = stringResource(Res.string.password),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
             trailingIcon = {
                 IconButton(
-                    onClick = {isVisiblePassword = !isVisiblePassword}
+                    onClick = {component.changeVisiblePassword(!state.isVisiblePassword)}
                 ){ Icon(
-                    painterResource(if(isVisiblePassword) Res.drawable.ic_show else Res.drawable.ic_hide),
+                    painterResource(if(state.isVisiblePassword) Res.drawable.ic_show else Res.drawable.ic_hide),
                     contentDescription = null,
                     tint = Colors.Gray
                 ) }
@@ -212,37 +247,25 @@ fun LoginFields(): Pair<SignUpEntity, Boolean> {
         )
 
         TextFields.OutlinedTextField(
-            value = confirmPassword,
-            isError = confirmPasswordError,
+            value = state.confirmPassword,
+            isError = state.confirmPasswordIsError,
             onValueChange = {
-                confirmPasswordError = it != password
-                confirmPassword = it
+                component.changeConfirmPasswordError(it != state.password)
+                component.changeConfirmPassword(it)
             },
-            visualTransformation = if (isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
-            supportingText = { if (confirmPasswordError) Texts.Error(stringResource(Res.string.confirm_password_error)) },
+            visualTransformation = if (state.isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
+            supportingText = { if (state.confirmPasswordIsError) Texts.Error(stringResource(Res.string.confirm_password_error)) },
             placeholderText = stringResource(Res.string.confirm_password),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             trailingIcon = {
                 IconButton(
-                    onClick = {isVisiblePassword = !isVisiblePassword}
+                    onClick = {component.changeVisiblePassword(state.isVisiblePassword)}
                 ){ Icon(
-                    painterResource(if(isVisiblePassword) Res.drawable.ic_show else Res.drawable.ic_hide),
+                    painterResource(if(state.isVisiblePassword) Res.drawable.ic_show else Res.drawable.ic_hide),
                     contentDescription = null,
                     tint = Colors.Gray
                 ) }
             }
         )
     }
-
-    val isValid =
-        !usernameError &&
-                !emailError &&
-                !passwordError &&
-                !confirmPasswordError &&
-                username.isNotBlank() &&
-                email.isNotBlank() &&
-                password.isNotBlank() &&
-                confirmPassword.isNotBlank()
-    val signUp = SignUpEntity(username, email, password)
-    return signUp to isValid
 }

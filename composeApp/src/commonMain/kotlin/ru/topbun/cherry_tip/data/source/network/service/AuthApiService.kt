@@ -5,6 +5,7 @@ import io.ktor.client.request.setBody
 import ru.topbun.cherry_tip.data.source.network.ApiFactory
 import ru.topbun.cherry_tip.data.source.network.dto.LoginDto
 import ru.topbun.cherry_tip.data.source.network.dto.SignUpDto
+import kotlin.math.sign
 
 class AuthApiService(
     private val api: ApiFactory
@@ -14,5 +15,7 @@ class AuthApiService(
         this.setBody(login)
     }
 
-    suspend fun signUp(signUp: SignUpDto) = api.client.post("/v1/auth/register")
+    suspend fun signUp(signUp: SignUpDto) = api.client.post("/v1/auth/register"){
+        this.setBody(signUp)
+    }
 }
