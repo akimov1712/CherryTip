@@ -11,6 +11,7 @@ import ru.topbun.cherry_tip.domain.entity.LoginEntity
 import ru.topbun.cherry_tip.domain.entity.SignUpEntity
 import ru.topbun.cherry_tip.domain.repository.AuthRepository
 import ru.topbun.cherry_tip.utills.ParseBackendResponseException
+import ru.topbun.cherry_tip.utills.codeResultWrapper
 import ru.topbun.cherry_tip.utills.exceptionWrapper
 
 
@@ -19,8 +20,8 @@ class AuthRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ): AuthRepository {
 
-    override suspend fun login(login: LoginEntity){
-        val response = authApi.login(login.toDto()).exceptionWrapper()
+    override suspend fun login(login: LoginEntity): Unit = exceptionWrapper{
+        val response = authApi.login(login.toDto()).codeResultWrapper()
         try {
             dataStore.edit {
                 it[AppSettings.KEY_TOKEN] = response.body<String>()
@@ -31,7 +32,7 @@ class AuthRepositoryImpl(
     }
 
 
-    override suspend fun singUp(signUp: SignUpEntity){
-        authApi.signUp(signUp.toDto()).exceptionWrapper()
+    override suspend fun singUp(signUp: SignUpEntity): Unit = exceptionWrapper{
+        authApi.signUp(signUp.toDto())
     }
 }

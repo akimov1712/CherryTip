@@ -14,14 +14,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.arkivanov.decompose.defaultComponentContext
+import ru.topbun.cherry_tip.presentation.screens.auth.AuthComponentImpl
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val authComponent = AuthComponentImpl(defaultComponentContext())
         setContent {
             MaterialTheme {
-                AppScreen()
+                AppScreen(authComponent)
             }
         }
     }

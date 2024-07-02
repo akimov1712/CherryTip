@@ -8,5 +8,7 @@ val appModule = module {
         repositoryModule,
         localModule,
         useCaseModule,
+        storeModule,
+        componentModule,
     )
 }
