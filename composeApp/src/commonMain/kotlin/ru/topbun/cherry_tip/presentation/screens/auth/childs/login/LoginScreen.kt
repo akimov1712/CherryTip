@@ -18,6 +18,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -67,46 +70,59 @@ fun LoginContent(
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val state by component.state.collectAsState()
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Colors.White)
-            .padding(horizontal = 20.dp)
-    ) {
-        Spacer(Modifier.height(20.dp))
-        Buttons.Icon(
-            painterResource(Res.drawable.ic_back),
-            Modifier.size(60.dp)
-        ) {component.clickBack()}
-        Spacer(Modifier.height(40.dp))
-        Texts.Title(
-            stringResource(Res.string.login_descr),
-            fontSize = 30.sp,
-            textAlign = TextAlign.Start
-        )
-        Spacer(Modifier.height(40.dp))
-        LoginFields(
-            email = state.email,
-            password = state.password,
-            isVisiblePassword = state.isVisiblePassword,
-            onChangeEmail = component::changeEmail,
-            onChangePassword = component::changePassword,
-            onChangeVisiblePassword = component::changeVisiblePassword,
-            onChangeValidPassword = component::changeValidPassword
-        )
-        Spacer(Modifier.height(40.dp))
-        ButtonLogin(state.isValidPassword){
-            component.onLogin(
-                LoginEntity(state.email, state.password)
-            )
+    val snackBarHostState = SnackbarHostState()
+    LaunchedEffect(state){
+        when(val loginState = state.loginState){
+            is LoginStore.State.LoginState.Error -> snackBarHostState.showSnackbar(loginState.errorText)
+            else -> {}
         }
-        Spacer(Modifier.height(40.dp))
-        SeparateText()
-        Spacer(Modifier.height(20.dp))
-        AuthMethods()
-        Spacer(Modifier.weight(1f))
-        TextDontHaveAccount{ component.clickSignUp() }
-        Spacer(Modifier.height(20.dp))
+    }
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackBarHostState)
+        }
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Colors.White)
+                .padding(horizontal = 20.dp)
+        ) {
+            Spacer(Modifier.height(20.dp))
+            Buttons.Icon(
+                painterResource(Res.drawable.ic_back),
+                Modifier.size(60.dp)
+            ) {component.clickBack()}
+            Spacer(Modifier.height(40.dp))
+            Texts.Title(
+                stringResource(Res.string.login_descr),
+                fontSize = 30.sp,
+                textAlign = TextAlign.Start
+            )
+            Spacer(Modifier.height(40.dp))
+            LoginFields(
+                email = state.email,
+                password = state.password,
+                isVisiblePassword = state.isVisiblePassword,
+                onChangeEmail = component::changeEmail,
+                onChangePassword = component::changePassword,
+                onChangeVisiblePassword = component::changeVisiblePassword,
+                onChangeValidPassword = component::changeValidPassword
+            )
+            Spacer(Modifier.height(40.dp))
+            ButtonLogin(state.isValidPassword){
+                component.onLogin(
+                    LoginEntity(state.email, state.password)
+                )
+            }
+            Spacer(Modifier.height(40.dp))
+            SeparateText()
+            Spacer(Modifier.height(20.dp))
+            AuthMethods()
+            Spacer(Modifier.weight(1f))
+            TextDontHaveAccount{ component.clickSignUp() }
+            Spacer(Modifier.height(20.dp))
+        }
     }
 }
 

@@ -118,7 +118,7 @@ class LoginStoreFactory(
                         } catch (e: ServerException) {
                             dispatch(Msg.LoginError("An error occurred on the server side"))
                         } catch (e: ConnectException) {
-                            dispatch(Msg.LoginError("AFailed to connect to the server, check your internet connection"))
+                            dispatch(Msg.LoginError("A Failed to connect to the server, check your internet connection"))
                         }
                     }
                 }
