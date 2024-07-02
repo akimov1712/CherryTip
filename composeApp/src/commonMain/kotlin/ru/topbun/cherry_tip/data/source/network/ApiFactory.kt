@@ -22,7 +22,7 @@ class ApiFactory {
         }
         install(Logging) {
             logger = Logger.DEFAULT
-            level = LogLevel.ALL
+            level = LogLevel.BODY
         }
         defaultRequest {
             contentType(ContentType.Application.Json
@@ -33,4 +33,4 @@ class ApiFactory {
 
 }
 
-fun HttpRequestBuilder.token(token: String) = header("Authorization", "application/json")
+fun HttpRequestBuilder.token(token: String) = header("Authorization", "Bearer $token")

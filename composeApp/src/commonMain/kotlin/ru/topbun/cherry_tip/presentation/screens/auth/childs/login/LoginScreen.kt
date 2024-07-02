@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -23,7 +24,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +41,6 @@ import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.dont_have_account
 import cherrytip.composeapp.generated.resources.email
-import cherrytip.composeapp.generated.resources.have_account
 import cherrytip.composeapp.generated.resources.ic_apple
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_facebook
@@ -49,17 +48,16 @@ import cherrytip.composeapp.generated.resources.ic_google
 import cherrytip.composeapp.generated.resources.ic_hide
 import cherrytip.composeapp.generated.resources.ic_show
 import cherrytip.composeapp.generated.resources.login
+import cherrytip.composeapp.generated.resources.login_descr
 import cherrytip.composeapp.generated.resources.or_login
 import cherrytip.composeapp.generated.resources.password
-import cherrytip.composeapp.generated.resources.login_descr
 import cherrytip.composeapp.generated.resources.sign_up
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import ru.topbun.cherry_tip.domain.entity.LoginEntity
-import ru.topbun.cherry_tip.domain.repository.AuthRepository
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
+import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
@@ -70,59 +68,59 @@ fun LoginContent(
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val state by component.state.collectAsState()
-    val snackBarHostState = SnackbarHostState()
-    LaunchedEffect(state){
-        when(val loginState = state.loginState){
-            is LoginStore.State.LoginState.Error -> snackBarHostState.showSnackbar(loginState.errorText)
-            else -> {}
+    var errorText by rememberSaveable{ mutableStateOf<String?>(null) }
+    LaunchedEffect(state.loginState){
+        errorText = when(val loginState = state.loginState){
+            is LoginStore.State.LoginState.Error -> loginState.errorText
+            else -> null
         }
     }
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(snackBarHostState)
-        }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Colors.White)
+            .padding(horizontal = 20.dp)
     ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Colors.White)
-                .padding(horizontal = 20.dp)
-        ) {
-            Spacer(Modifier.height(20.dp))
-            Buttons.Icon(
-                painterResource(Res.drawable.ic_back),
-                Modifier.size(60.dp)
-            ) {component.clickBack()}
-            Spacer(Modifier.height(40.dp))
-            Texts.Title(
-                stringResource(Res.string.login_descr),
-                fontSize = 30.sp,
-                textAlign = TextAlign.Start
+        Spacer(Modifier.height(20.dp))
+        Buttons.Icon(
+            painterResource(Res.drawable.ic_back),
+            Modifier.size(60.dp)
+        ) {component.clickBack()}
+        Spacer(Modifier.height(40.dp))
+        Texts.Title(
+            stringResource(Res.string.login_descr),
+            fontSize = 30.sp,
+            textAlign = TextAlign.Start
+        )
+        Spacer(Modifier.height(40.dp))
+        LoginFields(
+            email = state.email,
+            password = state.password,
+            isVisiblePassword = state.isVisiblePassword,
+            onChangeEmail = component::changeEmail,
+            onChangePassword = component::changePassword,
+            onChangeVisiblePassword = component::changeVisiblePassword,
+            onChangeValidPassword = component::changeValidPassword
+        )
+        Spacer(Modifier.height(20.dp))
+        errorText?.let { Texts.Error(it) }
+        Spacer(Modifier.height(20.dp))
+        ButtonLogin(
+            state.isValidPassword,
+            state.loginState == LoginStore.State.LoginState.Loading
+        ){
+            component.onLogin(
+                LoginEntity(state.email, state.password)
             )
-            Spacer(Modifier.height(40.dp))
-            LoginFields(
-                email = state.email,
-                password = state.password,
-                isVisiblePassword = state.isVisiblePassword,
-                onChangeEmail = component::changeEmail,
-                onChangePassword = component::changePassword,
-                onChangeVisiblePassword = component::changeVisiblePassword,
-                onChangeValidPassword = component::changeValidPassword
-            )
-            Spacer(Modifier.height(40.dp))
-            ButtonLogin(state.isValidPassword){
-                component.onLogin(
-                    LoginEntity(state.email, state.password)
-                )
-            }
-            Spacer(Modifier.height(40.dp))
-            SeparateText()
-            Spacer(Modifier.height(20.dp))
-            AuthMethods()
-            Spacer(Modifier.weight(1f))
-            TextDontHaveAccount{ component.clickSignUp() }
-            Spacer(Modifier.height(20.dp))
         }
+        Spacer(Modifier.height(40.dp))
+        SeparateText()
+        Spacer(Modifier.height(20.dp))
+        AuthMethods()
+        Spacer(Modifier.weight(1f))
+        TextDontHaveAccount{ component.clickSignUp() }
+        Spacer(Modifier.height(20.dp))
     }
 }
 
@@ -182,13 +180,17 @@ private fun SeparateText() {
 @Composable
 private fun ButtonLogin(
     isVisiblePassword: Boolean,
+    isLoading: Boolean,
     onLogin: () -> Unit
 ) {
     Buttons.Purple(
         modifier = Modifier.fillMaxWidth().height(60.dp),
         onClick = onLogin,
         enabled = isVisiblePassword
-    ) { Texts.Button(stringResource(Res.string.login)) }
+    ) {
+        if (isLoading) CircularProgressIndicator(color = Colors.Purple)
+        else Texts.Button(stringResource(Res.string.login))
+    }
 }
 
 @Composable
@@ -199,7 +201,7 @@ fun LoginFields(
     onChangeEmail: (String) -> Unit,
     onChangePassword: (String) -> Unit,
     onChangeVisiblePassword: (Boolean) -> Unit,
-    onChangeValidPassword: (Boolean) -> Unit,
+    onChangeValidPassword: () -> Unit,
 ){
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -220,7 +222,7 @@ fun LoginFields(
             },
             visualTransformation = if (isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
             placeholderText = stringResource(Res.string.password),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             trailingIcon = {
                 IconButton(
                     onClick = {onChangeVisiblePassword(!isVisiblePassword)}
@@ -234,5 +236,5 @@ fun LoginFields(
 
     }
 
-    onChangeValidPassword(email.isNotBlank() && password.isNotBlank())
+    onChangeValidPassword()
 }

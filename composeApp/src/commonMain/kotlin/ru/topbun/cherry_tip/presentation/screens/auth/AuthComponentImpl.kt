@@ -3,11 +3,10 @@ package ru.topbun.cherry_tip.presentation.screens.auth
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
-import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponentImpl

@@ -1,7 +1,6 @@
 package ru.topbun.cherry_tip.presentation.screens.auth
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginContent
 

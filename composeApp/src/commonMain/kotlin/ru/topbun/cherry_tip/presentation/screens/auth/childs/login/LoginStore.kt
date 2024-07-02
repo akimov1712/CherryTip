@@ -1,16 +1,15 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.childs.login
 
-import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.launch
-import ru.topbun.cherry_tip.di.useCaseModule
 import ru.topbun.cherry_tip.domain.entity.LoginEntity
 import ru.topbun.cherry_tip.domain.useCases.auth.LoginUseCase
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.*
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStoreFactory.ExecutorImpl
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.Intent
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.Label
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.State
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.ConnectException
 import ru.topbun.cherry_tip.utills.ParseBackendResponseException
@@ -27,7 +26,7 @@ interface LoginStore: Store<Intent, State, Label> {
         data class ChangeEmail(val email: String): Intent
         data class ChangePassword(val password: String): Intent
         data class ChangeVisiblePassword(val value: Boolean): Intent
-        data class ChangeValidPassword(val value: Boolean): Intent
+        data object ChangeValidPassword: Intent
 
     }
 
@@ -83,7 +82,7 @@ class LoginStoreFactory(
         data class ChangeEmail(val email: String): Msg
         data class ChangePassword(val password: String): Msg
         data class ChangeVisiblePassword(val value: Boolean): Msg
-        data class ChangeValidPassword(val value: Boolean): Msg
+        data object ChangeValidPassword: Msg
     }
 
     private inner class ExecutorImpl: CoroutineExecutor<Intent, Action, State, Msg, Label>(){
@@ -114,9 +113,9 @@ class LoginStoreFactory(
                         } catch (e: RequestTimeoutException) {
                             dispatch(Msg.LoginError("Timed out"))
                         } catch (e: ClientException) {
-                            dispatch(Msg.LoginError("An error has occurred on your device"))
+                            dispatch(Msg.LoginError(e.errorText))
                         } catch (e: ServerException) {
-                            dispatch(Msg.LoginError("An error occurred on the server side"))
+                            dispatch(Msg.LoginError(e.errorText))
                         } catch (e: ConnectException) {
                             dispatch(Msg.LoginError("A Failed to connect to the server, check your internet connection"))
                         }
@@ -127,7 +126,7 @@ class LoginStoreFactory(
                     dispatch(Msg.ChangeVisiblePassword(intent.value))
                 }
                 is Intent.ChangeValidPassword -> {
-                    dispatch(Msg.ChangeValidPassword(intent.value))
+                    dispatch(Msg.ChangeValidPassword)
                 }
             }
         }
@@ -154,7 +153,10 @@ class LoginStoreFactory(
                 copy(isVisiblePassword = msg.value)
             }
             is Msg.ChangeValidPassword -> {
-                copy(isValidPassword = msg.value)
+                copy(
+                    isValidPassword = email.isNotBlank() && password.isNotBlank() &&
+                            loginState != State.LoginState.Loading
+                )
             }
         }
     }

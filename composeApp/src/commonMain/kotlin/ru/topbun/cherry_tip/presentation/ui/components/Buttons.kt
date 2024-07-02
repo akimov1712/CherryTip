@@ -5,7 +5,6 @@ import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ButtonColors
@@ -19,9 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
-import cherrytip.composeapp.generated.resources.Res
-import cherrytip.composeapp.generated.resources.ic_back
-import org.jetbrains.compose.resources.painterResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
 
 object Buttons {
