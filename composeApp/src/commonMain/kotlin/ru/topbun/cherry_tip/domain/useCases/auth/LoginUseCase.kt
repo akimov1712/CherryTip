@@ -1,6 +1,6 @@
 package ru.topbun.cherry_tip.domain.useCases.auth
 
-import ru.topbun.cherry_tip.domain.entity.LoginEntity
+import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
 import ru.topbun.cherry_tip.domain.repository.AuthRepository
 
 class LoginUseCase(private val repository: AuthRepository) {

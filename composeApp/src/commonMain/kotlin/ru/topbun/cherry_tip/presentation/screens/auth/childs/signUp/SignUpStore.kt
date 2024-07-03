@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.launch
-import ru.topbun.cherry_tip.domain.entity.SignUpEntity
+import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
 import ru.topbun.cherry_tip.domain.useCases.auth.SignUpUseCase
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpStore.Label

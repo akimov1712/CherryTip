@@ -28,7 +28,7 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.ac
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.age.AgeFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.gender.Gender
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.gender.GenderFragmentContent
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.goal.Goal
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.goal.GoalType
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.goal.GoalFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.height.HeightFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.name.NameFragmentContent
@@ -62,7 +62,7 @@ fun SurveyScreen(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(40.dp))
 
         var name by rememberSaveable { mutableStateOf("") }
-        var goal by remember { mutableStateOf(Goal.Lose) }
+        var goalType by remember { mutableStateOf(GoalType.Lose) }
         var gender by remember { mutableStateOf(Gender.Female) }
         var date by remember { mutableStateOf(GMTDate()) }
         var height by rememberSaveable { mutableStateOf(100) }
@@ -76,7 +76,7 @@ fun SurveyScreen(modifier: Modifier = Modifier) {
                 nextFragment()
             }
             SurveyFragments.GOAL -> GoalFragmentContent(onClickBack = previousFragment) {
-                goal = it
+                goalType = it
                 nextFragment()
             }
             SurveyFragments.GENDER -> GenderFragmentContent(onClickBack = previousFragment) {

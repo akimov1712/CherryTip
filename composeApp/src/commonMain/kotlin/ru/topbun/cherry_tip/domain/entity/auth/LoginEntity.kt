@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.domain.entity
+package ru.topbun.cherry_tip.domain.entity.auth
 
 data class LoginEntity(
     val email: String,

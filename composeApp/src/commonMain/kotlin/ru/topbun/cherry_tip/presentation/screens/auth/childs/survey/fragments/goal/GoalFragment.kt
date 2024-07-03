@@ -25,14 +25,14 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 fun GoalFragmentContent(
     modifier: Modifier = Modifier,
     onClickBack: () -> Unit,
-    onClickContinue: (Goal) -> Unit
+    onClickContinue: (GoalType) -> Unit
 ) {
     FragmentsComponents.FragmentWrapper(
         modifier = modifier,
         title = stringResource(Res.string.what_your_goal)
     ){
         val goals = listOf(GoalObjects.Lose, GoalObjects.Stay, GoalObjects.Gain)
-        var selectedItem = remember { mutableStateOf(goals.first().goal) }
+        var selectedItem = remember { mutableStateOf(goals.first().goalType) }
 
         GoalList(goals, selectedItem)
         Spacer(Modifier.weight(1f))
@@ -45,20 +45,20 @@ fun GoalFragmentContent(
 @Composable
 private fun GoalList(
     goals: List<GoalObjects>,
-    selectedItem: MutableState<Goal>
+    selectedItem: MutableState<GoalType>
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         goals.forEach {
-            val isSelected = selectedItem.value == it.goal
+            val isSelected = selectedItem.value == it.goalType
             Buttons.Button(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     if (isSelected) Colors.Purple else Colors.PurpleBackground
                 ),
                 onClick = {
-                    selectedItem.value = it.goal
+                    selectedItem.value = it.goalType
                 },
                 contentPadding = PaddingValues(18.dp)
             ) {

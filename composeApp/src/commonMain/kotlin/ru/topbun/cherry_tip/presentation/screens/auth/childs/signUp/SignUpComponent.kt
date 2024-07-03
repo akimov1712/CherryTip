@@ -1,7 +1,7 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.topbun.cherry_tip.domain.entity.SignUpEntity
+import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
 
 interface SignUpComponent {
 

@@ -1,5 +1,5 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.goal
 
-enum class Goal {
+enum class GoalType {
     Lose, Stay, Gain
 }

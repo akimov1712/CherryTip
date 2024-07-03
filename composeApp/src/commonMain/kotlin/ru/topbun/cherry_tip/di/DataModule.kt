@@ -14,6 +14,7 @@ val apiModule = module {
 
 val repositoryModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
 }
 
 expect val localModule: Module

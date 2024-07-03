@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.topbun.cherry_tip.domain.entity.SignUpEntity
+import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
 import ru.topbun.cherry_tip.utills.componentScope
 
 class SignUpComponentImpl(

@@ -11,13 +11,13 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
 sealed class GoalObjects(
-    val goal: Goal,
+    val goalType: GoalType,
     val textRes: StringResource,
     val iconRes: DrawableResource,
 ) {
 
-    data object Lose: GoalObjects(Goal.Lose, Res.string.lose_weight, Res.drawable.ic_scale)
-    data object Stay: GoalObjects(Goal.Stay, Res.string.stay_healthy, Res.drawable.ic_apple_fruit)
-    data object Gain: GoalObjects(Goal.Gain, Res.string.gain_weight, Res.drawable.ic_gym)
+    data object Lose: GoalObjects(GoalType.Lose, Res.string.lose_weight, Res.drawable.ic_scale)
+    data object Stay: GoalObjects(GoalType.Stay, Res.string.stay_healthy, Res.drawable.ic_apple_fruit)
+    data object Gain: GoalObjects(GoalType.Gain, Res.string.gain_weight, Res.drawable.ic_gym)
 
 }

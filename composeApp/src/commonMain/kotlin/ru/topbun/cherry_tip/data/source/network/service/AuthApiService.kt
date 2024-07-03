@@ -3,9 +3,8 @@ package ru.topbun.cherry_tip.data.source.network.service
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import ru.topbun.cherry_tip.data.source.network.ApiFactory
-import ru.topbun.cherry_tip.data.source.network.dto.LoginDto
-import ru.topbun.cherry_tip.data.source.network.dto.SignUpDto
-import kotlin.math.sign
+import ru.topbun.cherry_tip.data.source.network.dto.auth.LoginDto
+import ru.topbun.cherry_tip.data.source.network.dto.auth.SignUpDto
 
 class AuthApiService(
     private val api: ApiFactory

@@ -52,7 +52,7 @@ import cherrytip.composeapp.generated.resources.password
 import cherrytip.composeapp.generated.resources.sign_up
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.domain.entity.LoginEntity
+import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields

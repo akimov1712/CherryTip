@@ -1,7 +1,7 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.childs.login
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.topbun.cherry_tip.domain.entity.LoginEntity
+import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
 
 interface LoginComponent {
 

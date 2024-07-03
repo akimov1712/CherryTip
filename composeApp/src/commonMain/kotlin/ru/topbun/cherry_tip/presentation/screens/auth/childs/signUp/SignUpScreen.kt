@@ -21,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,8 +58,7 @@ import cherrytip.composeapp.generated.resources.username
 import cherrytip.composeapp.generated.resources.username_error
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.domain.entity.SignUpEntity
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore
+import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
