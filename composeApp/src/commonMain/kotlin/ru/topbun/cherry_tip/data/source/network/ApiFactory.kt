@@ -14,19 +14,17 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 
 class ApiFactory {
-    private val BASE_URL = "http://10.0.2.2:3000/"
+
+    private companion object{
+         const val BASE_URL = "http://10.0.2.2:3000/"
+    }
 
     val client = HttpClient {
         install(ContentNegotiation) {
             json()
         }
-        install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.BODY
-        }
         defaultRequest {
-            contentType(ContentType.Application.Json
-                .withParameter("charset", "utf-8"))
+            contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
             url(BASE_URL)
         }
     }

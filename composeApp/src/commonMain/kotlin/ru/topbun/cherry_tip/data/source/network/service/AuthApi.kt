@@ -6,15 +6,15 @@ import ru.topbun.cherry_tip.data.source.network.ApiFactory
 import ru.topbun.cherry_tip.data.source.network.dto.auth.LoginDto
 import ru.topbun.cherry_tip.data.source.network.dto.auth.SignUpDto
 
-class AuthApiService(
+class AuthApi(
     private val api: ApiFactory
 ){
 
     suspend fun login(login: LoginDto) = api.client.post("/v1/auth/login"){
-        this.setBody(login)
+        setBody(login)
     }
 
     suspend fun signUp(signUp: SignUpDto) = api.client.post("/v1/auth/register"){
-        this.setBody(signUp)
+        setBody(signUp)
     }
 }
