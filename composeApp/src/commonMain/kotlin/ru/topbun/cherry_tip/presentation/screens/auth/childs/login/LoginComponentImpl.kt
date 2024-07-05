@@ -13,7 +13,8 @@ class LoginComponentImpl(
     componentContext: ComponentContext,
     private val storeFactory: LoginStoreFactory,
     private val onClickBack: () -> Unit,
-    private val onSignUp: () -> Unit,
+    private val onClickSignUp: () -> Unit,
+    private val onLogin: () -> Unit,
 ) : LoginComponent, ComponentContext by componentContext {
 
 
@@ -26,7 +27,8 @@ class LoginComponentImpl(
             store.labels.collect{
                 when(it){
                     LoginStore.Label.ClickBack -> onClickBack()
-                    LoginStore.Label.ClickSignUp -> onSignUp()
+                    LoginStore.Label.ClickSignUp -> onClickSignUp()
+                    LoginStore.Label.OnLogin -> onLogin()
                 }
             }
         }

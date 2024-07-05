@@ -31,6 +31,7 @@ import ru.topbun.cherry_tip.utills.toGMTDate
 @Composable
 fun AgeFragmentContent(
     modifier: Modifier = Modifier,
+    age: GMTDate,
     onClickBack: () -> Unit,
     onClickContinue: (GMTDate) -> Unit
 ) {
@@ -38,7 +39,7 @@ fun AgeFragmentContent(
         modifier = modifier,
         title = stringResource(Res.string.how_old_are_you)
     ){
-        var date by remember { mutableStateOf(GMTDate(getTimeMillis())) }
+        var date by remember { mutableStateOf(age) }
         WheelDatePicker(
             modifier = Modifier.fillMaxWidth(),
             minDate = LocalDate(1900, 1, 1),
@@ -50,7 +51,7 @@ fun AgeFragmentContent(
             size = DpSize(296.dp, 128.dp),
             textColor = Colors.Purple,
             selectorProperties = WheelPickerDefaults.selectorProperties(
-                color = Colors.PurpleBackground,
+                color = Colors.Transparent,
                 border = BorderStroke(1.dp, Colors.Purple)
             )
         ) {

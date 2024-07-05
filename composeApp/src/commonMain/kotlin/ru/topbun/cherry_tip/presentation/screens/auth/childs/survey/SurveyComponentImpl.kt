@@ -42,4 +42,6 @@ class SurveyComponentImpl(
     override fun changeTargetWeight(targetWeight: Int) = store.accept(Intent.ChangeTargetWeight(targetWeight))
     override fun changeActive(active: ActiveType) = store.accept(Intent.ChangeActive(active))
     override fun sendSurvey() = store.accept(Intent.SendSurvey)
+    override fun nextFragment() = store.accept(Intent.NextFragment)
+    override fun previousFragment() = store.accept(Intent.PreviousFragment)
 }

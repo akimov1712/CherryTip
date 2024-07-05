@@ -48,6 +48,7 @@ interface LoginStore: Store<Intent, State, Label> {
     sealed interface Label{
         data object ClickBack: Label
         data object ClickSignUp: Label
+        data object OnLogin: Label
     }
 
 }

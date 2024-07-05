@@ -27,6 +27,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 @Composable
 fun ActiveFragmentContent(
     modifier: Modifier = Modifier,
+    active: ActiveType,
     onClickBack: () -> Unit,
     onClickStart: (ActiveType) -> Unit
 ) {
@@ -35,7 +36,7 @@ fun ActiveFragmentContent(
         title = stringResource(Res.string.how_active_you)
     ){
         val actives = listOf(ActiveObjects.Inactive, ActiveObjects.Moderate, ActiveObjects.Active)
-        var selectedType = remember { mutableStateOf(ActiveType.MEDIUM) }
+        var selectedType = remember { mutableStateOf(active) }
         ActiveList(
             modifier = Modifier.fillMaxWidth(),
             actives = actives,

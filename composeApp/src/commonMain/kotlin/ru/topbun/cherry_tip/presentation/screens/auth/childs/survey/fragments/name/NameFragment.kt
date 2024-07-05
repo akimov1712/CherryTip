@@ -15,13 +15,17 @@ import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.FragmentsComponents
 
 @Composable
-fun NameFragmentContent(modifier: Modifier = Modifier, onClickContinue: (String) -> Unit) {
+fun NameFragmentContent(
+    modifier: Modifier = Modifier,
+    name: String,
+    onClickContinue: (String) -> Unit
+) {
     FragmentsComponents.FragmentWrapper(
         modifier = modifier,
         title = stringResource(Res.string.what_your_name)
     ) {
         var text by rememberSaveable {
-            mutableStateOf("")
+            mutableStateOf(name)
         }
         FragmentsComponents.TextField(
             text = text,

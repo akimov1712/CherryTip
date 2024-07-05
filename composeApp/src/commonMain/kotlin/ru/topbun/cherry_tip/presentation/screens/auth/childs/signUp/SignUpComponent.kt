@@ -1,7 +1,10 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp
 
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.StateFlow
 import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponent
 
 interface SignUpComponent {
 

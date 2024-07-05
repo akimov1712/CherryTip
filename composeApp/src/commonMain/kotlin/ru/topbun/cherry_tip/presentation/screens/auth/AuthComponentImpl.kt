@@ -16,6 +16,7 @@ import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyComponentImpl
 import kotlin.math.sign
 
 class AuthComponentImpl(
@@ -40,9 +41,10 @@ class AuthComponentImpl(
                 val onClickBack = {
                     navigation.pop()
                 }
-                val onSignUp = { navigation.replaceCurrent(Config.SignUp) }
+                val onClickSignUp = { navigation.replaceCurrent(Config.SignUp) }
+                val onLogin = { navigation.push(Config.Survey) }
                 val loginComponent: LoginComponentImpl = getKoin().get {
-                    parametersOf(componentContext, onClickBack, onSignUp)
+                    parametersOf(componentContext, onClickBack, onClickSignUp, onLogin)
                 }
                 AuthComponent.Child.Login(
                     loginComponent
@@ -61,6 +63,14 @@ class AuthComponentImpl(
                  signUpComponent
                 )
             }
+
+            Config.Survey -> {
+                val onSendSurvey = {}
+                val surveyComponent: SurveyComponentImpl = getKoin().get {
+                    parametersOf(componentContext, onSendSurvey)
+                }
+                AuthComponent.Child.Survey(surveyComponent)
+            }
         }
     }
 
@@ -71,9 +81,11 @@ class AuthComponentImpl(
         @Serializable
         data object Login : Config
 
-
         @Serializable
         data object SignUp : Config
+
+        @Serializable
+        data object Survey : Config
     }
 
 

@@ -13,11 +13,13 @@ import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.what_your_target_weight
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStore
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.FragmentsComponents
 
 @Composable
 fun TargetWeightFragmentContent(
     modifier: Modifier = Modifier,
+    targetWeight: Int,
     onClickBack: () -> Unit,
     onClickContinue: (Int) -> Unit,
 ) {
@@ -25,7 +27,7 @@ fun TargetWeightFragmentContent(
         modifier = modifier,
         title = stringResource(Res.string.what_your_target_weight)
     ){
-        var weight by rememberSaveable{ mutableStateOf(20) }
+        var weight by rememberSaveable{ mutableStateOf(targetWeight) }
         Spacer(Modifier.weight(1f))
         FragmentsComponents.NumberSlidePicker(
             modifier = Modifier.padding(horizontal = 20.dp),

@@ -6,8 +6,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,72 +44,105 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.we
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
+import ru.topbun.cherry_tip.utills.Log
 
 @Composable
-fun SurveyScreen(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+fun SurveyScreen(
+    component: SurveyComponent,
+    modifier: Modifier = Modifier
+) {
+    val snackBarHost = SnackbarHostState()
+    Scaffold(
+        modifier = modifier.statusBarsPadding(),
+        snackbarHost = {
+            SnackbarHost(snackBarHost)
+        }
     ) {
-        val fragments = SurveyFragments.entries
-        var selectedFragment by remember { mutableStateOf(SurveyFragments.NAME) }
-        val selectedIndex by remember { derivedStateOf { fragments.indexOf(selectedFragment) } }
-        val progress by remember { derivedStateOf { (selectedIndex + 1f) / fragments.size } }
-        val nextFragment = { selectedFragment = fragments[selectedIndex + 1] }
-        val previousFragment = { selectedFragment = fragments[selectedIndex - 1] }
-
-        Progress(progress)
-        Spacer(Modifier.height(40.dp))
-        Texts.Option(
-            stringResource(Res.string.step) + " ${selectedIndex + 1} / ${fragments.size}",
-            fontSize = 16.sp
-        )
-        Spacer(Modifier.height(40.dp))
-
-        var name by rememberSaveable { mutableStateOf("") }
-        var goalType by remember { mutableStateOf(GoalType.Lose) }
-        var gender by remember { mutableStateOf(Gender.Female) }
-        var date by remember { mutableStateOf(GMTDate()) }
-        var height by rememberSaveable { mutableStateOf(100) }
-        var weight by rememberSaveable { mutableStateOf(20) }
-        var targetWeight by rememberSaveable { mutableStateOf(20) }
-        var active by remember { mutableStateOf(ActiveType.MEDIUM) }
-
-        when (selectedFragment) {
-            SurveyFragments.NAME -> NameFragmentContent {
-                name = it
-                nextFragment()
-            }
-            SurveyFragments.GOAL -> GoalFragmentContent(onClickBack = previousFragment) {
-                goalType = it
-                nextFragment()
-            }
-            SurveyFragments.GENDER -> GenderFragmentContent(onClickBack = previousFragment) {
-                gender = it
-                nextFragment()
-            }
-            SurveyFragments.AGE -> AgeFragmentContent(onClickBack = previousFragment) {
-                date = it
-                nextFragment()
-            }
-            SurveyFragments.HEIGHT -> HeightFragmentContent(onClickBack = previousFragment) {
-                height = it
-                nextFragment()
-            }
-            SurveyFragments.WEIGHT -> WeightFragmentContent(onClickBack = previousFragment) {
-                weight = it
-                nextFragment()
-            }
-            SurveyFragments.TARGET_WEIGHT -> TargetWeightFragmentContent(onClickBack = previousFragment) {
-                targetWeight = it
-                nextFragment()
-            }
-            SurveyFragments.ACTIVE -> ActiveFragmentContent(onClickBack = previousFragment) {
-                active = it
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val state by component.state.collectAsState()
+            LaunchedEffect(state){
+                when(val screenState = state.surveyState){
+                    is SurveyStore.State.SurveyState.Error -> {
+                        snackBarHost.showSnackbar(screenState.error)
+                    }
+                    is SurveyStore.State.SurveyState.Loading -> {
+                        snackBarHost.showSnackbar("Загрузка")
+                    }
+                    else -> {}
+                }
             }
 
+            if (state.surveyState == SurveyStore.State.SurveyState.Loading) ProgressBars.FullscreenLoader()
+
+            Progress((state.selectedIndex + 1f)/ state.fragments.size)
+            Spacer(Modifier.height(40.dp))
+            Texts.Option(
+                stringResource(Res.string.step) + " ${state.selectedIndex + 1} / ${state.fragments.size}",
+                fontSize = 16.sp
+            )
+            Spacer(Modifier.height(40.dp))
+
+            when (state.selectedFragment) {
+                SurveyFragments.NAME -> NameFragmentContent(name = state.name) {
+                    component.changeName(it)
+                    component.nextFragment()
+                }
+                SurveyFragments.GOAL -> GoalFragmentContent(
+                    onClickBack = { component.previousFragment() },
+                    goal = state.goalType
+                ) {
+                    component.changeGoal(it)
+                    component.nextFragment()
+                }
+                SurveyFragments.GENDER -> GenderFragmentContent(
+                    onClickBack = { component.previousFragment() },
+                    gender = state.gender
+                ) {
+                    component.changeGender(it)
+                    component.nextFragment()
+                }
+                SurveyFragments.AGE -> AgeFragmentContent(
+                    onClickBack = { component.previousFragment() },
+                    age = state.age
+                ) {
+                    component.changeAge(it)
+                    component.nextFragment()
+                }
+                SurveyFragments.HEIGHT -> HeightFragmentContent(
+                    onClickBack = { component.previousFragment() },
+                    height = state.height
+                ) {
+                    component.changeHeight(it)
+                    component.nextFragment()
+                }
+                SurveyFragments.WEIGHT -> WeightFragmentContent(
+                    onClickBack = { component.previousFragment() },
+                    weight = state.weight
+                ) {
+                    component.changeWeight(it)
+                    component.nextFragment()
+                }
+                SurveyFragments.TARGET_WEIGHT -> TargetWeightFragmentContent(
+                    onClickBack = { component.previousFragment() },
+                    targetWeight = state.targetWeight
+                ) {
+                    component.changeTargetWeight(it)
+                    component.nextFragment()
+                }
+                SurveyFragments.ACTIVE -> ActiveFragmentContent(
+                    onClickBack = { component.previousFragment() },
+                    active = state.active
+                ) {
+                    component.changeActive(it)
+                    component.sendSurvey()
+                }
+
+            }
         }
     }
 }

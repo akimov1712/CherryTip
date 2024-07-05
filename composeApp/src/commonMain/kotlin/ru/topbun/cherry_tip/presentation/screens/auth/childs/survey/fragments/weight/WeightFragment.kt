@@ -18,6 +18,7 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.Fr
 @Composable
 fun WeightFragmentContent(
     modifier: Modifier = Modifier,
+    weight: Int,
     onClickBack: () -> Unit,
     onClickContinue: (Int) -> Unit,
 ) {
@@ -25,7 +26,7 @@ fun WeightFragmentContent(
         modifier = modifier,
         title = stringResource(Res.string.what_your_weight)
     ){
-        var weight by rememberSaveable{ mutableStateOf(20) }
+        var weight by rememberSaveable{ mutableStateOf(weight) }
         Spacer(Modifier.weight(1f))
         FragmentsComponents.NumberSlidePicker(
             modifier = Modifier.padding(horizontal = 20.dp),

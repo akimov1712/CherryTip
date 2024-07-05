@@ -1,10 +1,12 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.childs.survey
 
+import androidx.annotation.IntRange
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.ktor.util.date.GMTDate
+import io.ktor.util.date.getTimeMillis
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import ru.topbun.cherry_tip.domain.entity.user.GoalEntity
@@ -16,6 +18,7 @@ import ru.topbun.cherry_tip.domain.useCases.user.CreateUnitsUseCase
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStore.Label
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStore.State
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.FragmentsComponents
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.active.ActiveType
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.gender.Gender
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.goal.GoalType
@@ -40,6 +43,8 @@ interface SurveyStore: Store<Intent, State, Label> {
         data class ChangeTargetWeight(val targetWeight: Int): Intent
         data class ChangeActive(val active: ActiveType): Intent
         data object SendSurvey: Intent
+        data object NextFragment: Intent
+        data object PreviousFragment: Intent
     }
 
     data class State(
@@ -51,6 +56,10 @@ interface SurveyStore: Store<Intent, State, Label> {
         val weight: Int,
         val targetWeight: Int,
         val active: ActiveType,
+        val fragments: List<SurveyFragments>,
+        val selectedFragment: SurveyFragments,
+        val selectedIndex: Int,
+        val progress: Float,
         val surveyState: SurveyState
     ){
         sealed interface SurveyState{
@@ -68,7 +77,7 @@ interface SurveyStore: Store<Intent, State, Label> {
 }
 
 class SurveyStoreFactory(
-    val storeFactory: StoreFactory,
+    private val storeFactory: StoreFactory,
     private val createProfileUseCase: CreateProfileUseCase,
     private val createGoalUseCase: CreateGoalUseCase,
     private val createUnitsUseCase: CreateUnitsUseCase,
@@ -80,11 +89,15 @@ class SurveyStoreFactory(
             name = "",
             goalType = GoalType.Lose,
             gender = Gender.Female,
-            age = LocalDate.Companion.now().toGMTDate(),
+            age = GMTDate(getTimeMillis()),
             height = 100,
             weight = 20,
             targetWeight = 20,
             active = ActiveType.LOW,
+            fragments = SurveyFragments.entries,
+            selectedFragment = SurveyFragments.NAME,
+            selectedIndex = 0,
+            progress = 0f,
             surveyState = State.SurveyState.Initial,
         ),
         bootstrapper = null,
@@ -105,10 +118,13 @@ class SurveyStoreFactory(
         data class ChangeActive(val active: ActiveType): Msg
         data object SurveyLoading: Msg
         data class SurveyError(val error: String): Msg
+        data object NextFragment: Msg
+        data object PreviousFragment: Msg
     }
 
     private inner class ExecutorImpl: CoroutineExecutor<Intent, Action, State, Msg, Label>(){
         override fun executeIntent(intent: Intent) {
+            val state = state()
             when(intent){
                 is Intent.ChangeActive -> dispatch(Msg.ChangeActive(intent.active))
                 is Intent.ChangeAge -> dispatch(Msg.ChangeAge(intent.age))
@@ -121,7 +137,6 @@ class SurveyStoreFactory(
                 Intent.SendSurvey -> {
                     scope.launch {
                         dispatch(Msg.SurveyLoading)
-                        val state = state()
                         try {
                             val profile = ProfileEntity(
                                 firstName = state.name,
@@ -156,6 +171,9 @@ class SurveyStoreFactory(
                         }
                     }
                 }
+
+                Intent.NextFragment -> dispatch(Msg.NextFragment)
+                Intent.PreviousFragment -> dispatch(Msg.PreviousFragment)
             }
         }
     }
@@ -172,6 +190,16 @@ class SurveyStoreFactory(
             is Msg.ChangeWeight -> copy(weight = msg.weight)
             is Msg.SurveyError -> copy(surveyState = State.SurveyState.Error(msg.error))
             Msg.SurveyLoading -> copy(surveyState = State.SurveyState.Loading)
+            Msg.NextFragment -> {
+                val nextFragment = fragments[selectedIndex + 1]
+                val progress = (selectedIndex + 2f) / fragments.size
+                copy(selectedFragment = nextFragment, progress = progress, selectedIndex = selectedIndex + 1)
+            }
+            Msg.PreviousFragment -> {
+                val previousFragment = fragments[selectedIndex - 1]
+                val progress = (selectedIndex.toFloat()) / fragments.size
+                copy(selectedFragment = previousFragment, progress = progress, selectedIndex = selectedIndex-1)
+            }
         }
 
     }

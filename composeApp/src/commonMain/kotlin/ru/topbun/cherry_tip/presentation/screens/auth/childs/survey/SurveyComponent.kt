@@ -20,4 +20,7 @@ interface SurveyComponent {
     fun changeActive(active: ActiveType)
     fun sendSurvey()
 
+    fun nextFragment()
+    fun previousFragment()
+
 }

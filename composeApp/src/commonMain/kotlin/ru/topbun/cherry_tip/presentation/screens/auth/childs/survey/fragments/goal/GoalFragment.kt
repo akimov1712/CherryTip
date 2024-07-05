@@ -24,6 +24,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 @Composable
 fun GoalFragmentContent(
     modifier: Modifier = Modifier,
+    goal: GoalType,
     onClickBack: () -> Unit,
     onClickContinue: (GoalType) -> Unit
 ) {
@@ -32,7 +33,7 @@ fun GoalFragmentContent(
         title = stringResource(Res.string.what_your_goal)
     ){
         val goals = listOf(GoalObjects.Lose, GoalObjects.Stay, GoalObjects.Gain)
-        var selectedItem = remember { mutableStateOf(goals.first().goalType) }
+        var selectedItem = remember { mutableStateOf(goal) }
 
         GoalList(goals, selectedItem)
         Spacer(Modifier.weight(1f))

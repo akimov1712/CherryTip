@@ -24,6 +24,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 @Composable
 fun GenderFragmentContent(
     modifier: Modifier = Modifier,
+    gender: Gender,
     onClickBack: () -> Unit,
     onClickContinue: (Gender) -> Unit
 ) {
@@ -32,7 +33,7 @@ fun GenderFragmentContent(
         title = stringResource(Res.string.what_your_gender)
     ){
         val genders = listOf(GenderObjects.Female, GenderObjects.Male)
-        var selectedItem = remember { mutableStateOf(genders.first().gender) }
+        var selectedItem = remember { mutableStateOf(gender) }
         GenderList(genders, selectedItem)
         Spacer(Modifier.weight(1f))
         FragmentsComponents.ButtonsNavigation(onClickBack, { onClickContinue(selectedItem.value) })

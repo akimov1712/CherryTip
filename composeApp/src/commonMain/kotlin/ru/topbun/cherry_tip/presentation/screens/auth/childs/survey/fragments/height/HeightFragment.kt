@@ -18,6 +18,7 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.Fr
 @Composable
 fun HeightFragmentContent(
     modifier: Modifier = Modifier,
+    height: Int,
     onClickBack: () -> Unit,
     onClickContinue: (Int) -> Unit,
 ) {
@@ -25,7 +26,7 @@ fun HeightFragmentContent(
         modifier = modifier,
         title = stringResource(Res.string.what_your_height)
     ){
-        var height by rememberSaveable{ mutableStateOf(100) }
+        var height by rememberSaveable{ mutableStateOf(height) }
         Spacer(Modifier.weight(1f))
         FragmentsComponents.NumberSlidePicker(
             modifier = Modifier.fillMaxWidth(),

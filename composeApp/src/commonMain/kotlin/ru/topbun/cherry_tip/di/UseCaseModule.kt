@@ -1,5 +1,7 @@
 package ru.topbun.cherry_tip.di
 
+import org.koin.core.module.Module
+import org.koin.dsl.ModuleDeclaration
 import org.koin.dsl.module
 import ru.topbun.cherry_tip.domain.useCases.auth.LoginUseCase
 import ru.topbun.cherry_tip.domain.useCases.auth.SignUpUseCase
@@ -12,13 +14,11 @@ import ru.topbun.cherry_tip.domain.useCases.user.UpdateProfileUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.UpdateUnitsUseCase
 
 val useCaseModule = module {
-    includes(
-        authModule,
-        userModule
-    )
+    authModule()
+    userModule()
 }
 
-private val userModule = module{
+private fun Module.userModule(){
     single { CreateProfileUseCase(get()) }
     single { UpdateProfileUseCase(get()) }
     single { CreateGoalUseCase(get()) }
@@ -28,7 +28,7 @@ private val userModule = module{
     single { GetAccountInfoUseCase(get()) }
 }
 
-private val authModule = module {
+private fun Module.authModule(){
     single { LoginUseCase(get()) }
     single { SignUpUseCase(get()) }
 }
