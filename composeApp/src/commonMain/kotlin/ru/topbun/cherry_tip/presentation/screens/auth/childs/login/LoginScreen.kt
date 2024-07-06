@@ -107,9 +107,7 @@ fun LoginContent(
                     state.loginState != LoginStore.State.LoginState.Loading,
             isLoading = state.loginState == LoginStore.State.LoginState.Loading
         ){
-            component.onLogin(
-                LoginEntity(state.email, state.password)
-            )
+            component.onLogin()
         }
         Spacer(Modifier.height(40.dp))
         SeparateText()
@@ -221,7 +219,7 @@ fun LoginFields(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             trailingIcon = {
                 IconButton(
-                    onClick = {onChangeVisiblePassword(!isVisiblePassword)}
+                    onClick = { onChangeVisiblePassword(!isVisiblePassword)}
                 ){ Icon(
                     painterResource(if(isVisiblePassword) Res.drawable.ic_show else Res.drawable.ic_hide),
                     contentDescription = null,

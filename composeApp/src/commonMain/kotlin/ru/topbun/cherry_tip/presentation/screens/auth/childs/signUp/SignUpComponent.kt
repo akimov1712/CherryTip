@@ -11,7 +11,7 @@ interface SignUpComponent {
     val state: StateFlow<SignUpStore.State>
 
     fun clickBack()
-    fun onSignUp(signUp: SignUpEntity)
+    fun onSignUp()
     fun clickLogin()
     fun changeUsername(username: String)
     fun changeUsernameError(value: Boolean)

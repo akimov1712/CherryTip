@@ -51,7 +51,7 @@ fun SurveyScreen(
     component: SurveyComponent,
     modifier: Modifier = Modifier
 ) {
-    val snackBarHost = SnackbarHostState()
+    val snackBarHost = remember { SnackbarHostState() }
     Scaffold(
         modifier = modifier.statusBarsPadding(),
         snackbarHost = {
@@ -65,20 +65,12 @@ fun SurveyScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val state by component.state.collectAsState()
-            LaunchedEffect(state){
-                when(val screenState = state.surveyState){
-                    is SurveyStore.State.SurveyState.Error -> {
-                        snackBarHost.showSnackbar(screenState.error)
-                    }
-                    is SurveyStore.State.SurveyState.Loading -> {
-                        snackBarHost.showSnackbar("Загрузка")
-                    }
+            LaunchedEffect(state.surveyState) {
+                when(val screenState = state.surveyState) {
+                    is SurveyStore.State.SurveyState.Error -> snackBarHost.showSnackbar(screenState.error)
                     else -> {}
                 }
             }
-
-            if (state.surveyState == SurveyStore.State.SurveyState.Loading) ProgressBars.FullscreenLoader()
-
             Progress((state.selectedIndex + 1f)/ state.fragments.size)
             Spacer(Modifier.height(40.dp))
             Texts.Option(

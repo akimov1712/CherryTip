@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import io.ktor.client.call.body
 import ru.topbun.cherry_tip.data.mapper.toDto
+import ru.topbun.cherry_tip.data.mapper.toLogin
 import ru.topbun.cherry_tip.data.source.local.dataStore.AppSettings
 import ru.topbun.cherry_tip.data.source.network.service.AuthApi
 import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
@@ -32,7 +33,8 @@ class AuthRepositoryImpl(
     }
 
 
-    override suspend fun singUp(signUp: SignUpEntity): Unit = exceptionWrapper{
+    override suspend fun signUp(signUp: SignUpEntity): Unit = exceptionWrapper{
         authApi.signUp(signUp.toDto()).codeResultWrapper()
+        login(signUp.toLogin())
     }
 }

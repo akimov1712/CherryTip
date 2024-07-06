@@ -102,23 +102,9 @@ fun SignUpContent(
         errorText?.let { Texts.Error(it) }
         Spacer(Modifier.height(20.dp))
         ButtonSignUp(
-            isValid =
-                !state.usernameIsError &&
-                !state.emailIsError &&
-                !state.passwordIsError &&
-                !state.confirmPasswordIsError &&
-                state.username.isNotBlank() &&
-                state.email.isNotBlank() &&
-                state.password.isNotBlank() &&
-                state.confirmPassword.isNotBlank() && state.signUpState != SignUpStore.State.SignUpState.Loading,
+            isValid = isValidSignUp(state),
             isLoading = state.signUpState == SignUpStore.State.SignUpState.Loading
-        ){ component.onSignUp(
-            SignUpEntity(
-                username = state.username,
-                email = state.email,
-                password = state.password,
-            )
-        ) }
+        ){ component.onSignUp()}
         Spacer(Modifier.height(40.dp))
         SeparateText()
         Spacer(Modifier.height(20.dp))
@@ -128,6 +114,16 @@ fun SignUpContent(
         Spacer(Modifier.height(20.dp))
     }
 }
+
+private fun isValidSignUp(state: SignUpStore.State) =
+    !state.usernameIsError &&
+            !state.emailIsError &&
+            !state.passwordIsError &&
+            !state.confirmPasswordIsError &&
+            state.username.isNotBlank() &&
+            state.email.isNotBlank() &&
+            state.password.isNotBlank() &&
+            state.confirmPassword.isNotBlank() && state.signUpState != SignUpStore.State.SignUpState.Loading
 
 @Composable
 private fun TextHaveAccount(onClick: () -> Unit) {
@@ -257,7 +253,7 @@ fun LoginFields(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             trailingIcon = {
                 IconButton(
-                    onClick = {component.changeVisiblePassword(state.isVisiblePassword)}
+                    onClick = {component.changeVisiblePassword(!state.isVisiblePassword)}
                 ){ Icon(
                     painterResource(if(state.isVisiblePassword) Res.drawable.ic_show else Res.drawable.ic_hide),
                     contentDescription = null,

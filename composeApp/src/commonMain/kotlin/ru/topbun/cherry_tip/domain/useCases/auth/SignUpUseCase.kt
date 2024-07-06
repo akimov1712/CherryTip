@@ -5,6 +5,6 @@ import ru.topbun.cherry_tip.domain.repository.AuthRepository
 
 class SignUpUseCase(private val repository: AuthRepository) {
 
-    suspend operator fun invoke(signUp: SignUpEntity) = repository.singUp(signUp)
+    suspend operator fun invoke(signUp: SignUpEntity) = repository.signUp(signUp)
 
 }

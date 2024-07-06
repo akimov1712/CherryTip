@@ -6,14 +6,14 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
 import ru.topbun.cherry_tip.utills.componentScope
 
 class SignUpComponentImpl(
     componentContext: ComponentContext,
     private val storeFactory: SignUpStoreFactory,
     private val onClickBack: () -> Unit,
-    private val onLogin: () -> Unit,
+    private val onClickLogin: () -> Unit,
+    private val signUp: () -> Unit,
 ) : SignUpComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { storeFactory.store }
@@ -25,14 +25,15 @@ class SignUpComponentImpl(
             store.labels.collect{
                 when(it){
                     SignUpStore.Label.ClickBack -> onClickBack()
-                    SignUpStore.Label.ClickLogin -> onLogin()
+                    SignUpStore.Label.ClickLogin -> onClickLogin()
+                    SignUpStore.Label.OnSignUp -> signUp()
                 }
             }
         }
     }
 
     override fun clickBack() = store.accept(SignUpStore.Intent.ClickBack)
-    override fun onSignUp(signUp: SignUpEntity) = store.accept(SignUpStore.Intent.OnSignUp(signUp))
+    override fun onSignUp() = store.accept(SignUpStore.Intent.OnSignUp)
     override fun clickLogin() = store.accept(SignUpStore.Intent.ClickLogin)
     override fun changeUsername(username: String)  = store.accept(SignUpStore.Intent.ChangeUsername(username))
     override fun changeUsernameError(value: Boolean) = store.accept(SignUpStore.Intent.ChangeUsernameError(value))

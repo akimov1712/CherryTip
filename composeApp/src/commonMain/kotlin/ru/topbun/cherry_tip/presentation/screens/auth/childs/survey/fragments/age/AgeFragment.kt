@@ -27,6 +27,7 @@ import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.Fonts
 import ru.topbun.cherry_tip.utills.now
 import ru.topbun.cherry_tip.utills.toGMTDate
+import ru.topbun.cherry_tip.utills.toLocalDate
 
 @Composable
 fun AgeFragmentContent(
@@ -48,10 +49,11 @@ fun AgeFragmentContent(
                 fontSize = 18.sp,
                 fontFamily = Fonts.sfRegular
             ),
-            size = DpSize(296.dp, 128.dp),
+            startDate = age.toLocalDate(),
+            size = DpSize(310.dp, 140.dp),
             textColor = Colors.Purple,
             selectorProperties = WheelPickerDefaults.selectorProperties(
-                color = Colors.Transparent,
+                color = Colors.PurpleBackground,
                 border = BorderStroke(1.dp, Colors.Purple)
             )
         ) {

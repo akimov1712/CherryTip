@@ -8,7 +8,7 @@ interface LoginComponent {
     val state: StateFlow<LoginStore.State>
 
     fun clickBack()
-    fun onLogin(login: LoginEntity)
+    fun onLogin()
     fun clickSignUp()
     fun changeEmail(email: String)
     fun changePassword(password: String)

@@ -15,8 +15,8 @@ sealed class ActiveObjects(
     val descrRes: StringResource,
 ) {
 
-    data object Inactive: ActiveObjects(ActiveType.LOW, Res.string.inactive_title, Res.string.inactive_descr)
-    data object Moderate: ActiveObjects(ActiveType.MEDIUM, Res.string.moderate_title, Res.string.moderate_descr)
-    data object Active: ActiveObjects(ActiveType.HIGH, Res.string.active_title, Res.string.active_descr)
+    data object Inactive: ActiveObjects(ActiveType.Low, Res.string.inactive_title, Res.string.inactive_descr)
+    data object Moderate: ActiveObjects(ActiveType.Medium, Res.string.moderate_title, Res.string.moderate_descr)
+    data object Active: ActiveObjects(ActiveType.High, Res.string.active_title, Res.string.active_descr)
 
 }

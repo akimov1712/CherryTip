@@ -10,6 +10,7 @@ import ru.topbun.cherry_tip.domain.useCases.auth.LoginUseCase
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.Label
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.State
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpStore
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.ConnectException
 import ru.topbun.cherry_tip.utills.ParseBackendResponseException
@@ -21,7 +22,7 @@ interface LoginStore: Store<Intent, State, Label> {
     sealed interface Intent{
 
         data object ClickBack: Intent
-        data class OnLogin(val login: LoginEntity): Intent
+        data object OnLogin: Intent
         data object ClickSignUp: Intent
         data class ChangeEmail(val email: String): Intent
         data class ChangePassword(val password: String): Intent
@@ -77,7 +78,7 @@ class LoginStoreFactory(
     private sealed interface Msg{
         data object LoginLoading: Msg
         data class LoginError(val messageError: String): Msg
-        data class OnLogin(val login: LoginEntity): Msg
+        data object OnLogin: Msg
         data class ChangeEmail(val email: String): Msg
         data class ChangePassword(val password: String): Msg
         data class ChangeVisiblePassword(val value: Boolean): Msg
@@ -87,6 +88,7 @@ class LoginStoreFactory(
 
         override fun executeIntent(intent: Intent) {
             super.executeIntent(intent)
+            val state = state()
             when(intent){
                 is Intent.ChangeEmail -> {
                     dispatch(Msg.ChangeEmail(intent.email))
@@ -104,8 +106,9 @@ class LoginStoreFactory(
                     scope.launch {
                         dispatch(Msg.LoginLoading)
                         try {
-                            loginUseCase(intent.login)
-                            dispatch(Msg.OnLogin(intent.login))
+                            sendLogin(state)
+                            publish(Label.OnLogin)
+                            dispatch(Msg.OnLogin)
                         } catch (e: ParseBackendResponseException) {
                             dispatch(Msg.LoginError("Error while receiving data from the server"))
                         } catch (e: RequestTimeoutException) {
@@ -124,6 +127,14 @@ class LoginStoreFactory(
                     dispatch(Msg.ChangeVisiblePassword(intent.value))
                 }
             }
+        }
+
+        private suspend fun sendLogin(state: State){
+            val login = LoginEntity(
+                email = state.email,
+                password = state.password
+            )
+            loginUseCase(login)
         }
     }
 

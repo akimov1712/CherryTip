@@ -15,5 +15,8 @@ fun LocalDate.Companion.now(timeZone: TimeZone = TimeZone.currentSystemDefault()
 fun LocalDate.toGMTDate() =
     GMTDate(0,0,0,this.dayOfMonth, Month.from(this.monthNumber), this.year)
 
+fun GMTDate.toLocalDate() =
+    Instant.fromEpochMilliseconds(this.timestamp).toLocalDateTime(TimeZone.currentSystemDefault()).date
+
 fun GMTDate.toIso8601() = Instant.fromEpochMilliseconds(this.timestamp).toString()
 fun String.parseToGMTDate() = GMTDate(Instant.parse(this).toEpochMilliseconds())

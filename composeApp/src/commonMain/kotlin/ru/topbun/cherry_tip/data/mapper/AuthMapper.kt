@@ -26,3 +26,8 @@ fun SignUpDto.toEntity() = SignUpEntity(
     email = email,
     password = password
 )
+
+fun SignUpEntity.toLogin() = LoginEntity(
+    email = email,
+    password = password
+)

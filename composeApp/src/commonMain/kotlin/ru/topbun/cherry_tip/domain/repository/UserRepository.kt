@@ -15,5 +15,8 @@ interface UserRepository {
     suspend fun updateUnits(units: UnitsEntity)
     suspend fun getAccountInfo(): AccountInfoEntity
 
+    suspend fun tokenIsValid()
+    suspend fun checkAccountInfoComplete()
+
 
 }

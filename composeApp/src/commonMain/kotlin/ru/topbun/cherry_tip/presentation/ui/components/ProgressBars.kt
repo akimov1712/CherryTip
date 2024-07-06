@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -47,8 +48,9 @@ object ProgressBars{
 
     @Composable
     fun FullscreenLoader(modifier: Modifier = Modifier) {
-        Box(modifier.fillMaxSize().background(Colors.Black.copy(0.3f)), contentAlignment = Alignment.Center){
+        Box(modifier.fillMaxSize().background(Colors.Black.copy(0.1f)), contentAlignment = Alignment.Center){
             Card(
+                modifier = Modifier.padding(24.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Colors.White

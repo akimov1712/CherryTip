@@ -6,6 +6,6 @@ import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
 interface AuthRepository {
 
     suspend fun login(login: LoginEntity)
-    suspend fun singUp(signUp: SignUpEntity)
+    suspend fun signUp(signUp: SignUpEntity)
 
 }

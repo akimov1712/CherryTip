@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
@@ -38,11 +39,9 @@ class AuthComponentImpl(
     ): AuthComponent.Child{
         return when(config){
             Config.Login -> {
-                val onClickBack = {
-                    navigation.pop()
-                }
-                val onClickSignUp = { navigation.replaceCurrent(Config.SignUp) }
-                val onLogin = { navigation.push(Config.Survey) }
+                val onClickBack = { navigation.pop()}
+                val onClickSignUp = { navigation.pushToFront(Config.SignUp) }
+                val onLogin = {  }
                 val loginComponent: LoginComponentImpl = getKoin().get {
                     parametersOf(componentContext, onClickBack, onClickSignUp, onLogin)
                 }
@@ -52,12 +51,11 @@ class AuthComponentImpl(
             }
 
             Config.SignUp -> {
-                val onClickBack = {
-                    navigation.pop()
-                }
-                val onLogin = { navigation.replaceCurrent(Config.Login) }
+                val onClickBack = { navigation.pop()}
+                val onLogin = { navigation.pushToFront(Config.Login) }
+                val signUp = { navigation.pushToFront(Config.Survey) }
                 val signUpComponent: SignUpComponentImpl = getKoin().get {
-                    parametersOf(componentContext, onClickBack, onLogin)
+                    parametersOf(componentContext, onClickBack, onLogin, signUp)
                 }
                 AuthComponent.Child.SignUp(
                  signUpComponent
@@ -65,7 +63,7 @@ class AuthComponentImpl(
             }
 
             Config.Survey -> {
-                val onSendSurvey = {}
+                val onSendSurvey = {navigation.pop()}
                 val surveyComponent: SurveyComponentImpl = getKoin().get {
                     parametersOf(componentContext, onSendSurvey)
                 }

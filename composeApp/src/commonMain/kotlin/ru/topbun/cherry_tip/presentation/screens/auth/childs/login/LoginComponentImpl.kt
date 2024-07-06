@@ -37,7 +37,7 @@ class LoginComponentImpl(
     override fun changeVisiblePassword(value: Boolean) = store.accept(LoginStore.Intent.ChangeVisiblePassword(value))
     override fun clickBack() = store.accept(LoginStore.Intent.ClickBack)
     override fun clickSignUp() = store.accept(LoginStore.Intent.ClickSignUp)
-    override fun onLogin(login: LoginEntity) = store.accept(LoginStore.Intent.OnLogin(login))
+    override fun onLogin() = store.accept(LoginStore.Intent.OnLogin)
     override fun changeEmail(email: String) = store.accept(LoginStore.Intent.ChangeEmail(email))
     override fun changePassword(password: String) = store.accept(LoginStore.Intent.ChangePassword(password))
 

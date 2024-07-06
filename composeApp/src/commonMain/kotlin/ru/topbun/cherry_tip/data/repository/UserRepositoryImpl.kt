@@ -3,9 +3,7 @@ package ru.topbun.cherry_tip.data.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import io.ktor.client.call.body
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import ru.topbun.cherry_tip.data.mapper.toDto
 import ru.topbun.cherry_tip.data.source.local.dataStore.AppSettings
@@ -15,6 +13,7 @@ import ru.topbun.cherry_tip.domain.entity.user.GoalEntity
 import ru.topbun.cherry_tip.domain.entity.user.ProfileEntity
 import ru.topbun.cherry_tip.domain.entity.user.UnitsEntity
 import ru.topbun.cherry_tip.domain.repository.UserRepository
+import ru.topbun.cherry_tip.utills.AccountInfoNotComplete
 import ru.topbun.cherry_tip.utills.FailedExtractToken
 import ru.topbun.cherry_tip.utills.codeResultWrapper
 import ru.topbun.cherry_tip.utills.exceptionWrapper
@@ -24,11 +23,13 @@ class UserRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ): UserRepository {
 
-    private fun tokenFlow() = dataStore.data
-        .catch { throw FailedExtractToken() }
-        .map { it[AppSettings.KEY_TOKEN] }
+    private suspend fun getToken(): String {
+        val token = dataStore.data
+            .map { it[AppSettings.KEY_TOKEN] }
+            .firstOrNull()
 
-    private suspend fun getToken() = tokenFlow().last() ?: throw FailedExtractToken()
+        return token ?: throw FailedExtractToken()
+    }
 
     override suspend fun createProfile(profile: ProfileEntity): Unit = exceptionWrapper{
         api.createProfile(profile = profile.toDto(), token = getToken()).codeResultWrapper()
@@ -56,5 +57,15 @@ class UserRepositoryImpl(
 
     override suspend fun getAccountInfo(): AccountInfoEntity = exceptionWrapper {
         api.getAccountInfo(getToken()).body()
+    }
+
+    override suspend fun tokenIsValid() {
+        if (getToken().isBlank()) throw FailedExtractToken()
+    }
+
+    override suspend fun checkAccountInfoComplete() {
+        getAccountInfo().apply {
+            if (goal == null || units == null || profile == null) throw AccountInfoNotComplete()
+        }
     }
 }

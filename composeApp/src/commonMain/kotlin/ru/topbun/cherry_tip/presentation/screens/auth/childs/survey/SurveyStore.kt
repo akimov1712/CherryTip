@@ -1,6 +1,5 @@
 package ru.topbun.cherry_tip.presentation.screens.auth.childs.survey
 
-import androidx.annotation.IntRange
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -8,7 +7,6 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.ktor.util.date.GMTDate
 import io.ktor.util.date.getTimeMillis
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 import ru.topbun.cherry_tip.domain.entity.user.GoalEntity
 import ru.topbun.cherry_tip.domain.entity.user.ProfileEntity
 import ru.topbun.cherry_tip.domain.entity.user.UnitsEntity
@@ -18,18 +16,16 @@ import ru.topbun.cherry_tip.domain.useCases.user.CreateUnitsUseCase
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStore.Label
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStore.State
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.FragmentsComponents
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.active.ActiveType
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.gender.Gender
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.goal.GoalType
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.ConnectException
 import ru.topbun.cherry_tip.utills.FailedExtractToken
+import ru.topbun.cherry_tip.utills.Log
 import ru.topbun.cherry_tip.utills.ParseBackendResponseException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
 import ru.topbun.cherry_tip.utills.ServerException
-import ru.topbun.cherry_tip.utills.now
-import ru.topbun.cherry_tip.utills.toGMTDate
 
 interface SurveyStore: Store<Intent, State, Label> {
 
@@ -93,7 +89,7 @@ class SurveyStoreFactory(
             height = 100,
             weight = 20,
             targetWeight = 20,
-            active = ActiveType.LOW,
+            active = ActiveType.Low,
             fragments = SurveyFragments.entries,
             selectedFragment = SurveyFragments.NAME,
             selectedIndex = 0,
@@ -116,6 +112,7 @@ class SurveyStoreFactory(
         data class ChangeWeight(val weight: Int): Msg
         data class ChangeTargetWeight(val targetWeight: Int): Msg
         data class ChangeActive(val active: ActiveType): Msg
+        data object SendSurvey: Msg
         data object SurveyLoading: Msg
         data class SurveyError(val error: String): Msg
         data object NextFragment: Msg
@@ -138,25 +135,11 @@ class SurveyStoreFactory(
                     scope.launch {
                         dispatch(Msg.SurveyLoading)
                         try {
-                            val profile = ProfileEntity(
-                                firstName = state.name,
-                                lastName = null,
-                                birth = state.age,
-                                city = null,
-                                gender = state.gender
-                            )
-                            val goal = GoalEntity(active = state.active, goalType = state.goalType)
-                            val units = UnitsEntity(
-                                weight = state.weight,
-                                height = state.height,
-                                targetWeight = state.targetWeight,
-                                bloodGlucose = null
-                            )
-                            createProfileUseCase(profile)
-                            createGoalUseCase(goal)
-                            createUnitsUseCase(units)
+                            sendProfile(state)
+                            sendUnits(state)
+                            sendGoal(state)
                             publish(Label.SendSurvey)
-                        }catch (e: ParseBackendResponseException) {
+                        } catch (e: ParseBackendResponseException) {
                             dispatch(Msg.SurveyError("Error while receiving data from the server"))
                         } catch (e: RequestTimeoutException) {
                             dispatch(Msg.SurveyError("Timed out"))
@@ -171,11 +154,39 @@ class SurveyStoreFactory(
                         }
                     }
                 }
-
                 Intent.NextFragment -> dispatch(Msg.NextFragment)
                 Intent.PreviousFragment -> dispatch(Msg.PreviousFragment)
             }
         }
+
+        private suspend fun sendProfile(state: State){
+            val profile = ProfileEntity(
+                firstName = state.name,
+                lastName = null,
+                birth = state.age,
+                city = null,
+                gender = state.gender
+            )
+            createProfileUseCase(profile)
+        }
+
+
+        private suspend fun sendGoal(state: State){
+            val goal = GoalEntity(active = state.active, goalType = state.goalType)
+            createGoalUseCase(goal)
+        }
+
+
+        private suspend fun sendUnits(state: State){
+            val units = UnitsEntity(
+                weight = state.weight,
+                height = state.height,
+                targetWeight = state.targetWeight,
+                bloodGlucose = null
+            )
+            createUnitsUseCase(units)
+        }
+
     }
 
     private object ReducerImpl: Reducer<State, Msg>{
@@ -200,6 +211,7 @@ class SurveyStoreFactory(
                 val progress = (selectedIndex.toFloat()) / fragments.size
                 copy(selectedFragment = previousFragment, progress = progress, selectedIndex = selectedIndex-1)
             }
+            Msg.SendSurvey -> copy(surveyState = State.SurveyState.Success)
         }
 
     }

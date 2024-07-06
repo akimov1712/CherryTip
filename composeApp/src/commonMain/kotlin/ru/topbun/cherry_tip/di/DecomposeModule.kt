@@ -23,12 +23,13 @@ val componentModule = module {
             onLogin = onLogin
         )
     }
-    factory { (componentContext: ComponentContext, onClickBack: () -> Unit, onLogin: () -> Unit) ->
+    factory { (componentContext: ComponentContext, onClickBack: () -> Unit, onLogin: () -> Unit, onSignUp: () -> Unit) ->
         SignUpComponentImpl(
             componentContext = componentContext,
             storeFactory = get(),
             onClickBack = onClickBack,
-            onLogin = onLogin
+            onClickLogin = onLogin,
+            signUp = onSignUp
         )
     }
     factory { (componentContext: ComponentContext, onSendSurvey: () -> Unit) ->
@@ -42,6 +43,6 @@ val componentModule = module {
 
 val storeModule = module {
     single<LoginStoreFactory> { LoginStoreFactory(get(), get()) }
-    single<SignUpStoreFactory> { SignUpStoreFactory(get(), get()) }
-    single<SurveyStoreFactory> { SurveyStoreFactory(get(), get(), get(),get()) }
+    single<SignUpStoreFactory> { SignUpStoreFactory(get(), get(), get()) }
+    factory<SurveyStoreFactory> { SurveyStoreFactory(get(), get(), get(),get()) }
 }

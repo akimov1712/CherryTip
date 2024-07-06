@@ -5,7 +5,9 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.launch
+import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
 import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
+import ru.topbun.cherry_tip.domain.useCases.auth.LoginUseCase
 import ru.topbun.cherry_tip.domain.useCases.auth.SignUpUseCase
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpStore.Label
@@ -20,7 +22,7 @@ interface SignUpStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object ClickBack : Intent
-        data class OnSignUp(val signUp: SignUpEntity) : Intent
+        data object OnSignUp : Intent
         data object ClickLogin : Intent
         data class ChangeUsername(val username: String) : Intent
         data class ChangeUsernameError(val value: Boolean) : Intent
@@ -50,13 +52,13 @@ interface SignUpStore : Store<Intent, State, Label> {
 
             data object Initial : SignUpState
             data object Loading : SignUpState
-            data object Success : SignUpState
             data class Error(val errorText: String) : SignUpState
 
         }
     }
 
     sealed interface Label {
+        data object OnSignUp : Label
         data object ClickBack : Label
         data object ClickLogin : Label
     }
@@ -65,7 +67,8 @@ interface SignUpStore : Store<Intent, State, Label> {
 
 class SignUpStoreFactory(
     private val storeFactory: StoreFactory,
-    private val signUpUseCase: SignUpUseCase
+    private val signUpUseCase: SignUpUseCase,
+    private val loginUseCase: LoginUseCase,
 ) {
 
     val store: Store<Intent, State, Label> = storeFactory.create(
@@ -93,7 +96,6 @@ class SignUpStoreFactory(
     private sealed interface Msg {
         data object SignUpLoading : Msg
         data class SignUpError(val messageError: String) : Msg
-        data class OnSignUp(val signUp: SignUpEntity) : Msg
         data class ChangeUsername(val username: String) : Msg
         data class ChangeEmail(val email: String) : Msg
         data class ChangePassword(val password: String) : Msg
@@ -110,6 +112,7 @@ class SignUpStoreFactory(
 
         override fun executeIntent(intent: Intent) {
             super.executeIntent(intent)
+            val state = state()
             when (intent) {
                 is Intent.ChangeUsername -> dispatch(Msg.ChangeUsername(intent.username))
                 is Intent.ChangeEmail -> dispatch(Msg.ChangeEmail(intent.email))
@@ -122,8 +125,8 @@ class SignUpStoreFactory(
                     scope.launch {
                         dispatch(Msg.SignUpLoading)
                         try {
-                            signUpUseCase(intent.signUp)
-                            dispatch(Msg.OnSignUp(intent.signUp))
+                            sendSingUp(state)
+                            publish(Label.OnSignUp)
                             dispatch(Msg.CleanState)
                         } catch (e: ParseBackendResponseException) {
                             dispatch(Msg.SignUpError("Error while receiving data from the server"))
@@ -144,6 +147,15 @@ class SignUpStoreFactory(
                 is Intent.ChangePasswordError -> dispatch(Msg.ChangePasswordError(intent.value))
                 is Intent.ChangeUsernameError -> dispatch(Msg.ChangeUsernameError(intent.value))
             }
+        }
+
+        private suspend fun sendSingUp(state: State){
+            val signUp = SignUpEntity(
+                username = state.username,
+                email = state.email,
+                password = state.password
+            )
+            signUpUseCase(signUp)
         }
     }
 
@@ -167,10 +179,6 @@ class SignUpStoreFactory(
 
             is Msg.ChangeVisiblePassword -> {
                 copy(isVisiblePassword = msg.value)
-            }
-
-            is Msg.OnSignUp -> {
-                copy(signUpState = State.SignUpState.Success)
             }
 
             is Msg.SignUpError -> {
