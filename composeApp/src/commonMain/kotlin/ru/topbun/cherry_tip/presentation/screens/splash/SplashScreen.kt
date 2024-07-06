@@ -48,14 +48,13 @@ import ru.topbun.cherry_tip.presentation.ui.utills.getFileFromResource
 
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
-    val isAnimate = rememberSaveable { mutableStateOf(false) }
     val showModal = rememberSaveable { mutableStateOf(false) }
 
     Box(
         modifier = modifier.fillMaxSize().background(Colors.Purple)
     ) {
         Column {
-            Logo(isAnimate, showModal)
+            Logo(showModal)
             AnimatedModal(showModal.value)
         }
     }
@@ -149,13 +148,12 @@ private fun ModalText() {
 }
 
 @Composable
-private fun ColumnScope.Logo(isAnimate: MutableState<Boolean>, showModal: MutableState<Boolean>) {
+private fun ColumnScope.Logo(showModal: MutableState<Boolean>) {
     val lottie by getFileFromResource("files/anim_splash_logo.json")
     val composition by rememberLottieComposition(LottieCompositionSpec.JsonString(lottie))
     val progress by animateLottieCompositionAsState(composition)
     LaunchedEffect(progress) {
         if (progress >= 1f) {
-            isAnimate.value = true
             showModal.value = true
         }
     }
