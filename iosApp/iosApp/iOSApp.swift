@@ -12,16 +12,16 @@ struct iOSApp: App {
     @Environment(\.scenePhase)
     var scenePhase: ScenePhase
 
-    var authHolder: RootHolder { appDelegate.authHolder }
+    var rootHolder: RootHolder { appDelegate.rootHolder }
 
     var body: some Scene {
         WindowGroup {
-            RootView(authHolder.auth)
+            RootView(rootHolder.root)
                 .onChange(of: scenePhase) { newPhase in
                     switch newPhase {
-                    case .background: LifecycleRegistryExtKt.stop(authHolder.lifecycle)
-                    case .inactive: LifecycleRegistryExtKt.pause(authHolder.lifecycle)
-                    case .active: LifecycleRegistryExtKt.resume(authHolder.lifecycle)
+                    case .background: LifecycleRegistryExtKt.stop(rootHolder.lifecycle)
+                    case .inactive: LifecycleRegistryExtKt.pause(rootHolder.lifecycle)
+                    case .active: LifecycleRegistryExtKt.resume(rootHolder.lifecycle)
                     @unknown default: break
                     }
                 }
@@ -30,14 +30,14 @@ struct iOSApp: App {
 }
 
 
-class AuthHolder : ObservableObject {
+class RootHolder : ObservableObject {
     let lifecycle: LifecycleRegistry
-    let auth: AuthComponent
+    let root: RootComponent
 
     init() {
         lifecycle = LifecycleRegistryKt.LifecycleRegistry()
 
-        auth = AuthComponentImpl(
+        root = RootComponentImpl(
             componentContext: DefaultComponentContext(lifecycle: lifecycle)
         )
 
@@ -45,20 +45,20 @@ class AuthHolder : ObservableObject {
     }
 
     deinit {
-        // Destroy the auth component before it is deallocated
+        // Destroy the root component before it is deallocated
         LifecycleRegistryExtKt.destroy(lifecycle)
     }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    let authHolder: AuthHolder = AuthHolder()
+    let rootHolder: RootHolder = RootHolder()
 }
 
-struct AuthView: UIViewControllerRepresentable {
-    let auth: AuthComponent
+struct RootView: UIViewControllerRepresentable {
+    let root: RootComponent
 
     func makeUIViewController(context: Context) -> UIViewController {
-        return AuthViewControllerKt.authViewController(auth: auth)
+        return RootViewControllerKt.rootViewController(root: root)
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {

@@ -8,19 +8,19 @@ import androidx.compose.ui.Modifier
 import org.koin.compose.KoinContext
 import ru.topbun.cherry_tip.presentation.screens.auth.AuthComponent
 import ru.topbun.cherry_tip.presentation.screens.auth.AuthContent
+import ru.topbun.cherry_tip.presentation.screens.root.RootComponent
+import ru.topbun.cherry_tip.presentation.screens.root.RootContent
 import ru.topbun.cherry_tip.presentation.ui.Colors
 
 @Composable
-fun AppScreen(authComponent: AuthComponent) {
+fun AppScreen(rootComponent: RootComponent) {
     KoinContext {
         Scaffold(
             modifier = Modifier
                 .background(Colors.White)
                 .navigationBarsPadding()
         ) {
-            AuthContent(
-                component = authComponent
-            )
+            RootContent(rootComponent)
         }
     }
 }

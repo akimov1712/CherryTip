@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import org.koin.dsl.module
+import ru.topbun.cherry_tip.presentation.screens.auth.AuthComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpComponentImpl
@@ -40,6 +41,10 @@ val componentModule = module {
             storeFactory = get(),
             onSendSurvey = onSendSurvey
         )
+    }
+
+    factory { (componentContext: ComponentContext) ->
+        AuthComponentImpl(componentContext = componentContext)
     }
 
     factory {

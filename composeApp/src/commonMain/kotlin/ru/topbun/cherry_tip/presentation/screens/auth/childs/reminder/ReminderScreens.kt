@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.reminder
+package ru.topbun.cherry_tip.presentation.screens.auth.childs.reminder
 
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.reminder1
