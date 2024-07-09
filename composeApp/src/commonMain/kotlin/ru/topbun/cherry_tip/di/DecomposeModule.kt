@@ -10,6 +10,8 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpCompon
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.splash.SplashComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.splash.SplashStoreFactory
 
 val componentModule = module {
     single<StoreFactory>{ DefaultStoreFactory() }
@@ -39,10 +41,28 @@ val componentModule = module {
             onSendSurvey = onSendSurvey
         )
     }
+
+    factory {
+        (
+          componentContext: ComponentContext,
+          onAuthorization: () -> Unit,
+          onClickSignUpEmail: () -> Unit,
+          onClickLogin: () -> Unit,
+          accountInfoNotComplete: () -> Unit,
+        ) -> SplashComponentImpl(
+            componentContext = componentContext,
+            storeFactory = get(),
+            onAuthorization = onAuthorization,
+            onClickSignUpEmail = onClickSignUpEmail,
+            onClickLogin = onClickLogin,
+            accountInfoNotComplete = accountInfoNotComplete
+        )
+    }
 }
 
 val storeModule = module {
-    single<LoginStoreFactory> { LoginStoreFactory(get(), get()) }
-    single<SignUpStoreFactory> { SignUpStoreFactory(get(), get(), get()) }
+    factory<LoginStoreFactory> { LoginStoreFactory(get(), get()) }
+    factory<SignUpStoreFactory> { SignUpStoreFactory(get(), get(), get()) }
     factory<SurveyStoreFactory> { SurveyStoreFactory(get(), get(), get(),get()) }
+    factory<SplashStoreFactory> { SplashStoreFactory(get(), get(), get()) }
 }

@@ -15,6 +15,7 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyCompon
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyScreen
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.splash.SplashScreen
 
 @Composable
 fun AuthContent(
@@ -27,6 +28,7 @@ fun AuthContent(
             is AuthComponent.Child.Login -> LoginContent(instance.component)
             is AuthComponent.Child.SignUp -> SignUpContent(instance.component)
             is AuthComponent.Child.Survey -> SurveyScreen(instance.component)
+            is AuthComponent.Child.Splash -> SplashScreen(instance.component)
         }
     }
 }

@@ -1,10 +1,12 @@
 package ru.topbun.cherry_tip.presentation.screens.splash
 
+import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import io.ktor.client.network.sockets.ConnectTimeoutException
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.useCases.user.CheckAccountInfoCompleteUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.TokenIsValidUseCase
@@ -19,6 +21,7 @@ interface SplashStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data object OnSignUpEmail : Intent
         data object OnLogin : Intent
+        data object RunChecks : Intent
     }
 
     data class State(
@@ -26,6 +29,7 @@ interface SplashStore : Store<Intent, State, Label> {
     ){
         sealed interface SplashState{
             data object Initial: SplashState
+            data class Error(val message: String): SplashState
             data object NotAuth: SplashState
         }
     }
@@ -50,53 +54,40 @@ class SplashStoreFactory(
             initialState = State(
                 splashState = State.SplashState.Initial
             ),
-            bootstrapper = Bootstrapper(),
+            bootstrapper = null,
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {}
 
 
-    sealed interface Action{
-        data object OnAuth: Action
-        data object NotAuth: Action
-        data object NotAccountInfoComplete: Action
-    }
+    sealed interface Action
 
     private sealed interface Msg {
         data object NotAuth : Msg
+        data class SplashError(val message: String) : Msg
     }
 
-    inner class Bootstrapper: CoroutineBootstrapper<Action>() {
-        override fun invoke() {
-            scope.launch {
-                try {
-                    tokenIsValidUseCase()
-                    checkAccountInfoCompleteUseCase()
-                    dispatch(Action.OnAuth)
-                } catch (e: FailedExtractToken){
-                    dispatch(Action.NotAuth)
-                } catch (e: AccountInfoNotComplete){
-                    dispatch(Action.NotAccountInfoComplete)
-                }
-            }
-        }
-    }
-
-    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
-        override fun executeAction(action: Action) {
-            super.executeAction(action)
-            when(action){
-                Action.NotAccountInfoComplete -> publish(Label.AccountInfoNotComplete)
-                Action.NotAuth -> dispatch(Msg.NotAuth)
-                Action.OnAuth -> publish(Label.OnAuth)
-            }
-        }
-
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
         override fun executeIntent(intent: Intent) {
             super.executeIntent(intent)
             when(intent){
                 Intent.OnLogin -> publish(Label.OnLogin)
                 Intent.OnSignUpEmail -> publish(Label.OnSignUpEmail)
+                Intent.RunChecks -> {
+                    scope.launch {
+                        try {
+                            tokenIsValidUseCase()
+                            checkAccountInfoCompleteUseCase()
+                            publish(Label.OnAuth)
+                        } catch (e: FailedExtractToken){
+                            dispatch(Msg.NotAuth)
+                        } catch (e: AccountInfoNotComplete){
+                            publish(Label.AccountInfoNotComplete)
+                        } catch (e: ConnectTimeoutException){
+                            dispatch(Msg.SplashError("Check your internet connection"))
+                        }
+                    }
+                }
             }
         }
     }
@@ -104,6 +95,7 @@ class SplashStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg) = when (message) {
             Msg.NotAuth -> copy(splashState = State.SplashState.NotAuth)
+            is Msg.SplashError -> copy(splashState = State.SplashState.Error(message.message))
         }
     }
 }

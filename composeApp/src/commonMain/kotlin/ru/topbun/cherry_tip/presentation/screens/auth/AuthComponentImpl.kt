@@ -1,24 +1,20 @@
 package ru.topbun.cherry_tip.presentation.screens.auth
 
-import androidx.compose.ui.input.key.Key.Companion.T
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
-import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyComponentImpl
-import kotlin.math.sign
+import ru.topbun.cherry_tip.presentation.screens.splash.SplashComponentImpl
 
 class AuthComponentImpl(
     componentContext: ComponentContext
@@ -29,7 +25,7 @@ class AuthComponentImpl(
     override val stack: Value<ChildStack<*, AuthComponent.Child>> = childStack(
         source = navigation,
         serializer = Config.serializer(),
-        initialConfiguration = Config.Login,
+        initialConfiguration = Config.Splash,
         handleBackButton = true,
         childFactory = ::createChild
     )
@@ -69,6 +65,23 @@ class AuthComponentImpl(
                 }
                 AuthComponent.Child.Survey(surveyComponent)
             }
+
+            Config.Splash -> {
+                val onAuthorization = {}
+                val onClickSignUpEmail = { navigation.pushToFront(Config.SignUp) }
+                val onClickLogin = { navigation.pushToFront(Config.Login) }
+                val accountInfoNotComplete = { navigation.replaceCurrent(Config.Survey) }
+                val splashComponent: SplashComponentImpl = getKoin().get {
+                    parametersOf(
+                        componentContext,
+                        onAuthorization,
+                        onClickSignUpEmail,
+                        onClickLogin,
+                        accountInfoNotComplete,
+                    )
+                }
+                AuthComponent.Child.Splash(splashComponent)
+            }
         }
     }
 
@@ -84,6 +97,9 @@ class AuthComponentImpl(
 
         @Serializable
         data object Survey : Config
+
+        @Serializable
+        data object Splash : Config
     }
 
 

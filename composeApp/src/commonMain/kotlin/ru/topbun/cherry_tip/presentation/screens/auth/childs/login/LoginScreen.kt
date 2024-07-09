@@ -53,6 +53,7 @@ import cherrytip.composeapp.generated.resources.sign_up
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.LoginFields
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
@@ -128,14 +129,7 @@ private fun TextDontHaveAccount(
         horizontalArrangement = Arrangement.Center
     ) {
         Texts.General(stringResource(Res.string.dont_have_account))
-        Texts.Link(stringResource(Res.string.sign_up),
-            modifier = Modifier.clickable(
-                interactionSource = MutableInteractionSource(),
-                indication = null,
-            ){
-                onClickSignUp()
-            }
-        )
+        Texts.Link(stringResource(Res.string.sign_up), onClick = onClickSignUp)
     }
 }
 

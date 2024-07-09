@@ -3,6 +3,7 @@ package ru.topbun.cherry_tip.presentation.screens.splash
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -47,21 +50,24 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.presentation.ui.utills.getFileFromResource
 
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier) {
-    val showModal = rememberSaveable { mutableStateOf(false) }
-
+fun SplashScreen(
+    component: SplashComponent,
+    modifier: Modifier = Modifier
+) {
+    val state by component.state.collectAsState()
+    val showModal = state.splashState is SplashStore.State.SplashState.NotAuth
     Box(
         modifier = modifier.fillMaxSize().background(Colors.Purple)
     ) {
         Column {
-            Logo(showModal)
-            AnimatedModal(showModal.value)
+            Logo(component)
+            AnimatedModal(showModal, component)
         }
     }
 }
 
 @Composable
-private fun AnimatedModal(show: Boolean) {
+private fun AnimatedModal(show: Boolean, component: SplashComponent) {
     val targetHeight = if (show) Modifier.wrapContentHeight() else Modifier.height(0.dp)
     Column(
         modifier = Modifier
@@ -76,26 +82,26 @@ private fun AnimatedModal(show: Boolean) {
             Spacer(Modifier.height(24.dp))
             ModalText()
             Spacer(Modifier.height(20.dp))
-            ButtonList()
+            ButtonList(component)
             Spacer(Modifier.height(20.dp))
-            TextHaveAccount()
+            TextHaveAccount(component)
             Spacer(Modifier.height(20.dp))
         }
     }
 }
 
 @Composable
-private fun TextHaveAccount() {
+private fun TextHaveAccount(component: SplashComponent) {
     Row(
         horizontalArrangement = Arrangement.Center
     ) {
         Texts.General(stringResource(Res.string.have_account))
-        Texts.Link(stringResource(Res.string.login))
+        Texts.Link(stringResource(Res.string.login), onClick = { component.onLogin() })
     }
 }
 
 @Composable
-private fun ButtonList() {
+private fun ButtonList(component: SplashComponent) {
     val authItems = listOf(AuthItems.Apple, AuthItems.Facebook, AuthItems.Google, AuthItems.Email)
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -105,7 +111,12 @@ private fun ButtonList() {
                 text = stringResource(it.textRes),
                 icon = painterResource(it.iconRes)
             ) {
-
+                when(it){
+                    AuthItems.Apple -> {}
+                    AuthItems.Facebook -> {}
+                    AuthItems.Google -> {}
+                    AuthItems.Email -> { component.onSignUpEmail() }
+                }
             }
         }
     }
@@ -148,13 +159,13 @@ private fun ModalText() {
 }
 
 @Composable
-private fun ColumnScope.Logo(showModal: MutableState<Boolean>) {
+private fun ColumnScope.Logo(component: SplashComponent) {
     val lottie by getFileFromResource("files/anim_splash_logo.json")
     val composition by rememberLottieComposition(LottieCompositionSpec.JsonString(lottie))
     val progress by animateLottieCompositionAsState(composition)
     LaunchedEffect(progress) {
         if (progress >= 1f) {
-            showModal.value = true
+            component.runChecks()
         }
     }
     LottieAnimation(

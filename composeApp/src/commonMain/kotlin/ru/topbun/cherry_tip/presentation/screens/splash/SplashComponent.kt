@@ -8,5 +8,6 @@ interface SplashComponent {
 
     fun onSignUpEmail()
     fun onLogin()
+    fun runChecks()
 
 }

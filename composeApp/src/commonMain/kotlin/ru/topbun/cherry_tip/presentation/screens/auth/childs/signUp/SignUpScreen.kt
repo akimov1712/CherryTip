@@ -132,8 +132,7 @@ private fun TextHaveAccount(onClick: () -> Unit) {
         horizontalArrangement = Arrangement.Center
     ) {
         Texts.General(stringResource(Res.string.have_account))
-        Texts.Link(stringResource(Res.string.login),
-            modifier = Modifier.clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick))
+        Texts.Link(stringResource(Res.string.login), onClick = onClick)
     }
 }
 

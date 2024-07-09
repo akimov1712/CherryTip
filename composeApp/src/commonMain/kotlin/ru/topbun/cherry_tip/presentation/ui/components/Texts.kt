@@ -1,5 +1,7 @@
 package ru.topbun.cherry_tip.presentation.ui.components
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -119,6 +121,7 @@ object Texts{
     @Composable
     fun Link(
         text: String,
+        onClick: () -> Unit,
         modifier: Modifier = Modifier,
         color: Color = Colors.Purple,
         fontSize: TextUnit = 16.sp,
@@ -136,7 +139,7 @@ object Texts{
         onTextLayout: ((TextLayoutResult) -> Unit)? = null,
         style: TextStyle = LocalTextStyle.current
     ) = Text(
-        text,modifier,color,fontSize,fontStyle,fontWeight,fontFamily,letterSpacing,textDecoration,
+        text,modifier.clickable (interactionSource = MutableInteractionSource(), indication = null, onClick = onClick),color,fontSize,fontStyle,fontWeight,fontFamily,letterSpacing,textDecoration,
         textAlign,lineHeight,overflow,softWrap,maxLines,minLines,onTextLayout,style
     )
 

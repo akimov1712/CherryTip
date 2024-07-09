@@ -34,4 +34,5 @@ class SplashComponentImpl(
 
     override fun onSignUpEmail() = store.accept(SplashStore.Intent.OnSignUpEmail)
     override fun onLogin() = store.accept(SplashStore.Intent.OnLogin)
+    override fun runChecks() = store.accept(SplashStore.Intent.RunChecks)
 }

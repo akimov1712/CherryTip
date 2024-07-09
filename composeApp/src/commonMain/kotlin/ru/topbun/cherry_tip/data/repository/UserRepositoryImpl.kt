@@ -6,7 +6,9 @@ import io.ktor.client.call.body
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import ru.topbun.cherry_tip.data.mapper.toDto
+import ru.topbun.cherry_tip.data.mapper.toEntity
 import ru.topbun.cherry_tip.data.source.local.dataStore.AppSettings
+import ru.topbun.cherry_tip.data.source.network.dto.user.AccountInfoDto
 import ru.topbun.cherry_tip.data.source.network.service.UserApi
 import ru.topbun.cherry_tip.domain.entity.user.AccountInfoEntity
 import ru.topbun.cherry_tip.domain.entity.user.GoalEntity
@@ -56,7 +58,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getAccountInfo(): AccountInfoEntity = exceptionWrapper {
-        api.getAccountInfo(getToken()).body()
+        api.getAccountInfo(getToken()).body<AccountInfoDto>().toEntity()
     }
 
     override suspend fun tokenIsValid() {
