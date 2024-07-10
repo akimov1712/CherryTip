@@ -8,5 +8,6 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.go
 @Serializable
 data class GoalDto(
     @SerialName("activity") val active: ActiveType,
-    @SerialName("type") val goalType: GoalType
+    @SerialName("type") val goalType: GoalType,
+    @SerialName("calorieGoal") val calorieGoal: Int? = null,
 )

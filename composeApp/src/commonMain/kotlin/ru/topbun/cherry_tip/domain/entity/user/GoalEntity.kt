@@ -5,5 +5,6 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.go
 
 data class GoalEntity(
     val active: ActiveType,
-    val goalType: GoalType
+    val goalType: GoalType,
+    val calorieGoal: Int? = null
 )

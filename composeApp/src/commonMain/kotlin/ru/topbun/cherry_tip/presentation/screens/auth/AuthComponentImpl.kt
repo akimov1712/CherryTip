@@ -6,12 +6,15 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushToFront
+import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.reminder.ReminderComponent
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.reminder.ReminderComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.splash.SplashComponentImpl
@@ -59,7 +62,7 @@ class AuthComponentImpl(
             }
 
             Config.Survey -> {
-                val onSendSurvey = {navigation.pop()}
+                val onSendSurvey = {navigation.replaceAll(Config.Reminder)}
                 val surveyComponent: SurveyComponentImpl = getKoin().get {
                     parametersOf(componentContext, onSendSurvey)
                 }
@@ -82,6 +85,14 @@ class AuthComponentImpl(
                 }
                 AuthComponent.Child.Splash(splashComponent)
             }
+
+            Config.Reminder -> {
+                val onFinishedAuth = {}
+                val component:ReminderComponentImpl = getKoin().get{
+                    parametersOf(componentContext, onFinishedAuth)
+                }
+                AuthComponent.Child.Reminder(component)
+            }
         }
     }
 
@@ -100,6 +111,9 @@ class AuthComponentImpl(
 
         @Serializable
         data object Splash : Config
+
+        @Serializable
+        data object Reminder : Config
     }
 
 

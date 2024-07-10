@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 data class UnitsDto(
     @SerialName("weight") val weight: Int,
     @SerialName("height") val height: Int,
-    @SerialName("targetWeight") val targetWeight: Int,
+    @SerialName("targetWeight") val targetWeight: Int?,
     @SerialName("bloodGlucose") val bloodGlucose: Int?,
 )

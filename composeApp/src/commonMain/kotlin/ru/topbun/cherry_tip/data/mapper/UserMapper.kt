@@ -13,12 +13,13 @@ import ru.topbun.cherry_tip.utills.toIso8601
 
 fun GoalDto.toEntity() = GoalEntity(
     active = active,
-    goalType = goalType
+    goalType = goalType,
+    calorieGoal = calorieGoal
 )
 
 fun GoalEntity.toDto() = GoalDto(
     active = active,
-    goalType = goalType
+    goalType = goalType,
 )
 
 fun ProfileDto.toEntity() = ProfileEntity(

@@ -116,6 +116,7 @@ private fun ButtonList(component: SplashComponent) {
                     AuthItems.Facebook -> {}
                     AuthItems.Google -> {}
                     AuthItems.Email -> { component.onSignUpEmail() }
+                    else -> {}
                 }
             }
         }

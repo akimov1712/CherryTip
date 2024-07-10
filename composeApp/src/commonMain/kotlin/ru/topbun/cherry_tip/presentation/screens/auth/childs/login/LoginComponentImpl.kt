@@ -6,7 +6,6 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
 import ru.topbun.cherry_tip.utills.componentScope
 
 class LoginComponentImpl(
@@ -14,7 +13,7 @@ class LoginComponentImpl(
     private val storeFactory: LoginStoreFactory,
     private val onClickBack: () -> Unit,
     private val onClickSignUp: () -> Unit,
-    private val onLogin: () -> Unit,
+    private val onLoginFinished: () -> Unit,
 ) : LoginComponent, ComponentContext by componentContext {
 
 
@@ -28,7 +27,7 @@ class LoginComponentImpl(
                 when(it){
                     LoginStore.Label.ClickBack -> onClickBack()
                     LoginStore.Label.ClickSignUp -> onClickSignUp()
-                    LoginStore.Label.OnLogin -> onLogin()
+                    LoginStore.Label.OnLogin -> onLoginFinished()
                 }
             }
         }

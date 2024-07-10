@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -36,17 +39,19 @@ import ru.topbun.cherry_tip.presentation.ui.utills.getScreenSizeInfo
 
 
 @Composable
-fun ReminderScreen(modifier: Modifier = Modifier) {
+fun ReminderScreen(
+    component: ReminderComponent,
+    modifier: Modifier
+) {
+    val state by component.state.collectAsState()
     Box(modifier) {
-        val screens = listOf(ReminderScreens.Reminder1, ReminderScreens.Reminder2, ReminderScreens.Reminder3)
-        var screenIndexSelected = rememberSaveable{ mutableStateOf(0) }
-        ReminderImage(screens[screenIndexSelected.value])
-        ReminderCard(screens, screenIndexSelected)
+        ReminderImage(state.screens[state.indexSelected])
+        ReminderCard(component, state)
     }
 }
 
 @Composable
-private fun ReminderCard(screens: List<ReminderScreens>, indexSelected: MutableState<Int>) {
+private fun ReminderCard(component: ReminderComponent, state: ReminderStore.State) {
     Column {
         Spacer(Modifier.weight(3f))
         Card(
@@ -61,16 +66,19 @@ private fun ReminderCard(screens: List<ReminderScreens>, indexSelected: MutableS
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                val isLastScreen = screens.last() == screens[indexSelected.value]
-                Texts.Title(stringResource(screens[indexSelected.value].titleRes), fontSize = 30.sp)
+                val isLastScreen = state.screens.last() == state.screens[state.indexSelected]
+                Texts.Title(stringResource(state.screens[state.indexSelected].titleRes), fontSize = 30.sp)
                 Spacer(Modifier.height(20.dp))
-                Texts.General(stringResource(screens[indexSelected.value].descrRes))
+                Texts.General(stringResource(state.screens[state.indexSelected].descrRes))
                 Spacer(Modifier.weight(1f))
-                IndexState(screens.size, indexSelected.value){indexSelected.value = it}
+                IndexState(state.screens.size, state.indexSelected){component.setIndexSelected(it)}
                 Spacer(Modifier.height(20.dp))
                 Buttons.Gray(
                     modifier = Modifier.fillMaxWidth().height(60.dp),
-                    onClick = { if (!isLastScreen) indexSelected.value += 1 }
+                    onClick = {
+                        if (!isLastScreen) component.setIndexSelected(state.indexSelected + 1)
+                        else component.finishedAuth()
+                    }
                 ) {
                     val text = if(isLastScreen) "Get Started" else "Next"
                     Texts.Button(text, fontSize = 16.sp, color = Colors.Purple)

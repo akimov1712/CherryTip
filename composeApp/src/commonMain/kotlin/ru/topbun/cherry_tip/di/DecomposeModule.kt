@@ -7,6 +7,8 @@ import org.koin.dsl.module
 import ru.topbun.cherry_tip.presentation.screens.auth.AuthComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.reminder.ReminderComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.auth.childs.reminder.ReminderStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyComponentImpl
@@ -23,7 +25,7 @@ val componentModule = module {
             storeFactory = get(),
             onClickBack = onClickBack,
             onClickSignUp = onClickSignUp,
-            onLogin = onLogin
+            onLoginFinished = onLogin
         )
     }
     factory { (componentContext: ComponentContext, onClickBack: () -> Unit, onLogin: () -> Unit, onSignUp: () -> Unit) ->
@@ -63,6 +65,10 @@ val componentModule = module {
             accountInfoNotComplete = accountInfoNotComplete
         )
     }
+
+    factory { (componentContext: ComponentContext, onFinishedAuth: () -> Unit) ->
+        ReminderComponentImpl(componentContext = componentContext, storeFactory = get(), onFinishedAuth = onFinishedAuth)
+    }
 }
 
 val storeModule = module {
@@ -70,4 +76,5 @@ val storeModule = module {
     factory<SignUpStoreFactory> { SignUpStoreFactory(get(), get(), get()) }
     factory<SurveyStoreFactory> { SurveyStoreFactory(get(), get(), get(),get()) }
     factory<SplashStoreFactory> { SplashStoreFactory(get(), get(), get()) }
+    factory<ReminderStoreFactory> { ReminderStoreFactory(get()) }
 }
