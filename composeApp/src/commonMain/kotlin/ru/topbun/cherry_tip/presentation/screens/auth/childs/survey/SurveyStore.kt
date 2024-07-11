@@ -21,8 +21,7 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.ge
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.fragments.goal.GoalType
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.ConnectException
-import ru.topbun.cherry_tip.utills.FailedExtractToken
-import ru.topbun.cherry_tip.utills.Log
+import ru.topbun.cherry_tip.utills.FailedExtractTokenException
 import ru.topbun.cherry_tip.utills.ParseBackendResponseException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
 import ru.topbun.cherry_tip.utills.ServerException
@@ -149,7 +148,7 @@ class SurveyStoreFactory(
                             dispatch(Msg.SurveyError(e.errorText))
                         } catch (e: ConnectException) {
                             dispatch(Msg.SurveyError("A Failed to connect to the server, check your internet connection"))
-                        } catch (e: FailedExtractToken) {
+                        } catch (e: FailedExtractTokenException) {
                             dispatch(Msg.SurveyError("Access token not available"))
                         }
                     }

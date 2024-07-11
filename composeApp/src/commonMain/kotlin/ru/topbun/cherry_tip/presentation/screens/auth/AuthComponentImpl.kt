@@ -20,7 +20,8 @@ import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyCompon
 import ru.topbun.cherry_tip.presentation.screens.splash.SplashComponentImpl
 
 class AuthComponentImpl(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    private val onAuthFinished: () -> Unit
 ): AuthComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -40,9 +41,10 @@ class AuthComponentImpl(
             Config.Login -> {
                 val onClickBack = { navigation.pop()}
                 val onClickSignUp = { navigation.pushToFront(Config.SignUp) }
-                val onLogin = {  }
+                val onAccountInfoNotComplete = { navigation.replaceAll(Config.Survey) }
+                val onLogin = { navigation.replaceAll(Config.Reminder) }
                 val loginComponent: LoginComponentImpl = getKoin().get {
-                    parametersOf(componentContext, onClickBack, onClickSignUp, onLogin)
+                    parametersOf(componentContext, onClickBack, onClickSignUp, onLogin, onAccountInfoNotComplete)
                 }
                 AuthComponent.Child.Login(
                     loginComponent
@@ -70,7 +72,7 @@ class AuthComponentImpl(
             }
 
             Config.Splash -> {
-                val onAuthorization = {}
+                val onAuthorization = { onAuthFinished() }
                 val onClickSignUpEmail = { navigation.pushToFront(Config.SignUp) }
                 val onClickLogin = { navigation.pushToFront(Config.Login) }
                 val accountInfoNotComplete = { navigation.replaceCurrent(Config.Survey) }
@@ -87,7 +89,7 @@ class AuthComponentImpl(
             }
 
             Config.Reminder -> {
-                val onFinishedAuth = {}
+                val onFinishedAuth = { onAuthFinished() }
                 val component:ReminderComponentImpl = getKoin().get{
                     parametersOf(componentContext, onFinishedAuth)
                 }

@@ -21,7 +21,7 @@ class ReminderComponentImpl(
         componentScope.launch {
             store.labels.collect{
                 when(it){
-                    ReminderStore.Label.FinishedStarted -> onFinishedAuth
+                    ReminderStore.Label.FinishedStarted -> onFinishedAuth()
                 }
             }
         }

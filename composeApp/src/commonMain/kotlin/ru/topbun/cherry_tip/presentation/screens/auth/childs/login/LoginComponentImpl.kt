@@ -14,6 +14,7 @@ class LoginComponentImpl(
     private val onClickBack: () -> Unit,
     private val onClickSignUp: () -> Unit,
     private val onLoginFinished: () -> Unit,
+    private val accountInfoNotComplete: () -> Unit,
 ) : LoginComponent, ComponentContext by componentContext {
 
 
@@ -28,6 +29,7 @@ class LoginComponentImpl(
                     LoginStore.Label.ClickBack -> onClickBack()
                     LoginStore.Label.ClickSignUp -> onClickSignUp()
                     LoginStore.Label.OnLogin -> onLoginFinished()
+                    LoginStore.Label.AccountInfoNotComplete -> accountInfoNotComplete()
                 }
             }
         }

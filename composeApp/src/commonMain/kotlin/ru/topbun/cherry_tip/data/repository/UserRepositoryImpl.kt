@@ -15,8 +15,8 @@ import ru.topbun.cherry_tip.domain.entity.user.GoalEntity
 import ru.topbun.cherry_tip.domain.entity.user.ProfileEntity
 import ru.topbun.cherry_tip.domain.entity.user.UnitsEntity
 import ru.topbun.cherry_tip.domain.repository.UserRepository
-import ru.topbun.cherry_tip.utills.AccountInfoNotComplete
-import ru.topbun.cherry_tip.utills.FailedExtractToken
+import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
+import ru.topbun.cherry_tip.utills.FailedExtractTokenException
 import ru.topbun.cherry_tip.utills.codeResultWrapper
 import ru.topbun.cherry_tip.utills.exceptionWrapper
 
@@ -30,7 +30,7 @@ class UserRepositoryImpl(
             .map { it[AppSettings.KEY_TOKEN] }
             .firstOrNull()
 
-        return token ?: throw FailedExtractToken()
+        return token ?: throw FailedExtractTokenException()
     }
 
     override suspend fun createProfile(profile: ProfileEntity): Unit = exceptionWrapper{
@@ -62,12 +62,12 @@ class UserRepositoryImpl(
     }
 
     override suspend fun tokenIsValid() {
-        if (getToken().isBlank()) throw FailedExtractToken()
+        if (getToken().isBlank()) throw FailedExtractTokenException()
     }
 
     override suspend fun checkAccountInfoComplete() {
         getAccountInfo().apply {
-            if (goal == null || units == null || profile == null) throw AccountInfoNotComplete()
+            if (goal == null || units == null || profile == null) throw AccountInfoNotCompleteException()
         }
     }
 }

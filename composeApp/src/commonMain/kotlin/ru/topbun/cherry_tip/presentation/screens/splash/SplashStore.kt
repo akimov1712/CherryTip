@@ -1,10 +1,8 @@
 package ru.topbun.cherry_tip.presentation.screens.splash
 
-import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.ktor.client.network.sockets.ConnectTimeoutException
 import kotlinx.coroutines.launch
@@ -13,8 +11,8 @@ import ru.topbun.cherry_tip.domain.useCases.user.TokenIsValidUseCase
 import ru.topbun.cherry_tip.presentation.screens.splash.SplashStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.splash.SplashStore.Label
 import ru.topbun.cherry_tip.presentation.screens.splash.SplashStore.State
-import ru.topbun.cherry_tip.utills.AccountInfoNotComplete
-import ru.topbun.cherry_tip.utills.FailedExtractToken
+import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
+import ru.topbun.cherry_tip.utills.FailedExtractTokenException
 
 interface SplashStore : Store<Intent, State, Label> {
 
@@ -79,9 +77,9 @@ class SplashStoreFactory(
                             tokenIsValidUseCase()
                             checkAccountInfoCompleteUseCase()
                             publish(Label.OnAuth)
-                        } catch (e: FailedExtractToken){
+                        } catch (e: FailedExtractTokenException){
                             dispatch(Msg.NotAuth)
-                        } catch (e: AccountInfoNotComplete){
+                        } catch (e: AccountInfoNotCompleteException){
                             publish(Label.AccountInfoNotComplete)
                         } catch (e: ConnectTimeoutException){
                             dispatch(Msg.SplashError("Check your internet connection"))

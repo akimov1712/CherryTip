@@ -13,4 +13,5 @@ interface LoginComponent {
     fun changeEmail(email: String)
     fun changePassword(password: String)
     fun changeVisiblePassword(value: Boolean)
+
 }

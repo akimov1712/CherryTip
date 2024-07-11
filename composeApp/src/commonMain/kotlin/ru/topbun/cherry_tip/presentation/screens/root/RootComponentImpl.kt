@@ -3,7 +3,9 @@ package ru.topbun.cherry_tip.presentation.screens.root
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.koin.mp.KoinPlatform.getKoin
@@ -31,7 +33,14 @@ class RootComponentImpl(
     ): RootComponent.Child {
         return when(config){
             Config.Auth -> {
-                RootComponent.Child.Auth( getKoin().get<AuthComponentImpl> { parametersOf(componentContext) })
+                val onAuthFinished = { navigation.replaceAll(Config.Tabs) }
+                RootComponent.Child.Auth( getKoin().get<AuthComponentImpl> {
+                    parametersOf(componentContext, onAuthFinished)
+                })
+            }
+
+            Config.Tabs -> {
+                RootComponent.Child.Tabs
             }
         }
     }
@@ -41,6 +50,9 @@ class RootComponentImpl(
 
         @Serializable
         data object Auth: Config
+
+        @Serializable
+        data object Tabs: Config
 
     }
 

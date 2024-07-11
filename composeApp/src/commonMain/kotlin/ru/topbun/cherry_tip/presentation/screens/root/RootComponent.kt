@@ -10,6 +10,7 @@ interface RootComponent {
 
     sealed interface Child{
         data class Auth(val component: AuthComponent): Child
+        data object Tabs: Child
     }
 
 }

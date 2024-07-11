@@ -1,8 +1,16 @@
 package ru.topbun.cherry_tip.presentation.screens.auth
 
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation
+import com.arkivanov.decompose.extensions.compose.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.stack.animation.scale
+import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import org.koin.compose.getKoin
 import ru.topbun.cherry_tip.domain.repository.UserRepository
@@ -23,7 +31,16 @@ fun AuthContent(
     component: AuthComponent,
 ) {
     Children(
-        stack = component.stack
+        stack = component.stack,
+        animation = stackAnimation { child ->
+            when(child.instance){
+                is AuthComponent.Child.Login -> fade() + scale(frontFactor = 1.10f)
+                is AuthComponent.Child.SignUp -> fade() + scale(frontFactor = 1.10f)
+                is AuthComponent.Child.Survey -> fade() + scale(frontFactor = 1.10f)
+                is AuthComponent.Child.Splash -> null
+                is AuthComponent.Child.Reminder -> fade() + scale(frontFactor = 1.10f)
+            }
+        }
     ){
         when(val instance = it.instance){
             is AuthComponent.Child.Login -> LoginContent(instance.component)

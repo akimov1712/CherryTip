@@ -8,5 +8,5 @@ class ClientException(val errorText: String) : AppException()
 class ServerException(val errorText: String) : AppException()
 class ConnectException() : AppException()
 
-class FailedExtractToken : AppException()
-class AccountInfoNotComplete : AppException()
+class FailedExtractTokenException : AppException()
+class AccountInfoNotCompleteException : AppException()

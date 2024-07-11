@@ -7,10 +7,13 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
 import ru.topbun.cherry_tip.domain.useCases.auth.LoginUseCase
+import ru.topbun.cherry_tip.domain.useCases.user.CheckAccountInfoCompleteUseCase
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.Label
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStore.State
 import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpStore
+import ru.topbun.cherry_tip.presentation.screens.splash.SplashStore
+import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.ConnectException
 import ru.topbun.cherry_tip.utills.ParseBackendResponseException
@@ -50,13 +53,15 @@ interface LoginStore: Store<Intent, State, Label> {
         data object ClickBack: Label
         data object ClickSignUp: Label
         data object OnLogin: Label
+        data object AccountInfoNotComplete : Label
     }
 
 }
 
 class LoginStoreFactory(
     private val storeFactory: StoreFactory,
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val checkAccountInfoCompleteUseCase: CheckAccountInfoCompleteUseCase
 ){
 
     val store: Store<Intent, State, Label> = storeFactory.create(
@@ -107,6 +112,7 @@ class LoginStoreFactory(
                         dispatch(Msg.LoginLoading)
                         try {
                             sendLogin(state)
+                            checkAccountInfoCompleteUseCase()
                             publish(Label.OnLogin)
                             dispatch(Msg.OnLogin)
                         } catch (e: ParseBackendResponseException) {
@@ -119,6 +125,8 @@ class LoginStoreFactory(
                             dispatch(Msg.LoginError(e.errorText))
                         } catch (e: ConnectException) {
                             dispatch(Msg.LoginError("A Failed to connect to the server, check your internet connection"))
+                        } catch (e: AccountInfoNotCompleteException){
+                            publish(Label.AccountInfoNotComplete)
                         }
                     }
                 }
