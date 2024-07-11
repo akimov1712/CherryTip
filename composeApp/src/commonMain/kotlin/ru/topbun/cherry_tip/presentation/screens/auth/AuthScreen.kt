@@ -3,6 +3,7 @@ package ru.topbun.cherry_tip.presentation.screens.auth
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.pointer.PointerEventType.Companion.Scroll
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation

@@ -2,6 +2,11 @@ package ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,8 +19,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -72,17 +79,18 @@ fun SignUpContent(
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val state by component.state.collectAsState()
-    var errorText by rememberSaveable{ mutableStateOf<String?>(null) }
-    LaunchedEffect(state.signUpState){
-        errorText = when(val loginState = state.signUpState){
+    var errorText by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(state.signUpState) {
+        errorText = when (val loginState = state.signUpState) {
             is SignUpStore.State.SignUpState.Error -> loginState.errorText
             else -> null
         }
     }
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(Colors.White)
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp)
     ) {
         Spacer(Modifier.height(20.dp))
@@ -104,16 +112,17 @@ fun SignUpContent(
         ButtonSignUp(
             isValid = isValidSignUp(state),
             isLoading = state.signUpState == SignUpStore.State.SignUpState.Loading
-        ){ component.onSignUp()}
+        ) { component.onSignUp() }
         Spacer(Modifier.height(40.dp))
         SeparateText()
         Spacer(Modifier.height(20.dp))
         AuthMethods()
-        Spacer(Modifier.weight(1f))
-        TextHaveAccount{ component.clickLogin() }
+        Spacer(Modifier.height(40.dp))
+        TextHaveAccount { component.clickLogin() }
         Spacer(Modifier.height(20.dp))
     }
 }
+
 
 private fun isValidSignUp(state: SignUpStore.State) =
     !state.usernameIsError &&

@@ -83,7 +83,6 @@ private fun ReminderCard(component: ReminderComponent, state: ReminderStore.Stat
                     val text = if(isLastScreen) "Get Started" else "Next"
                     Texts.Button(text, fontSize = 16.sp, color = Colors.Purple)
                 }
-                Spacer(Modifier.height(42.dp))
             }
         }
     }
