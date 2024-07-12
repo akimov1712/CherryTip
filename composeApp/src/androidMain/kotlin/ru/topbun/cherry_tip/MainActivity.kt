@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.arkivanov.decompose.defaultComponentContext
-import ru.topbun.cherry_tip.presentation.screens.auth.AuthComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.RootComponentImpl
 
 class MainActivity : ComponentActivity() {

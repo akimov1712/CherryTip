@@ -4,17 +4,17 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import org.koin.dsl.module
-import ru.topbun.cherry_tip.presentation.screens.auth.AuthComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.login.LoginStoreFactory
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.reminder.ReminderComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.reminder.ReminderStoreFactory
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.signUp.SignUpStoreFactory
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.auth.childs.survey.SurveyStoreFactory
-import ru.topbun.cherry_tip.presentation.screens.splash.SplashComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.splash.SplashStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashStoreFactory
 
 val componentModule = module {
     single<StoreFactory>{ DefaultStoreFactory() }

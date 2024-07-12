@@ -95,6 +95,30 @@ object Texts{
     )
 
     @Composable
+    fun Tips(
+        text: String,
+        modifier: Modifier = Modifier,
+        color: Color = Colors.Gray,
+        fontSize: TextUnit = 14.sp,
+        fontStyle: FontStyle? = null,
+        fontWeight: FontWeight? = null,
+        fontFamily: FontFamily? = Fonts.hovesRegular,
+        letterSpacing: TextUnit = TextUnit.Unspecified,
+        textDecoration: TextDecoration? = null,
+        textAlign: TextAlign? = TextAlign.Center,
+        lineHeight: TextUnit = TextUnit.Unspecified,
+        overflow: TextOverflow = TextOverflow.Clip,
+        softWrap: Boolean = true,
+        maxLines: Int = Int.MAX_VALUE,
+        minLines: Int = 1,
+        onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+        style: TextStyle = LocalTextStyle.current
+    ) = Text(
+        text,modifier,color,fontSize,fontStyle,fontWeight,fontFamily,letterSpacing,textDecoration,
+        textAlign,lineHeight,overflow,softWrap,maxLines,minLines,onTextLayout,style
+    )
+
+    @Composable
     fun Button(
         text: String,
         modifier: Modifier = Modifier,
