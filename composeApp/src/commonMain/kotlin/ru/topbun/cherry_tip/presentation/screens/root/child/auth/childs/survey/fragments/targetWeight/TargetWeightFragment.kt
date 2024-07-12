@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.what_your_target_weight
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyStore
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.FragmentsComponents
 
 @Composable

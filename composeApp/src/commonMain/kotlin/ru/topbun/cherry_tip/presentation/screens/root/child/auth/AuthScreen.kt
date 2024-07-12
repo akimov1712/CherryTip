@@ -1,30 +1,15 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.auth
 
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.input.pointer.PointerEventType.Companion.Scroll
-import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.scale
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.arkivanov.mvikotlin.core.store.StoreFactory
-import org.koin.compose.getKoin
-import ru.topbun.cherry_tip.domain.repository.UserRepository
-import ru.topbun.cherry_tip.domain.useCases.user.CreateGoalUseCase
-import ru.topbun.cherry_tip.domain.useCases.user.CreateProfileUseCase
-import ru.topbun.cherry_tip.domain.useCases.user.CreateUnitsUseCase
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginContent
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpContent
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponent
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyScreen
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashScreen
 
 @Composable

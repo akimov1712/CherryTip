@@ -11,8 +11,6 @@ import ru.topbun.cherry_tip.domain.useCases.user.CheckAccountInfoCompleteUseCase
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginStore.Label
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginStore.State
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpStore
-import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashStore
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.ConnectException

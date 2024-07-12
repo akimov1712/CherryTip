@@ -3,7 +3,6 @@ package ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminde
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderStore.Label

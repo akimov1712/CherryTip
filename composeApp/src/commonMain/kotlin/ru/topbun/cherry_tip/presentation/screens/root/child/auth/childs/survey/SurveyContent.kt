@@ -9,18 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,14 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.step
-import io.ktor.util.date.GMTDate
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.active.ActiveFragmentContent
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.active.ActiveType
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.age.AgeFragmentContent
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.gender.Gender
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.gender.GenderFragmentContent
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.height.HeightFragmentContent
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.name.NameFragmentContent
@@ -44,7 +35,6 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.f
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
-import ru.topbun.cherry_tip.utills.Log
 
 @Composable
 fun SurveyScreen(

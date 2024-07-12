@@ -1,19 +1,11 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.FlingBehavior
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -65,7 +57,6 @@ import cherrytip.composeapp.generated.resources.username
 import cherrytip.composeapp.generated.resources.username_error
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields

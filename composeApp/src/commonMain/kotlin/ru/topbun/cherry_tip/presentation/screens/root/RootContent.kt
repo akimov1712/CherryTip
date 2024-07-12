@@ -9,7 +9,6 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthContent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainContent
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsScreen
 
 @Composable
 fun RootContent(

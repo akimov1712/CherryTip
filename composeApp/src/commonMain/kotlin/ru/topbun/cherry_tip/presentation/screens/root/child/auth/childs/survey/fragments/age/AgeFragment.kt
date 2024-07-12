@@ -19,7 +19,6 @@ import cherrytip.composeapp.generated.resources.how_old_are_you
 import dev.darkokoa.datetimewheelpicker.WheelDatePicker
 import dev.darkokoa.datetimewheelpicker.core.WheelPickerDefaults
 import io.ktor.util.date.GMTDate
-import io.ktor.util.date.getTimeMillis
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.FragmentsComponents

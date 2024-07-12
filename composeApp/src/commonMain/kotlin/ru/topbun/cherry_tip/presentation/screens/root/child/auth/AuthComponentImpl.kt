@@ -13,7 +13,6 @@ import kotlinx.serialization.Serializable
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl

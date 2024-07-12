@@ -7,8 +7,8 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
-import org.koin.mp.KoinPlatform.getKoin
 import org.koin.core.parameter.parametersOf
+import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthComponentImpl
 
 class RootComponentImpl(

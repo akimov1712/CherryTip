@@ -2,8 +2,8 @@ package ru.topbun.cherry_tip.domain.repository
 
 import ru.topbun.cherry_tip.domain.entity.user.AccountInfoEntity
 import ru.topbun.cherry_tip.domain.entity.user.GoalEntity
-import ru.topbun.cherry_tip.domain.entity.user.UnitsEntity
 import ru.topbun.cherry_tip.domain.entity.user.ProfileEntity
+import ru.topbun.cherry_tip.domain.entity.user.UnitsEntity
 
 interface UserRepository {
 

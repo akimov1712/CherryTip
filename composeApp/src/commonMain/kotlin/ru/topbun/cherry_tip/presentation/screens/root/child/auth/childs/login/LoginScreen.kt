@@ -1,8 +1,6 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,8 +50,6 @@ import cherrytip.composeapp.generated.resources.password
 import cherrytip.composeapp.generated.resources.sign_up
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.LoginFields
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
