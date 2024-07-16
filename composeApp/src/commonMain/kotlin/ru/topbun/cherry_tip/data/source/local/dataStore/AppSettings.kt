@@ -25,5 +25,6 @@ object AppSettings {
 
 
     val KEY_TOKEN = stringPreferencesKey(name = "token")
+    val COUNT_GLASS_TOKEN = stringPreferencesKey(name = "count_glass")
 
 }
