@@ -19,13 +19,13 @@ fun RootContent(
         animation = stackAnimation { child ->
             when(child.instance){
                 is RootComponent.Child.Auth -> fade(tween(300)) + slide()
-                RootComponent.Child.Main -> fade(tween(300)) + slide()
+                is RootComponent.Child.Main -> fade(tween(300)) + slide()
             }
         }
     ){
         when(val instance = it.instance){
             is RootComponent.Child.Auth -> AuthContent(instance.component)
-            RootComponent.Child.Main -> MainContent()
+            is RootComponent.Child.Main -> MainContent(instance.componentContext)
         }
     }
 }

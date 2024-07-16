@@ -3,6 +3,7 @@ package ru.topbun.cherry_tip.di
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import org.koin.core.module.Module
 import org.koin.dsl.module
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginComponentImpl
@@ -13,12 +14,76 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.S
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashStoreFactory
 
-val componentModule = module {
+val decomposeModule = module {
     single<StoreFactory>{ DefaultStoreFactory() }
+    splashModule()
+    authModule()
+    loginModule()
+    signUpModule()
+    reminderModule()
+    surveyModule()
+    homeModule()
+}
 
+private fun Module.homeModule(){
+    factory<HomeStoreFactory> { HomeStoreFactory(get(), get(), get()) }
+    factory { (componentContext: ComponentContext) ->
+        HomeComponentImpl(componentContext = componentContext, storeFactory = get(),)
+    }
+}
+
+
+private fun Module.reminderModule(){
+    factory<ReminderStoreFactory> { ReminderStoreFactory(get()) }
+    factory { (componentContext: ComponentContext, onFinishedAuth: () -> Unit) ->
+        ReminderComponentImpl(componentContext = componentContext, storeFactory = get(), onFinishedAuth = onFinishedAuth)
+    }
+}
+
+private fun Module.splashModule(){
+    factory<SplashStoreFactory> { SplashStoreFactory(get(), get(), get()) }
+    factory {
+            (
+                componentContext: ComponentContext,
+                onAuthorization: () -> Unit,
+                onClickSignUpEmail: () -> Unit,
+                onClickLogin: () -> Unit,
+                accountInfoNotComplete: () -> Unit,
+            ) -> SplashComponentImpl(
+        componentContext = componentContext,
+        storeFactory = get(),
+        onAuthorization = onAuthorization,
+        onClickSignUpEmail = onClickSignUpEmail,
+        onClickLogin = onClickLogin,
+        accountInfoNotComplete = accountInfoNotComplete
+    )
+    }
+}
+
+private fun Module.authModule(){
+    factory { (componentContext: ComponentContext, onAuthFinished: () -> Unit) ->
+        AuthComponentImpl(componentContext = componentContext, onAuthFinished)
+    }
+}
+
+private fun Module.surveyModule(){
+    factory<SurveyStoreFactory> { SurveyStoreFactory(get(), get(), get(),get()) }
+    factory { (componentContext: ComponentContext, onSendSurvey: () -> Unit) ->
+        SurveyComponentImpl(
+            componentContext = componentContext,
+            storeFactory = get(),
+            onSendSurvey = onSendSurvey
+        )
+    }
+}
+
+private fun Module.loginModule(){
+    factory<LoginStoreFactory> { LoginStoreFactory(get(), get(), get() ) }
     factory { (componentContext: ComponentContext, onClickBack: () -> Unit, onClickSignUp: () -> Unit,
                   onLogin: () -> Unit, accountInfoNotComplete: () -> Unit) ->
         LoginComponentImpl(
@@ -30,6 +95,10 @@ val componentModule = module {
             accountInfoNotComplete = accountInfoNotComplete
         )
     }
+}
+
+private fun Module.signUpModule(){
+    factory<SignUpStoreFactory> { SignUpStoreFactory(get(), get(), get()) }
     factory { (componentContext: ComponentContext, onClickBack: () -> Unit, onLogin: () -> Unit, onSignUp: () -> Unit) ->
         SignUpComponentImpl(
             componentContext = componentContext,
@@ -39,44 +108,4 @@ val componentModule = module {
             signUp = onSignUp
         )
     }
-    factory { (componentContext: ComponentContext, onSendSurvey: () -> Unit) ->
-        SurveyComponentImpl(
-            componentContext = componentContext,
-            storeFactory = get(),
-            onSendSurvey = onSendSurvey
-        )
-    }
-
-    factory { (componentContext: ComponentContext, onAuthFinished: () -> Unit) ->
-        AuthComponentImpl(componentContext = componentContext, onAuthFinished)
-    }
-
-    factory {
-        (
-          componentContext: ComponentContext,
-          onAuthorization: () -> Unit,
-          onClickSignUpEmail: () -> Unit,
-          onClickLogin: () -> Unit,
-          accountInfoNotComplete: () -> Unit,
-        ) -> SplashComponentImpl(
-            componentContext = componentContext,
-            storeFactory = get(),
-            onAuthorization = onAuthorization,
-            onClickSignUpEmail = onClickSignUpEmail,
-            onClickLogin = onClickLogin,
-            accountInfoNotComplete = accountInfoNotComplete
-        )
-    }
-
-    factory { (componentContext: ComponentContext, onFinishedAuth: () -> Unit) ->
-        ReminderComponentImpl(componentContext = componentContext, storeFactory = get(), onFinishedAuth = onFinishedAuth)
-    }
-}
-
-val storeModule = module {
-    factory<LoginStoreFactory> { LoginStoreFactory(get(), get(), get() ) }
-    factory<SignUpStoreFactory> { SignUpStoreFactory(get(), get(), get()) }
-    factory<SurveyStoreFactory> { SurveyStoreFactory(get(), get(), get(),get()) }
-    factory<SplashStoreFactory> { SplashStoreFactory(get(), get(), get()) }
-    factory<ReminderStoreFactory> { ReminderStoreFactory(get()) }
 }

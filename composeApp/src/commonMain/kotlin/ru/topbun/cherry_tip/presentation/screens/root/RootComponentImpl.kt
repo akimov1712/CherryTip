@@ -38,7 +38,7 @@ class RootComponentImpl(
             }
 
             Config.Main -> {
-                RootComponent.Child.Main
+                RootComponent.Child.Main(componentContext)
             }
         }
     }

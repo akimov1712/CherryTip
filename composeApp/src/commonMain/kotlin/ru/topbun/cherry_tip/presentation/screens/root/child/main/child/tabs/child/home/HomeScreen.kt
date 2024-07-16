@@ -32,6 +32,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,7 +71,10 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
-fun HomeContent(modifier: Modifier = Modifier.statusBarsPadding()) {
+fun HomeContent(
+    component: HomeComponent,
+    modifier: Modifier = Modifier.statusBarsPadding()
+) {
     Column(
         modifier = modifier
             .padding(vertical = 24.dp),
@@ -77,19 +83,16 @@ fun HomeContent(modifier: Modifier = Modifier.statusBarsPadding()) {
         Spacer(Modifier.height(20.dp))
         Challenge()
         Spacer(Modifier.height(20.dp))
-        Glass(
-            GlassEntity(10, 18)
-        ){  }
+        Glass(component){ component.addDrinkGlass() }
     }
 }
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-private fun Glass(glass: GlassEntity, onClickAdd: () -> Unit) {
+private fun Glass(component: HomeComponent, onClickAdd: () -> Unit) {
     val scope = rememberCoroutineScope()
-    val firstPageIndex = glass.countDrinkGlass / 5
-    var consumption = glass.toConsumption()
-    GlassTitle(glass)
+    val state by component.state.collectAsState()
+    GlassTitle(state)
     Spacer(Modifier.height(16.dp))
     Column(
         modifier = Modifier
@@ -100,19 +103,19 @@ private fun Glass(glass: GlassEntity, onClickAdd: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val lazyListState = rememberLazyListState(firstPageIndex)
+        val lazyListState = rememberLazyListState(state.firstPageIndex)
         LazyRow(
             state = lazyListState,
             modifier = Modifier
                 .fillMaxWidth(),
             flingBehavior = rememberSnapFlingBehavior(lazyListState)
         ) {
-            items(items = consumption.chunked(5)) {
+            items(items = state.consumption.chunked(5)) {
                 pageGlasses(it, onClickAdd)
             }
         }
         IndicatorPages(
-            countPages = glass.countNeededGlass / 5 + 1,
+            countPages = state.countPages,
             indexSelected = lazyListState.firstVisibleItemIndex,
         ){
             scope.launch { lazyListState.animateScrollToItem(it) }
@@ -147,16 +150,15 @@ private fun WarningDontForgetDrink() {
 }
 
 @Composable
-private fun GlassTitle(glasses: GlassEntity) {
+private fun GlassTitle(state: HomeStore.State) {
     Row(
         modifier = Modifier.padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val mlConsumed = glasses.countDrinkGlass * 250 / 1000f
-        val mlTotal = glasses.countNeededGlass * 250 / 1000f
+
         Texts.Title(stringResource(Res.string.water_consumption), textAlign = TextAlign.Start)
         Spacer(Modifier.weight(1f))
-        Texts.Option("$mlConsumed / $mlTotal", fontSize = 16.sp, color = Colors.Black)
+        Texts.Option("${state.mlConsumed} / ${state.mlTotal}", fontSize = 16.sp, color = Colors.Black)
     }
 }
 
