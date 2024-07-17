@@ -5,7 +5,9 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.glass.GlassEntity
 import ru.topbun.cherry_tip.domain.useCases.glass.AddDrinkGlassUseCase
@@ -80,6 +82,7 @@ class HomeStoreFactory(
                             countPages = it.countNeededGlass / 5 + 1
                         )
                     )
+                    Napier.d((it.countDrinkGlass / 5).toString(), tag = "glassFlow")
                 }
             }
         }

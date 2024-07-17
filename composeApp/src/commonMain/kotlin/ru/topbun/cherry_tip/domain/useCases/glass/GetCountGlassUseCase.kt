@@ -6,6 +6,6 @@ class GetCountGlassUseCase(
     private val repository: GlassRepository
 ) {
 
-    suspend operator fun invoke() = repository.getCountGlass()
+    suspend operator fun invoke() = repository.countGlassFlow
 
 }

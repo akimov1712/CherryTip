@@ -32,9 +32,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -104,6 +107,7 @@ private fun Glass(component: HomeComponent, onClickAdd: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val lazyListState = rememberLazyListState(state.firstPageIndex)
+        LaunchedEffect(state.firstPageIndex){ lazyListState.animateScrollToItem(state.firstPageIndex) }
         LazyRow(
             state = lazyListState,
             modifier = Modifier

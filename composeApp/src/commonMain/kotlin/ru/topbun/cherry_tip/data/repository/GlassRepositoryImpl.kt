@@ -3,12 +3,18 @@ package ru.topbun.cherry_tip.data.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import io.github.aakira.napier.Napier
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.data.source.local.dataStore.AppSettings
 import ru.topbun.cherry_tip.domain.entity.glass.GlassEntity
 import ru.topbun.cherry_tip.domain.repository.GlassRepository
@@ -23,17 +29,16 @@ class GlassRepositoryImpl(
     private val countGlass = dataStore.data.
         map { it[AppSettings.COUNT_GLASS_TOKEN] }
 
-    private val glassFlow = MutableSharedFlow<GlassEntity>(1, 1)
 
-    override suspend fun getCountGlass(): Flow<GlassEntity> {
+    override val countGlassFlow = flow {
         val weight = userRepository.getAccountInfo().units?.weight ?: throw AccountInfoNotCompleteException()
         val countNeededGlass = weight * 50 / 250
         countGlass.collect{
             val result = it?.toInt() ?: 0
-            glassFlow.emit(GlassEntity(result, countNeededGlass))
+            emit(GlassEntity(result, countNeededGlass))
         }
-        return glassFlow.asSharedFlow()
     }
+
 
     override suspend fun addDrinkGlass() {
         val countDrinkGlasses = countGlass.firstOrNull()?.toInt() ?: 0
@@ -41,6 +46,5 @@ class GlassRepositoryImpl(
             it[AppSettings.COUNT_GLASS_TOKEN] = (countDrinkGlasses + 1).toString()
         }
     }
-
 
 }

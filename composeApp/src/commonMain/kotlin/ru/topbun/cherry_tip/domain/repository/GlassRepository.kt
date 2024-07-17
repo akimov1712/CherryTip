@@ -5,7 +5,7 @@ import ru.topbun.cherry_tip.domain.entity.glass.GlassEntity
 
 interface GlassRepository {
 
-    suspend fun getCountGlass(): Flow<GlassEntity>
+    val countGlassFlow: Flow<GlassEntity>
     suspend fun addDrinkGlass()
 
 }
