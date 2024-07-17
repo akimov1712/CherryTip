@@ -1,8 +1,13 @@
 package ru.topbun.cherry_tip.data.source.network
 
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
@@ -12,7 +17,7 @@ import io.ktor.serialization.kotlinx.json.json
 class ApiFactory {
 
     private companion object{
-         const val BASE_URL = "http://192.168.31.120:3000/"
+         const val BASE_URL = "http://192.168.31.119:3000/"
     }
 
     val client = HttpClient {
@@ -23,7 +28,15 @@ class ApiFactory {
             contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
             url(BASE_URL)
         }
-    }
+        install(Logging) {
+            logger = object: Logger {
+                override fun log(message: String) {
+                    Napier.v("HTTP Client", null, message)
+                }
+            }
+            level = LogLevel.BODY
+        }
+    }.also { Napier.base(DebugAntilog()) }
 
 }
 

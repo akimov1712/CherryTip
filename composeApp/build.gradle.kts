@@ -55,6 +55,7 @@ kotlin {
             implementation(libs.datastore.preferences)
             implementation(libs.datastore.preferences.core)
             implementation(libs.atomicfu)
+            implementation(libs.napier)
 
             // Ktor
             implementation(libs.ktor.client.core)
