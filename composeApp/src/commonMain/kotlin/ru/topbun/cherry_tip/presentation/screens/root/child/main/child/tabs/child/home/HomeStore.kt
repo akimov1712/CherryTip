@@ -12,7 +12,9 @@ import ru.topbun.cherry_tip.domain.useCases.glass.GetCountGlassUseCase
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore.Label
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore.State
+import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.Const
+import ru.topbun.cherry_tip.utills.RequestTimeoutException
 
 interface HomeStore : Store<Intent, State, Label> {
 
@@ -21,12 +23,22 @@ interface HomeStore : Store<Intent, State, Label> {
     }
 
     data class State(
-        val consumption: List<Glass>,
-        val mlConsumed: Float,
-        val mlTotal: Float,
-        val firstPageIndex: Int,
-        val countPages: Int,
-    )
+        val glassStateStatus: GlassStateStatus
+    ){
+        data class GlassState(
+            val consumption: List<Glass> = emptyList(),
+            val mlConsumed: Float = 0f,
+            val mlTotal: Float = 0f,
+            val firstPageIndex: Int = 0,
+            val countPages: Int = 0,
+        )
+        sealed interface GlassStateStatus{
+            data object Initial: GlassStateStatus
+            data object Loading: GlassStateStatus
+            data object Error: GlassStateStatus
+            data class Result(val state: GlassState): GlassStateStatus
+        }
+    }
 
     sealed interface Label
 
@@ -41,45 +53,45 @@ class HomeStoreFactory(
     fun create(): HomeStore =
         object : HomeStore, Store<Intent, State, Label> by storeFactory.create(
             name = "HomeStore",
-            initialState = State(emptyList(), 0f, 0f, 0, 0),
+            initialState = State(
+                glassStateStatus = State.GlassStateStatus.Initial
+            ),
             bootstrapper = BootstrapperImpl(),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ){}
 
     private sealed interface Action {
-        data class GetCountGlass(
-            val consumption: List<Glass>,
-            val mlConsumed: Float,
-            val mlTotal: Float,
-            val firstPageIndex: Int,
-            val countPages: Int,
-        ): Action
+        data object GlassLoadingStatus: Action
+        data object GlassErrorStatus: Action
+        data class GlassResultStatus(val state: State.GlassState): Action
     }
 
     private sealed interface Msg {
-        data class GetCountGlass(
-            val consumption: List<Glass>,
-            val mlConsumed: Float,
-            val mlTotal: Float,
-            val firstPageIndex: Int,
-            val countPages: Int,
-        ): Msg
+        data object GlassLoadingStatus: Msg
+        data object GlassErrorStatus: Msg
+        data class GlassResultStatus(val state: State.GlassState): Msg
     }
 
     private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
         override fun invoke() {
             scope.launch {
-                getCountGlassUseCase().collect{
-                    dispatch(
-                        Action.GetCountGlass(
+                try {
+                    dispatch(Action.GlassLoadingStatus)
+                    getCountGlassUseCase().collect{
+                        val glassState = State.GlassState(
                             consumption = it.toConsumption(),
                             mlConsumed = it.countDrinkGlass * Const.ML_GLASS / Const.ML_TO_LITER.toFloat(),
                             mlTotal = it.countNeededGlass * Const.ML_GLASS / Const.ML_TO_LITER.toFloat(),
                             firstPageIndex = it.countDrinkGlass / COUNT_GLASS_PAGE,
                             countPages = it.countNeededGlass / COUNT_GLASS_PAGE
                         )
-                    )
+                        dispatch(Action.GlassResultStatus(glassState))
+                    }
+                } catch (e: AccountInfoNotCompleteException){
+                    dispatch(Action.GlassErrorStatus)
+                } catch (e: RequestTimeoutException){
+                    dispatch(Action.GlassErrorStatus)
                 }
             }
         }
@@ -89,15 +101,9 @@ class HomeStoreFactory(
         override fun executeAction(action: Action) {
             super.executeAction(action)
             when(action){
-                is Action.GetCountGlass -> dispatch(
-                    Msg.GetCountGlass(
-                        consumption =  action.consumption,
-                        mlConsumed = action.mlConsumed,
-                        mlTotal = action.mlTotal,
-                        firstPageIndex = action.firstPageIndex,
-                        countPages = action.countPages
-                    )
-                )
+                Action.GlassErrorStatus -> dispatch(Msg.GlassErrorStatus)
+                Action.GlassLoadingStatus -> dispatch(Msg.GlassLoadingStatus)
+                is Action.GlassResultStatus -> dispatch(Msg.GlassResultStatus(action.state))
             }
         }
 
@@ -115,13 +121,9 @@ class HomeStoreFactory(
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg) = when (message) {
-            is Msg.GetCountGlass -> copy(
-                consumption = message.consumption,
-                mlConsumed = message.mlConsumed,
-                mlTotal = message.mlTotal,
-                firstPageIndex = message.firstPageIndex,
-                countPages = message.countPages,
-            )
+            Msg.GlassErrorStatus -> copy(glassStateStatus = State.GlassStateStatus.Error)
+            Msg.GlassLoadingStatus -> copy(glassStateStatus = State.GlassStateStatus.Loading)
+            is Msg.GlassResultStatus -> copy(glassStateStatus = State.GlassStateStatus.Result(message.state))
         }
     }
 }

@@ -5,4 +5,7 @@
     <string name="water_consumption">Water Сonsumption</string>
     <string name="remember_hydrated">Remember to stay hydrated!</string>
     <string name="more">More</string>
+    <string name="failed_get_drink">Failed to get drink glasses</string>
+    <string name="error">Error</string>
+    <string name="loading">Loading</string>
 </resources>

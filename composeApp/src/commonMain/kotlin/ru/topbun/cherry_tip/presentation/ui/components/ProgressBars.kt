@@ -46,19 +46,4 @@ object ProgressBars{
         }
     }
 
-    @Composable
-    fun FullscreenLoader(modifier: Modifier = Modifier) {
-        Box(modifier.fillMaxSize().background(Colors.Black.copy(0.1f)), contentAlignment = Alignment.Center){
-            Card(
-                modifier = Modifier.padding(24.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Colors.White
-                )
-            ){
-                CircularProgressIndicator(color = Colors.Purple)
-            }
-        }
-    }
-
 }

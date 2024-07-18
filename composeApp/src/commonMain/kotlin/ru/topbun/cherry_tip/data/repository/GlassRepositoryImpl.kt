@@ -57,7 +57,7 @@ class GlassRepositoryImpl(
         glassJson?.let {
             val glass = Json.decodeFromString<GlassStoreModel>(it)
             if (glass.day != LocalDate.now().toEpochDays()) resetGlass( countNeededGlass)
-        } ?: run { resetGlass(countNeededGlass) }
+        } ?: resetGlass(countNeededGlass)
     }
 
     private suspend fun resetGlass(countNeededGlass: Int){

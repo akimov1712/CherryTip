@@ -4,6 +4,7 @@ import io.ktor.client.call.DoubleReceiveException
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.ConnectTimeoutException
+import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.TimeoutCancellationException
@@ -22,6 +23,8 @@ suspend fun <T>exceptionWrapper(block: suspend () -> T): T {
         throw ParseBackendResponseException()
     } catch (e: DoubleReceiveException){
         throw ParseBackendResponseException()
+    } catch (e: SocketTimeoutException){
+        throw RequestTimeoutException()
     }
 }
 

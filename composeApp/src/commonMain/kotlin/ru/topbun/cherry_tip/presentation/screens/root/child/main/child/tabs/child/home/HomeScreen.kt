@@ -30,6 +30,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.challenges
+import cherrytip.composeapp.generated.resources.error
+import cherrytip.composeapp.generated.resources.failed_get_drink
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_clock
 import cherrytip.composeapp.generated.resources.ic_glass_add
@@ -57,6 +60,7 @@ import cherrytip.composeapp.generated.resources.ic_info
 import cherrytip.composeapp.generated.resources.ic_lightning
 import cherrytip.composeapp.generated.resources.ic_peach
 import cherrytip.composeapp.generated.resources.img_test
+import cherrytip.composeapp.generated.resources.loading
 import cherrytip.composeapp.generated.resources.more
 import cherrytip.composeapp.generated.resources.nutrition_tips
 import cherrytip.composeapp.generated.resources.remember_hydrated
@@ -93,7 +97,8 @@ fun HomeContent(
 private fun Glass(component: HomeComponent, onClickAdd: () -> Unit) {
     val scope = rememberCoroutineScope()
     val state by component.state.collectAsState()
-    GlassTitle(state)
+    GlassTitle(state.glassStateStatus)
+
     Spacer(Modifier.height(16.dp))
     Column(
         modifier = Modifier
@@ -104,24 +109,31 @@ private fun Glass(component: HomeComponent, onClickAdd: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val lazyListState = rememberLazyListState(state.firstPageIndex)
-        LaunchedEffect(state.firstPageIndex){ lazyListState.animateScrollToItem(state.firstPageIndex) }
-        LazyRow(
-            state = lazyListState,
-            modifier = Modifier
-                .fillMaxWidth(),
-            flingBehavior = rememberSnapFlingBehavior(lazyListState)
-        ) {
-            items(items = state.consumption.chunked(5)) {
-                pageGlasses(it, onClickAdd)
+        when(val stateScreen = state.glassStateStatus){
+            HomeStore.State.GlassStateStatus.Loading -> CircularProgressIndicator(color = Colors.White)
+            is HomeStore.State.GlassStateStatus.Result -> {
+                val lazyListState = rememberLazyListState(stateScreen.state.firstPageIndex)
+                LaunchedEffect(stateScreen.state.firstPageIndex){ lazyListState.animateScrollToItem(stateScreen.state.firstPageIndex) }
+                LazyRow(
+                    state = lazyListState,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    flingBehavior = rememberSnapFlingBehavior(lazyListState)
+                ) {
+                    items(items = stateScreen.state.consumption.chunked(5)) {
+                        pageGlasses(it, onClickAdd)
+                    }
+                }
+                IndicatorPages(
+                    countPages = stateScreen.state.countPages,
+                    indexSelected = lazyListState.firstVisibleItemIndex,
+                ){
+                    scope.launch { lazyListState.animateScrollToItem(it) }
+                }
             }
+            else -> Unit
         }
-        IndicatorPages(
-            countPages = state.countPages,
-            indexSelected = lazyListState.firstVisibleItemIndex,
-        ){
-            scope.launch { lazyListState.animateScrollToItem(it) }
-        }
+
         WarningDontForgetDrink()
     }
 }
@@ -152,7 +164,7 @@ private fun WarningDontForgetDrink() {
 }
 
 @Composable
-private fun GlassTitle(state: HomeStore.State) {
+private fun GlassTitle(state: HomeStore.State.GlassStateStatus) {
     Row(
         modifier = Modifier.padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -160,7 +172,13 @@ private fun GlassTitle(state: HomeStore.State) {
 
         Texts.Title(stringResource(Res.string.water_consumption), textAlign = TextAlign.Start)
         Spacer(Modifier.weight(1f))
-        Texts.Option("${state.mlConsumed} / ${state.mlTotal}", fontSize = 16.sp, color = Colors.Black)
+        var titleText = when(state){
+            HomeStore.State.GlassStateStatus.Error -> stringResource(Res.string.error)
+            HomeStore.State.GlassStateStatus.Loading -> stringResource(Res.string.loading)
+            is HomeStore.State.GlassStateStatus.Result -> "${state.state.mlConsumed} / ${state.state.mlTotal}"
+            else -> ""
+        }
+        Texts.Option(titleText, fontSize = 16.sp, color = Colors.Black)
     }
 }
 

@@ -20,7 +20,7 @@ class RootComponentImpl(
     override val stack: Value<ChildStack<*, RootComponent.Child>> = childStack(
         source = navigation,
         serializer = Config.serializer(),
-        initialConfiguration = Config.Auth,
+        initialConfiguration = Config.Main,
         handleBackButton = true,
         childFactory = ::createChild
     )
