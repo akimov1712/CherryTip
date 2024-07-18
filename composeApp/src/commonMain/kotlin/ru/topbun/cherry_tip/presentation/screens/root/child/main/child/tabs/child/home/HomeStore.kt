@@ -6,15 +6,13 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import ru.topbun.cherry_tip.domain.entity.glass.GlassEntity
 import ru.topbun.cherry_tip.domain.useCases.glass.AddDrinkGlassUseCase
 import ru.topbun.cherry_tip.domain.useCases.glass.GetCountGlassUseCase
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore.Label
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore.State
+import ru.topbun.cherry_tip.utills.Const
 
 interface HomeStore : Store<Intent, State, Label> {
 
@@ -76,13 +74,12 @@ class HomeStoreFactory(
                     dispatch(
                         Action.GetCountGlass(
                             consumption = it.toConsumption(),
-                            mlConsumed = it.countDrinkGlass * 250 / 1000f,
-                            mlTotal = it.countNeededGlass * 250 / 1000f,
-                            firstPageIndex = it.countDrinkGlass / 5,
-                            countPages = it.countNeededGlass / 5 + 1
+                            mlConsumed = it.countDrinkGlass * Const.ML_GLASS / Const.ML_TO_LITER.toFloat(),
+                            mlTotal = it.countNeededGlass * Const.ML_GLASS / Const.ML_TO_LITER.toFloat(),
+                            firstPageIndex = it.countDrinkGlass / COUNT_GLASS_PAGE,
+                            countPages = it.countNeededGlass / COUNT_GLASS_PAGE
                         )
                     )
-                    Napier.d((it.countDrinkGlass / 5).toString(), tag = "glassFlow")
                 }
             }
         }

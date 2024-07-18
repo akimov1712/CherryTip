@@ -4,46 +4,66 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import ru.topbun.cherry_tip.data.source.local.dataStore.AppSettings
+import ru.topbun.cherry_tip.data.source.local.dataStore.entity.glass.GlassStoreModel
 import ru.topbun.cherry_tip.domain.entity.glass.GlassEntity
 import ru.topbun.cherry_tip.domain.repository.GlassRepository
 import ru.topbun.cherry_tip.domain.repository.UserRepository
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
+import ru.topbun.cherry_tip.utills.Const
+import ru.topbun.cherry_tip.utills.now
 
 class GlassRepositoryImpl(
     private val userRepository: UserRepository,
     private val dataStore: DataStore<Preferences>
 ): GlassRepository {
 
-    private val countGlass = dataStore.data.
-        map { it[AppSettings.COUNT_GLASS_TOKEN] }
+    private val glass = dataStore.data.
+        map { it[AppSettings.KEY_GLASS] }
 
 
     override val countGlassFlow = flow {
         val weight = userRepository.getAccountInfo().units?.weight ?: throw AccountInfoNotCompleteException()
-        val countNeededGlass = weight * 50 / 250
-        countGlass.collect{
-            val result = it?.toInt() ?: 0
-            emit(GlassEntity(result, countNeededGlass))
+        val countNeededGlass = weight * Const.ML_PER_KG / Const.ML_GLASS
+        checkReset(countNeededGlass)
+        glass.collect{ jsonGlass ->
+            jsonGlass?.let {
+                val result = Json.decodeFromString<GlassStoreModel>(it).countDrinkGlass
+                emit(GlassEntity(result, countNeededGlass))
+            }
         }
     }
 
 
     override suspend fun addDrinkGlass() {
-        val countDrinkGlasses = countGlass.firstOrNull()?.toInt() ?: 0
+        val glassJson = glass.firstOrNull()
+        glassJson?.let {
+            val glass = Json.decodeFromString<GlassStoreModel>(it)
+            dataStore.edit { settings ->
+                settings[AppSettings.KEY_GLASS] =
+                    Json.encodeToString(glass.copy(countDrinkGlass = glass.countDrinkGlass + 1))
+            }
+        }
+    }
+
+    private suspend fun checkReset(countNeededGlass: Int) {
+        val glassJson = glass.firstOrNull()
+        glassJson?.let {
+            val glass = Json.decodeFromString<GlassStoreModel>(it)
+            if (glass.day != LocalDate.now().toEpochDays()) resetGlass( countNeededGlass)
+        } ?: run { resetGlass(countNeededGlass) }
+    }
+
+    private suspend fun resetGlass(countNeededGlass: Int){
+        val glass = GlassStoreModel(0, countNeededGlass, LocalDate.now().toEpochDays())
         dataStore.edit {
-            it[AppSettings.COUNT_GLASS_TOKEN] = (countDrinkGlasses + 1).toString()
+            it[AppSettings.KEY_GLASS] = Json.encodeToString(glass)
         }
     }
 
