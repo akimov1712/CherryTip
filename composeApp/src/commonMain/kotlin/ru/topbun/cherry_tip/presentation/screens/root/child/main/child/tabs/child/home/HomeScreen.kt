@@ -69,6 +69,7 @@ import cherrytip.composeapp.generated.resources.water_consumption
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tipsDetail.TipsDetailScreen
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
@@ -345,7 +346,7 @@ private fun TipsButton() {
             shape = CircleShape,
             border = BorderStroke(1.dp, Colors.PurpleBackground),
             colors = CardDefaults.cardColors(containerColor = Colors.Transparent),
-            onClick = {}
+            onClick = {  }
         ){
             Icon(modifier = Modifier.padding(20.dp), painter = painterResource(Res.drawable.ic_peach), contentDescription = null)
         }

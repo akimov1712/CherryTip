@@ -15,6 +15,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.chil
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.Const
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
+import kotlin.math.ceil
 
 interface HomeStore : Store<Intent, State, Label> {
 
@@ -84,7 +85,7 @@ class HomeStoreFactory(
                             mlConsumed = it.countDrinkGlass * Const.ML_GLASS / Const.ML_TO_LITER.toFloat(),
                             mlTotal = it.countNeededGlass * Const.ML_GLASS / Const.ML_TO_LITER.toFloat(),
                             firstPageIndex = it.countDrinkGlass / COUNT_GLASS_PAGE,
-                            countPages = it.countNeededGlass / COUNT_GLASS_PAGE
+                            countPages = ceil(it.countNeededGlass.toFloat() / COUNT_GLASS_PAGE).toInt()
                         )
                         dispatch(Action.GlassResultStatus(glassState))
                     }
