@@ -1,0 +1,13 @@
+<resources>
+    <string name="tips_fruits_title">Fruits and Vegetables</string>
+    <string name="tips_active_title">Be active be healthy</string>
+    <string name="tips_sugar_title">Cut down fat and sugar</string>
+    <string name="tips_water_title">Less salt, more water</string>
+    <string name="tips_fish_title">More oily fish</string>
+
+    <string name="tips_fruits_descr">Adding more fruits and vegetables to your diet can significantly improve your health and well-being. They are packed with essential nutrients, vitamins, and fiber that support overall health and prevent chronic diseases.</string>
+    <string name="tips_active_descr">Regular physical activity is key to maintaining a healthy lifestyle. It boosts your mood, strengthens your muscles, and improves your overall health, helping to prevent various health issues.</string>
+    <string name="tips_sugar_descr">Cutting sugar out of your diet is one strategy to lose weight and feel healthier, but it can be a tough transition.</string>
+    <string name="tips_water_descr">Regular physical activity is key to maintaining a healthy lifestyle. It boosts your mood, strengthens your muscles, and improves your overall health, helping to prevent various health issues.</string>
+    <string name="tips_fish_descr">Regular physical activity is key to maintaining a healthy lifestyle. It boosts your mood, strengthens your muscles, and improves your overall health, helping to prevent various health issues.</string>
+</resources>

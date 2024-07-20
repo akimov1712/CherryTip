@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyItemScope
@@ -31,12 +32,19 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -44,13 +52,13 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.challenges
 import cherrytip.composeapp.generated.resources.error
-import cherrytip.composeapp.generated.resources.failed_get_drink
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_clock
 import cherrytip.composeapp.generated.resources.ic_glass_add
@@ -58,7 +66,6 @@ import cherrytip.composeapp.generated.resources.ic_glass_empty
 import cherrytip.composeapp.generated.resources.ic_glass_fill
 import cherrytip.composeapp.generated.resources.ic_info
 import cherrytip.composeapp.generated.resources.ic_lightning
-import cherrytip.composeapp.generated.resources.ic_peach
 import cherrytip.composeapp.generated.resources.img_test
 import cherrytip.composeapp.generated.resources.loading
 import cherrytip.composeapp.generated.resources.more
@@ -69,6 +76,7 @@ import cherrytip.composeapp.generated.resources.water_consumption
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tipsDetail.Tips
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tipsDetail.TipsDetailScreen
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
@@ -76,20 +84,35 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 const val COUNT_GLASS_PAGE = 5
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
     component: HomeComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
+    val state = SheetState(
+        skipPartiallyExpanded = true,
+        density = LocalDensity.current,
+        initialValue = SheetValue.Hidden
+    )
+    val scope = rememberCoroutineScope()
+    var tipsSelected by remember{ mutableStateOf<Tips?>(null) }
     Column(
         modifier = modifier
             .padding(vertical = 24.dp),
     ) {
-        Tips()
+        Tips{
+            tipsSelected = it
+            scope.launch { state.expand() }
+        }
         Spacer(Modifier.height(20.dp))
         Challenge()
         Spacer(Modifier.height(20.dp))
         Glass(component){ component.addDrinkGlass() }
+    }
+
+    tipsSelected?.let {
+        TipsDetailScreen(it, state){ tipsSelected = null}
     }
 }
 
@@ -257,7 +280,7 @@ private fun Challenge() {
 }
 
 @Composable
-private fun Tips() {
+private fun Tips(onClickTips: (tips: Tips) -> Unit) {
     Texts.Title(
         stringResource(Res.string.nutrition_tips),
         modifier = Modifier.padding(start = 20.dp),
@@ -266,10 +289,11 @@ private fun Tips() {
     Spacer(Modifier.height(16.dp))
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(horizontal = 20.dp)
+        contentPadding = PaddingValues(horizontal = 20.dp),
+
     ) {
-        repeat(10) {
-            item { TipsButton() }
+        items(items = Tips.entries.toList()) {
+            TipsButton(it){ onClickTips(it) }
         }
     }
 }
@@ -339,19 +363,18 @@ private fun IconWithText(
 }
 
 @Composable
-private fun TipsButton() {
-    Column {
+private fun TipsButton(tips: Tips, onClickTips: () -> Unit) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Card(
             modifier = Modifier.size(70.dp),
             shape = CircleShape,
             border = BorderStroke(1.dp, Colors.PurpleBackground),
             colors = CardDefaults.cardColors(containerColor = Colors.Transparent),
-            onClick = {  }
+            onClick = onClickTips
         ){
-            Icon(modifier = Modifier.padding(20.dp), painter = painterResource(Res.drawable.ic_peach), contentDescription = null)
+            Icon(modifier = Modifier.padding(20.dp), painter = painterResource(tips.icon), contentDescription = stringResource(tips.title))
         }
         Spacer(Modifier.height(7.dp))
-        Texts.Tips("Fruits &\n" +
-                "Vegetables")
+        Texts.Tips(stringResource(tips.title), modifier = Modifier.sizeIn(maxWidth = 80.dp), maxLines = 2)
     }
 }
