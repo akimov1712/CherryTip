@@ -33,7 +33,7 @@ class ReminderStoreFactory(
         object : ReminderStore, Store<Intent, State, Label> by storeFactory.create(
             name = "ReminderStore",
             initialState = State(
-                screens = listOf(ReminderScreens.Reminder1, ReminderScreens.Reminder2, ReminderScreens.Reminder3),
+                screens = ReminderScreens.entries.toList(),
                 indexSelected = 0
             ),
             bootstrapper = null,
