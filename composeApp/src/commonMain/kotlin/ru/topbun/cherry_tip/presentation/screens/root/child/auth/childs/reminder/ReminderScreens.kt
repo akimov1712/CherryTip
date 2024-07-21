@@ -13,25 +13,22 @@ import cherrytip.composeapp.generated.resources.reminder_title_3
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
-sealed class ReminderScreens(
+enum class ReminderScreens(
     val titleRes: StringResource,
     val descrRes: StringResource,
     val imageRes: DrawableResource,
 ) {
-
-    data object Reminder1: ReminderScreens(
+    Reminder1(
         titleRes = Res.string.reminder_title_1,
         descrRes = Res.string.reminder_descr_1,
         imageRes = Res.drawable.reminder1
-    )
-
-    data object Reminder2: ReminderScreens(
+    ),
+    Reminder2(
         titleRes = Res.string.reminder_title_2,
         descrRes = Res.string.reminder_descr_2,
         imageRes = Res.drawable.reminder2
-    )
-
-    data object Reminder3: ReminderScreens(
+    ),
+    Reminder3(
         titleRes = Res.string.reminder_title_3,
         descrRes = Res.string.reminder_descr_3,
         imageRes = Res.drawable.reminder3

@@ -5,7 +5,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.useCases.glass.AddDrinkGlassUseCase
 import ru.topbun.cherry_tip.domain.useCases.glass.GetCountGlassUseCase

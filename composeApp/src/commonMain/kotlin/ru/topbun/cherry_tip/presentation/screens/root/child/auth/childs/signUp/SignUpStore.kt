@@ -67,7 +67,6 @@ interface SignUpStore : Store<Intent, State, Label> {
 class SignUpStoreFactory(
     private val storeFactory: StoreFactory,
     private val signUpUseCase: SignUpUseCase,
-    private val loginUseCase: LoginUseCase,
 ) {
 
     val store: Store<Intent, State, Label> = storeFactory.create(

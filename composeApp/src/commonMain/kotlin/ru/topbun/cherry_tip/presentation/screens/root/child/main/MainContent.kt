@@ -6,7 +6,7 @@ import com.arkivanov.decompose.ComponentContext
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsScreen
 
 @Composable
-fun MainContent(
+fun MainScreen(
     componentContext: ComponentContext,
     modifier: Modifier = Modifier
 ) {

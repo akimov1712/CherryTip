@@ -7,8 +7,8 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthContent
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainContent
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainScreen
 
 @Composable
 fun RootContent(
@@ -18,14 +18,16 @@ fun RootContent(
         component.stack,
         animation = stackAnimation { child ->
             when(child.instance){
-                is RootComponent.Child.Auth -> fade(tween(300)) + slide()
-                is RootComponent.Child.Main -> fade(tween(300)) + slide()
+                is RootComponent.Child.Auth -> defaultAnimationScreen
+                is RootComponent.Child.Main -> defaultAnimationScreen
             }
         }
     ){
         when(val instance = it.instance){
-            is RootComponent.Child.Auth -> AuthContent(instance.component)
-            is RootComponent.Child.Main -> MainContent(instance.componentContext)
+            is RootComponent.Child.Auth -> AuthScreen(instance.component)
+            is RootComponent.Child.Main -> MainScreen(instance.componentContext)
         }
     }
 }
+
+private val defaultAnimationScreen = fade(tween(300)) + slide()
