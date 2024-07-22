@@ -98,7 +98,7 @@ private fun Module.loginModule(){
 }
 
 private fun Module.signUpModule(){
-    factory<SignUpStoreFactory> { SignUpStoreFactory(get(), get(), get()) }
+    factory<SignUpStoreFactory> { SignUpStoreFactory(get(), get()) }
     factory { (componentContext: ComponentContext, onClickBack: () -> Unit, onLogin: () -> Unit, onSignUp: () -> Unit) ->
         SignUpComponentImpl(
             componentContext = componentContext,

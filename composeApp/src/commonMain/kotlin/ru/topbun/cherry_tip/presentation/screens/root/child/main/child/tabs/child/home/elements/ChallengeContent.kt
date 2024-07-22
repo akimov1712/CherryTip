@@ -67,18 +67,18 @@ fun Challenge() {
 }
 
 @Composable
-private fun ChallengeItem(onClickMore: () -> Unit) {
+fun ChallengeItem(onClickMore: () -> Unit) {
     Card(
-        modifier = Modifier.width(310.dp),
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xffFFB7CE))
     ) {
         Row(
             modifier = Modifier.height(IntrinsicSize.Min)
         ) {
-            InfoChallenge(onClickMore)
+            InfoChallenge(modifier = Modifier.weight(1f), onClickMore)
             Image(
-                modifier = Modifier.fillMaxWidth().offset(y = 50.dp, x = 10.dp).scale(1.2f),
+                modifier = Modifier.weight(1f).align(Alignment.Bottom).scale(1.159f),
                 painter = painterResource(Res.drawable.img_test),
                 contentScale = ContentScale.FillWidth,
                 contentDescription = null
@@ -88,10 +88,10 @@ private fun ChallengeItem(onClickMore: () -> Unit) {
 }
 
 @Composable
-private fun InfoChallenge(onClickMore: () -> Unit) {
+private fun InfoChallenge(modifier: Modifier, onClickMore: () -> Unit) {
     Column(
-        modifier = Modifier.padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Texts.Option("Sweet Free", color = Colors.Black)
         IconWithText(painter = painterResource(Res.drawable.ic_clock), text = "7 days")
