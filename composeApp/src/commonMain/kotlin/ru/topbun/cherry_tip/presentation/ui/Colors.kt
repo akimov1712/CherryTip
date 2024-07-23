@@ -17,7 +17,7 @@ object Colors {
     val PurpleBackground = Color(237, 241 ,247)
 
     val GreenLight = Color(81, 241 ,87)
-    val GreenDark = Color(101, 227 ,136)
+    val Green = Color(55, 215 ,100)
 
     val Red = Color(227, 101 ,101)
 
