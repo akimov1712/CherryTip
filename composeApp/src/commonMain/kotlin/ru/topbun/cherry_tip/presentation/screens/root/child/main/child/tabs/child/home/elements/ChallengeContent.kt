@@ -47,7 +47,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
-fun Challenge(onClickMore: () -> Unit) {
+fun Challenge(onClickMore: () -> Unit, onClickAll: () -> Unit) {
     Row(
         modifier = Modifier.padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -58,7 +58,7 @@ fun Challenge(onClickMore: () -> Unit) {
             stringResource(Res.string.see_all),
             fontSize = 16.sp,
             modifier = Modifier.clickable (interactionSource = MutableInteractionSource(),
-                indication = null, onClick = onClickMore)
+                indication = null, onClick = onClickAll)
         )
     }
     Spacer(Modifier.height(16.dp))
@@ -68,24 +68,24 @@ fun Challenge(onClickMore: () -> Unit) {
         contentPadding = PaddingValues(horizontal = 20.dp)
     ) {
         repeat(10) {
-            item { ChallengeItem { } }
+            item { ChallengeItem(onClickMore) }
         }
     }
 }
 
 @Composable
-fun ChallengeItem(onClickMore: () -> Unit) {
+private fun ChallengeItem(onClickMore: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.width(310.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xffFFB7CE))
     ) {
         Row(
             modifier = Modifier.height(IntrinsicSize.Min)
         ) {
-            InfoChallenge(modifier = Modifier.weight(1f), onClickMore)
+            InfoChallenge(onClickMore = onClickMore)
             Image(
-                modifier = Modifier.weight(1f).align(Alignment.Bottom).scale(1.15f),
+                modifier = Modifier.fillMaxWidth().offset(y = 30.dp, x = 10.dp).scale(1.2f),
                 painter = painterResource(Res.drawable.img_test),
                 contentScale = ContentScale.FillWidth,
                 contentDescription = null
@@ -95,7 +95,7 @@ fun ChallengeItem(onClickMore: () -> Unit) {
 }
 
 @Composable
-private fun InfoChallenge(modifier: Modifier, onClickMore: () -> Unit) {
+private fun InfoChallenge(modifier: Modifier = Modifier, onClickMore: () -> Unit) {
     Column(
         modifier = modifier.padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)

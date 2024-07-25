@@ -11,6 +11,7 @@ import ru.topbun.cherry_tip.utills.componentScope
 class HomeComponentImpl(
     componentContext: ComponentContext,
     private val onOpenChallenge: () -> Unit,
+    private val onOpenChallengeDetail: () -> Unit,
     private val storeFactory: HomeStoreFactory
 ): HomeComponent, ComponentContext by componentContext {
 
@@ -22,6 +23,7 @@ class HomeComponentImpl(
             store.labels.collect{
                 when(it){
                     HomeStore.Label.OpenChallengeScreen -> onOpenChallenge()
+                    HomeStore.Label.OpenChallengeDetailScreen -> onOpenChallengeDetail()
                 }
             }
         }
@@ -29,4 +31,5 @@ class HomeComponentImpl(
 
     override fun addDrinkGlass() = store.accept(HomeStore.Intent.AddDrinkGlass)
     override fun openChallenge() = store.accept(HomeStore.Intent.OpenChallengeScreen)
+    override fun openChallengeDetail() = store.accept(HomeStore.Intent.OpenChallengeDetailScreen)
 }

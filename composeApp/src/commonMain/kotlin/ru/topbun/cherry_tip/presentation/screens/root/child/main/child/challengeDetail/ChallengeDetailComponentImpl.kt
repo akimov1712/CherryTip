@@ -1,19 +1,19 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.utills.componentScope
 
-class ChallengeComponentImpl(
+class ChallengeDetailComponentImpl(
     componentContext: ComponentContext,
     private val onClickBack: () -> Unit,
-    private val onOpenChallengeDetail: () -> Unit,
-    private val storeFactory: ChallengeStoreFactory
-) : ChallengeComponent, ComponentContext by componentContext{
+    private val storeFactory: ChallengeDetailStoreFactory
+) : ChallengeDetailComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { storeFactory.create() }
     override val state = store.stateFlow
@@ -22,14 +22,12 @@ class ChallengeComponentImpl(
         componentScope.launch {
             store.labels.collect{
                 when(it){
-                    ChallengeStore.Label.OnClick -> onClickBack()
-                    ChallengeStore.Label.OpenChallengeDetail -> onOpenChallengeDetail()
+                    ChallengeDetailStore.Label.ClickBack -> onClickBack()
                 }
             }
         }
     }
 
-    override fun clickBack() = store.accept(ChallengeStore.Intent.OnClick)
-    override fun openChallengeDetail() = store.accept(ChallengeStore.Intent.OpenChallengeDetail)
+    override fun clickBack() = store.accept(ChallengeDetailStore.Intent.ClickBack)
 
 }

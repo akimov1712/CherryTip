@@ -17,6 +17,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.S
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStoreFactory
@@ -35,12 +37,20 @@ val decomposeModule = module {
     tabsModule()
     mainModule()
     challengeModule()
+    challengeDetailModule()
+}
+
+private fun Module.challengeDetailModule(){
+    factory<ChallengeDetailStoreFactory> { ChallengeDetailStoreFactory(get()) }
+    factory { (componentContext: ComponentContext, onClickBack: () -> Unit) ->
+        ChallengeDetailComponentImpl(componentContext, onClickBack, get())
+    }
 }
 
 private fun Module.challengeModule(){
     factory<ChallengeStoreFactory> { ChallengeStoreFactory(get()) }
-    factory { (componentContext: ComponentContext, onClickBack: () -> Unit,) ->
-        ChallengeComponentImpl(componentContext, onClickBack, get())
+    factory { (componentContext: ComponentContext, onClickBack: () -> Unit, openChallengeDetail: () -> Unit) ->
+        ChallengeComponentImpl(componentContext, onClickBack, openChallengeDetail, get())
     }
 }
 
@@ -52,15 +62,15 @@ private fun Module.mainModule(){
 
 
 private fun Module.tabsModule(){
-    factory { (componentContext: ComponentContext, onOpenChallenge: () -> Unit) ->
-        TabsComponentImpl(componentContext, onOpenChallenge)
+    factory { (componentContext: ComponentContext, onOpenChallenge: () -> Unit, onOpenChallengeDetail: () -> Unit) ->
+        TabsComponentImpl(componentContext, onOpenChallenge, onOpenChallengeDetail)
     }
 }
 
 private fun Module.homeModule(){
     factory<HomeStoreFactory> { HomeStoreFactory(get(), get(), get()) }
-    factory { (componentContext: ComponentContext, onOpenChallenge: () -> Unit) ->
-        HomeComponentImpl(componentContext = componentContext, onOpenChallenge, storeFactory = get())
+    factory { (componentContext: ComponentContext, onOpenChallenge: () -> Unit, openChallengeDetail: () -> Unit) ->
+        HomeComponentImpl(componentContext = componentContext, onOpenChallenge, openChallengeDetail, storeFactory = get())
     }
 }
 

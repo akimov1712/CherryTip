@@ -21,6 +21,7 @@ interface HomeStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data object AddDrinkGlass: Intent
         data object OpenChallengeScreen: Intent
+        data object OpenChallengeDetailScreen: Intent
     }
 
     data class State(
@@ -43,6 +44,7 @@ interface HomeStore : Store<Intent, State, Label> {
 
     sealed interface Label{
         data object OpenChallengeScreen: Label
+        data object OpenChallengeDetailScreen: Label
     }
 
 }
@@ -120,6 +122,7 @@ class HomeStoreFactory(
                 }
 
                 Intent.OpenChallengeScreen -> publish(Label.OpenChallengeScreen)
+                Intent.OpenChallengeDetailScreen -> publish(Label.OpenChallengeDetailScreen)
             }
         }
     }

@@ -8,6 +8,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsScreen
 
 @Composable
@@ -30,7 +31,9 @@ fun MainScreen(
                 ChallengeScreen(instance.component)
             }
 
-            is MainComponent.Child.ChallengeDetail -> {}
+            is MainComponent.Child.ChallengeDetail -> {
+                ChallengeDetailScreen(instance.component)
+            }
             is MainComponent.Child.Tabs -> {
                 TabsScreen(instance.component)
             }

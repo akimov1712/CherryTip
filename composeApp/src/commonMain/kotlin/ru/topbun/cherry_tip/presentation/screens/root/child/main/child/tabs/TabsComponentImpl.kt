@@ -13,7 +13,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.chil
 
 class TabsComponentImpl(
     private val componentContext: ComponentContext,
-    private val onOpenChallenge: () -> Unit
+    private val onOpenChallenge: () -> Unit,
+    private val onOpenChallengeDetail: () -> Unit,
 ) : TabsComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -31,7 +32,7 @@ class TabsComponentImpl(
         componentContext: ComponentContext
     ): TabsComponent.Child = when (config) {
         Config.Home -> {
-            val component: HomeComponentImpl = getKoin().get { parametersOf(componentContext, onOpenChallenge) }
+            val component: HomeComponentImpl = getKoin().get { parametersOf(componentContext, onOpenChallenge, onOpenChallengeDetail) }
             TabsComponent.Child.Home(component)
         }
     }

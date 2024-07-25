@@ -45,11 +45,14 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
-fun ChallengeDetailScreen(modifier: Modifier = Modifier.statusBarsPadding()) {
+fun ChallengeDetailScreen(
+    component: ChallengeDetailComponent,
+    modifier: Modifier = Modifier.statusBarsPadding()
+) {
     Column(
         modifier = modifier.fillMaxSize().padding(20.dp)
     ) {
-        BackWithTitle()
+        BackWithTitle{ component.clickBack() }
         Spacer(Modifier.height(30.dp))
         InfoDateChallenge()
         Spacer(Modifier.height(20.dp))
@@ -199,12 +202,16 @@ private fun InfoDateChallenge() {
 }
 
 @Composable
-private fun BackWithTitle() {
-    Row {
-        Icon(
-            painter = painterResource(Res.drawable.ic_back),
-            contentDescription = null,
-            tint = Colors.Purple
+private fun BackWithTitle(clickBack: () -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Buttons.Icon(
+            modifier = Modifier.size(24.dp),
+            onClick = clickBack,
+            icon = painterResource(Res.drawable.ic_back),
+            containerColor = Colors.Transparent,
+            contentColor = Colors.Purple,
+            shape = CircleShape,
+            border = null
         )
         Spacer(Modifier.width(10.dp))
         Texts.Title(text = stringResource(Res.string.challenges))
