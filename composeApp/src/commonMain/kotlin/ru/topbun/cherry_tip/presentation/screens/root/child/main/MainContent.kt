@@ -1,17 +1,44 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main
 
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeScreen
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsScreen
 
 @Composable
 fun MainScreen(
-    componentContext: ComponentContext,
-    modifier: Modifier = Modifier
+    component: MainComponent,
 ) {
-//    TabsScreen(componentContext, modifier)
-    ChallengeDetailScreen()
+    Children(
+        stack = component.stack,
+        animation = stackAnimation { child ->
+            when (child.instance) {
+                is MainComponent.Child.Challenge -> defaultAnimationScreen
+                is MainComponent.Child.ChallengeDetail -> defaultAnimationScreen
+                is MainComponent.Child.Tabs -> defaultAnimationScreen
+                is MainComponent.Child.TipsDetail -> defaultAnimationScreen
+            }
+        }
+    ) {
+        when (val instance = it.instance) {
+            is MainComponent.Child.Challenge -> {
+                ChallengeScreen(instance.component)
+            }
+
+            is MainComponent.Child.ChallengeDetail -> {}
+            is MainComponent.Child.Tabs -> {
+                TabsScreen(instance.component)
+            }
+
+            is MainComponent.Child.TipsDetail -> {}
+        }
+    }
+
 }
+
+private val defaultAnimationScreen = slide()

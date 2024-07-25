@@ -25,7 +25,7 @@ fun RootContent(
     ){
         when(val instance = it.instance){
             is RootComponent.Child.Auth -> AuthScreen(instance.component)
-            is RootComponent.Child.Main -> MainScreen(instance.componentContext)
+            is RootComponent.Child.Main -> MainScreen(instance.component)
         }
     }
 }

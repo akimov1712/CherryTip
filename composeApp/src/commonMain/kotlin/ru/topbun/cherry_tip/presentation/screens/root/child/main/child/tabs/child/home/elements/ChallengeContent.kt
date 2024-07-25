@@ -1,6 +1,8 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.elements
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -45,14 +47,19 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
-fun Challenge() {
+fun Challenge(onClickMore: () -> Unit) {
     Row(
         modifier = Modifier.padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Texts.Title(stringResource(Res.string.challenges), textAlign = TextAlign.Start)
         Spacer(Modifier.weight(1f))
-        Texts.Option(stringResource(Res.string.see_all), fontSize = 16.sp)
+        Texts.Option(
+            stringResource(Res.string.see_all),
+            fontSize = 16.sp,
+            modifier = Modifier.clickable (interactionSource = MutableInteractionSource(),
+                indication = null, onClick = onClickMore)
+        )
     }
     Spacer(Modifier.height(16.dp))
     LazyRow(
@@ -78,7 +85,7 @@ fun ChallengeItem(onClickMore: () -> Unit) {
         ) {
             InfoChallenge(modifier = Modifier.weight(1f), onClickMore)
             Image(
-                modifier = Modifier.weight(1f).align(Alignment.Bottom).scale(1.159f),
+                modifier = Modifier.weight(1f).align(Alignment.Bottom).scale(1.15f),
                 painter = painterResource(Res.drawable.img_test),
                 contentScale = ContentScale.FillWidth,
                 contentDescription = null

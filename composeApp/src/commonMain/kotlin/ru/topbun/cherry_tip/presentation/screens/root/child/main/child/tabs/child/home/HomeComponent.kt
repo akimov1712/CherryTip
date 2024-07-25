@@ -7,5 +7,6 @@ interface HomeComponent {
     val state: StateFlow<HomeStore.State>
 
     fun addDrinkGlass()
+    fun openChallenge()
 
 }

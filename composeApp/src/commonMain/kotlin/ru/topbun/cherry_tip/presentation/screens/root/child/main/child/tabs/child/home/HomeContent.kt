@@ -48,7 +48,7 @@ fun HomeScreen(
             scope.launch { state.expand() }
         }
         Spacer(Modifier.height(20.dp))
-        Challenge()
+        Challenge{ component.openChallenge() }
         Spacer(Modifier.height(20.dp))
         Glass(component){ component.addDrinkGlass() }
     }

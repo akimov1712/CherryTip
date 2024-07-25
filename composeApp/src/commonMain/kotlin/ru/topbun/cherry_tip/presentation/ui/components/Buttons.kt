@@ -11,17 +11,18 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import ru.topbun.cherry_tip.presentation.ui.Colors
 
 object Buttons {
-
 
     @Composable
     fun Gray(
@@ -114,19 +115,24 @@ object Buttons {
     fun Icon(
         icon: Painter,
         modifier: Modifier = Modifier,
+        contentColor: Color = Colors.Purple,
+        containerColor: Color = Colors.White,
+        shape: Shape = RoundedCornerShape(16.dp),
+        border: BorderStroke? = BorderStroke(2.dp, Colors.PurpleBackground),
         onClick: () -> Unit
     ) {
         Button(
             modifier = modifier,
             onClick = onClick,
+            shape = shape,
             contentPadding = PaddingValues(0.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Colors.White),
-            border = BorderStroke(2.dp, Colors.PurpleBackground)
+            colors = ButtonDefaults.buttonColors(containerColor = containerColor),
+            border = border
         ) {
             Icon(
                 painter = icon,
                 contentDescription = null,
-                tint = Colors.Purple
+                tint = contentColor
             )
         }
     }

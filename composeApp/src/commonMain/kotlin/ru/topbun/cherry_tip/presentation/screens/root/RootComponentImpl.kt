@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainComponentImpl
 
 class RootComponentImpl(
     componentContext: ComponentContext,
@@ -38,7 +39,8 @@ class RootComponentImpl(
             }
 
             Config.Main -> {
-                RootComponent.Child.Main(componentContext)
+                val component: MainComponentImpl = getKoin().get{ parametersOf(componentContext) }
+                RootComponent.Child.Main(component)
             }
         }
     }

@@ -1,18 +1,18 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.utills.componentScope
 
-
-class HomeComponentImpl(
+class ChallengeComponentImpl(
     componentContext: ComponentContext,
-    private val onOpenChallenge: () -> Unit,
-    private val storeFactory: HomeStoreFactory
-): HomeComponent, ComponentContext by componentContext {
+    private val onClickBack: () -> Unit,
+    private val storeFactory: ChallengeStoreFactory
+) : ChallengeComponent, ComponentContext by componentContext{
 
     private val store = instanceKeeper.getStore { storeFactory.create() }
     override val state = store.stateFlow
@@ -21,12 +21,12 @@ class HomeComponentImpl(
         componentScope.launch {
             store.labels.collect{
                 when(it){
-                    HomeStore.Label.OpenChallengeScreen -> onOpenChallenge()
+                    ChallengeStore.Label.OnClick -> onClickBack()
                 }
             }
         }
     }
 
-    override fun addDrinkGlass() = store.accept(HomeStore.Intent.AddDrinkGlass)
-    override fun openChallenge() = store.accept(HomeStore.Intent.OpenChallengeScreen)
+    override fun clickBack() = store.accept(ChallengeStore.Intent.OnClick)
+
 }
