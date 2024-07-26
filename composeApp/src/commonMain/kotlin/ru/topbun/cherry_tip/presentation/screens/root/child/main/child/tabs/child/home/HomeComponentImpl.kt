@@ -28,7 +28,6 @@ class HomeComponentImpl(
             }
         }
     }
-
     override fun addDrinkGlass() = store.accept(HomeStore.Intent.AddDrinkGlass)
     override fun openChallenge() = store.accept(HomeStore.Intent.OpenChallengeScreen)
     override fun openChallengeDetail() = store.accept(HomeStore.Intent.OpenChallengeDetailScreen)

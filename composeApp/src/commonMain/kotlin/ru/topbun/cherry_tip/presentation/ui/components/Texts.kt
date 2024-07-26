@@ -193,7 +193,7 @@ object Texts{
 
     @Composable
     fun Error(
-        text: String,
+        text: String?,
         modifier: Modifier = Modifier,
         color: Color = Colors.Red,
         fontSize: TextUnit = 16.sp,
@@ -211,7 +211,7 @@ object Texts{
         onTextLayout: ((TextLayoutResult) -> Unit)? = null,
         style: TextStyle = LocalTextStyle.current
     ) = Text(
-        text,modifier,color,fontSize,fontStyle,fontWeight,fontFamily,letterSpacing,textDecoration,
+        text ?: "",modifier,color,fontSize,fontStyle,fontWeight,fontFamily,letterSpacing,textDecoration,
         textAlign,lineHeight,overflow,softWrap,maxLines,minLines,onTextLayout,style
     )
 

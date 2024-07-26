@@ -32,7 +32,7 @@ fun HomeScreen(
     component: HomeComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
-    val state = SheetState(
+    val sheetState = SheetState(
         skipPartiallyExpanded = true,
         density = LocalDensity.current,
         initialValue = SheetValue.Hidden
@@ -45,15 +45,16 @@ fun HomeScreen(
     ) {
         Tips{
             tipsSelected = it
-            scope.launch { state.expand() }
+            scope.launch { sheetState.expand() }
         }
         Spacer(Modifier.height(20.dp))
-        Challenge(onClickAll = { component.openChallenge() }, onClickMore = { component.openChallengeDetail() } )
+        Challenge( component )
         Spacer(Modifier.height(20.dp))
         Glass(component){ component.addDrinkGlass() }
     }
+
     tipsSelected?.let {
-        TipsDetailScreen(it, state){ tipsSelected = null}
+        TipsDetailScreen(it, sheetState){ tipsSelected = null}
     }
 }
 

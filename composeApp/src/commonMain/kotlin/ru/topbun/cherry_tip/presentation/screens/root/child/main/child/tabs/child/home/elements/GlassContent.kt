@@ -72,20 +72,20 @@ fun Glass(component: HomeComponent, onClickAdd: () -> Unit) {
         when(val stateScreen = state.glassStateStatus){
             HomeStore.State.GlassStateStatus.Loading -> CircularProgressIndicator(color = Colors.White)
             is HomeStore.State.GlassStateStatus.Result -> {
-                val lazyListState = rememberLazyListState(stateScreen.state.firstPageIndex)
-                LaunchedEffect(stateScreen.state.firstPageIndex){ lazyListState.animateScrollToItem(stateScreen.state.firstPageIndex) }
+                val lazyListState = rememberLazyListState(stateScreen.result.firstPageIndex)
+                LaunchedEffect(stateScreen.result.firstPageIndex){ lazyListState.animateScrollToItem(stateScreen.result.firstPageIndex) }
                 LazyRow(
                     state = lazyListState,
                     modifier = Modifier
                         .fillMaxWidth(),
                     flingBehavior = rememberSnapFlingBehavior(lazyListState)
                 ) {
-                    items(items = stateScreen.state.consumption.chunked(5)) {
+                    items(items = stateScreen.result.consumption.chunked(5)) {
                         pageGlasses(it, onClickAdd)
                     }
                 }
                 IndicatorPages(
-                    countPages = stateScreen.state.countPages,
+                    countPages = stateScreen.result.countPages,
                     indexSelected = lazyListState.firstVisibleItemIndex,
                 ){
                     scope.launch { lazyListState.animateScrollToItem(it) }
@@ -135,7 +135,7 @@ private fun GlassTitle(state: HomeStore.State.GlassStateStatus) {
         var titleText = when(state){
             HomeStore.State.GlassStateStatus.Error -> stringResource(Res.string.error)
             HomeStore.State.GlassStateStatus.Loading -> stringResource(Res.string.loading)
-            is HomeStore.State.GlassStateStatus.Result -> "${state.state.mlConsumed} / ${state.state.mlTotal}"
+            is HomeStore.State.GlassStateStatus.Result -> "${state.result.mlConsumed} / ${state.result.mlTotal}"
             else -> ""
         }
         Texts.Option(titleText, fontSize = 16.sp, color = Colors.Black)

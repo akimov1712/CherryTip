@@ -4,6 +4,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import ru.topbun.cherry_tip.domain.useCases.auth.LoginUseCase
 import ru.topbun.cherry_tip.domain.useCases.auth.SignUpUseCase
+import ru.topbun.cherry_tip.domain.useCases.challenge.GetChallengeUseCase
 import ru.topbun.cherry_tip.domain.useCases.glass.AddDrinkGlassUseCase
 import ru.topbun.cherry_tip.domain.useCases.glass.GetCountGlassUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CheckAccountInfoCompleteUseCase
@@ -20,6 +21,11 @@ val useCaseModule = module {
     authModule()
     userModule()
     glassModule()
+    challengeModule()
+}
+
+private fun Module.challengeModule(){
+    single { GetChallengeUseCase(get()) }
 }
 
 private fun Module.glassModule(){

@@ -68,7 +68,7 @@ private fun Module.tabsModule(){
 }
 
 private fun Module.homeModule(){
-    factory<HomeStoreFactory> { HomeStoreFactory(get(), get(), get()) }
+    factory<HomeStoreFactory> { HomeStoreFactory(get(), get(), get(), get()) }
     factory { (componentContext: ComponentContext, onOpenChallenge: () -> Unit, openChallengeDetail: () -> Unit) ->
         HomeComponentImpl(componentContext = componentContext, onOpenChallenge, openChallengeDetail, storeFactory = get())
     }

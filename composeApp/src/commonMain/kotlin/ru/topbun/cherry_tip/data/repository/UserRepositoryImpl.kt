@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.map
 import ru.topbun.cherry_tip.data.mapper.toDto
 import ru.topbun.cherry_tip.data.mapper.toEntity
 import ru.topbun.cherry_tip.data.source.local.dataStore.AppSettings
+import ru.topbun.cherry_tip.data.source.local.getToken
 import ru.topbun.cherry_tip.data.source.network.dto.user.AccountInfoDto
 import ru.topbun.cherry_tip.data.source.network.service.UserApi
 import ru.topbun.cherry_tip.domain.entity.user.AccountInfoEntity
@@ -25,44 +26,36 @@ class UserRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ): UserRepository {
 
-    private suspend fun getToken(): String {
-        val token = dataStore.data
-            .map { it[AppSettings.KEY_TOKEN] }
-            .firstOrNull()
-
-        return token ?: throw FailedExtractTokenException()
-    }
-
     override suspend fun createProfile(profile: ProfileEntity): Unit = exceptionWrapper{
-        api.createProfile(profile = profile.toDto(), token = getToken()).codeResultWrapper()
+        api.createProfile(profile = profile.toDto(), token = dataStore.getToken()).codeResultWrapper()
     }
 
     override suspend fun updateProfile(profile: ProfileEntity): Unit = exceptionWrapper {
-        api.updateProfile(profile = profile.toDto(), token = getToken()).codeResultWrapper()
+        api.updateProfile(profile = profile.toDto(), token = dataStore.getToken()).codeResultWrapper()
     }
 
     override suspend fun createGoal(goal: GoalEntity): Unit = exceptionWrapper {
-        api.createGoal(goal = goal.toDto(), token = getToken()).codeResultWrapper()
+        api.createGoal(goal = goal.toDto(), token = dataStore.getToken()).codeResultWrapper()
     }
 
     override suspend fun updateGoal(goal: GoalEntity): Unit = exceptionWrapper {
-        api.updateGoal(goal = goal.toDto(), token = getToken()).codeResultWrapper()
+        api.updateGoal(goal = goal.toDto(), token = dataStore.getToken()).codeResultWrapper()
     }
 
     override suspend fun createUnits(units: UnitsEntity): Unit = exceptionWrapper {
-        api.createUnits(units = units.toDto(), token = getToken()).codeResultWrapper()
+        api.createUnits(units = units.toDto(), token = dataStore.getToken()).codeResultWrapper()
     }
 
     override suspend fun updateUnits(units: UnitsEntity): Unit = exceptionWrapper {
-        api.updateUnits(units = units.toDto(), token = getToken()).codeResultWrapper()
+        api.updateUnits(units = units.toDto(), token = dataStore.getToken()).codeResultWrapper()
     }
 
     override suspend fun getAccountInfo(): AccountInfoEntity = exceptionWrapper {
-        api.getAccountInfo(getToken()).body<AccountInfoDto>().toEntity()
+        api.getAccountInfo(dataStore.getToken()).codeResultWrapper().body<AccountInfoDto>().toEntity()
     }
 
     override suspend fun tokenIsValid() {
-        if (getToken().isBlank()) throw FailedExtractTokenException()
+        if (dataStore.getToken().isBlank()) throw FailedExtractTokenException()
     }
 
     override suspend fun checkAccountInfoComplete() {
