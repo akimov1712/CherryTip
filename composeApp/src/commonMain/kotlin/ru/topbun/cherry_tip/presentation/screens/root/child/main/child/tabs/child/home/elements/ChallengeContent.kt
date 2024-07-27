@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.challenges
-import cherrytip.composeapp.generated.resources.error_challenge
+import cherrytip.composeapp.generated.resources.challenges_is_empty
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_clock
 import cherrytip.composeapp.generated.resources.ic_lightning
@@ -77,15 +77,20 @@ fun Challenge(component: HomeComponent) {
             is HomeStore.State.ChallengeStateStatus.Error -> Texts.Error(text = screenState.text)
             HomeStore.State.ChallengeStateStatus.Loading -> CircularProgressIndicator(color = Colors.Purple)
             is HomeStore.State.ChallengeStateStatus.Result -> {
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(horizontal = 20.dp)
-                ) {
-                    items(items = screenState.result.challengeStatus, key = {it.title}){
-                        ChallengeItem(it){component.openChallengeDetail()}
+                if (screenState.result.challengeStatus.isEmpty()){
+                    Texts.Option(stringResource(Res.string.challenges_is_empty), color = Colors.Black)
+                } else {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        contentPadding = PaddingValues(horizontal = 20.dp)
+                    ) {
+                        items(items = screenState.result.challengeStatus, key = {it.title}){
+                            ChallengeItem(it){component.openChallengeDetail()}
+                        }
                     }
                 }
+
             }
             else -> {}
         }

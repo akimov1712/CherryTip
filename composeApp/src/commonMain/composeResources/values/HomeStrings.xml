@@ -6,7 +6,7 @@
     <string name="remember_hydrated">Remember to stay hydrated!</string>
     <string name="more">More</string>
     <string name="failed_get_drink">Failed to get drink glasses</string>
-    <string name="error_challenge">Error when receiving challenges</string>
+    <string name="challenges_is_empty">Challenges not found</string>
     <string name="error">Error</string>
     <string name="loading">Loading</string>
 </resources>
