@@ -1,5 +1,7 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.elements
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -10,12 +12,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +31,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -45,7 +52,7 @@ import cherrytip.composeapp.generated.resources.ic_lightning
 import cherrytip.composeapp.generated.resources.more
 import cherrytip.composeapp.generated.resources.see_all
 import coil3.compose.AsyncImage
-import io.github.aakira.napier.Napier
+import coil3.compose.AsyncImagePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
@@ -67,68 +74,98 @@ fun Challenge(component: HomeComponent) {
         Texts.Option(
             stringResource(Res.string.see_all),
             fontSize = 16.sp,
-            modifier = Modifier.clickable (interactionSource = MutableInteractionSource(),
+            modifier = Modifier.clickable(interactionSource = MutableInteractionSource(),
                 indication = null, onClick = { component.openChallenge() })
         )
     }
     Spacer(Modifier.height(16.dp))
-    Box(Modifier.fillMaxWidth().defaultMinSize(minHeight = 150.dp), contentAlignment = Alignment.Center){
-        when(val screenState = state.challengeStateStatus){
+    Box(
+        Modifier.fillMaxWidth().defaultMinSize(minHeight = 150.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        when (val screenState = state.challengeStateStatus) {
             is HomeStore.State.ChallengeStateStatus.Error -> Texts.Error(text = screenState.text)
             HomeStore.State.ChallengeStateStatus.Loading -> CircularProgressIndicator(color = Colors.Purple)
             is HomeStore.State.ChallengeStateStatus.Result -> {
-                if (screenState.result.challengeStatus.isEmpty()){
-                    Texts.Option(stringResource(Res.string.challenges_is_empty), color = Colors.Black)
+                if (screenState.result.challengeStatus.isEmpty()) {
+                    Texts.Option(
+                        stringResource(Res.string.challenges_is_empty),
+                        color = Colors.Black
+                    )
                 } else {
                     LazyRow(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         contentPadding = PaddingValues(horizontal = 20.dp)
                     ) {
-                        items(items = screenState.result.challengeStatus, key = {it.title}){
-                            ChallengeItem(it){component.openChallengeDetail()}
+                        items(items = screenState.result.challengeStatus, key = { it.title }) {
+                            ChallengeItem(it) { component.openChallengeDetail() }
                         }
                     }
                 }
 
             }
+
             else -> {}
         }
     }
-
-
 }
 
 @Composable
 private fun ChallengeItem(challenge: ChallengeEntity, onClickMore: () -> Unit) {
-    Card(
-        modifier = Modifier.width(310.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = challenge.color)
-    ) {
-        Row(
-            modifier = Modifier.height(IntrinsicSize.Min)
+    Box(
+        Modifier.width(310.dp).height(IntrinsicSize.Min).background(color = challenge.color, shape = RoundedCornerShape(20.dp))
+    ){
+        InfoChallenge(
+            modifier = Modifier.align(Alignment.TopStart),
+            challenge = challenge,
+            onClickMore = onClickMore
+        )
+        Box(
+            Modifier.fillMaxWidth(0.6f).align(Alignment.CenterEnd)
         ) {
-            InfoChallenge(challenge = challenge,onClickMore = onClickMore)
+            var isLoading by rememberSaveable { mutableStateOf(true) }
+            if (isLoading) {
+                CircularProgressIndicator(Modifier.align(Alignment.Center), color = Colors.White)
+            }
             AsyncImage(
-                modifier = Modifier.fillMaxWidth().offset(y = 30.dp, x = 10.dp).scale(1.2f),
+                modifier = Modifier.fillMaxSize(),
                 model = challenge.image,
+                onState = { isLoading = it is AsyncImagePainter.State.Loading },
                 contentScale = ContentScale.FillWidth,
-                contentDescription = null
+                alignment = Alignment.BottomEnd,
+                contentDescription = challenge.title
             )
         }
+
     }
+
 }
 
 @Composable
-private fun InfoChallenge(challenge: ChallengeEntity, modifier: Modifier = Modifier, onClickMore: () -> Unit) {
+private fun InfoChallenge(
+    challenge: ChallengeEntity,
+    modifier: Modifier = Modifier,
+    onClickMore: () -> Unit
+) {
     Column(
         modifier = modifier.padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Texts.Option(challenge.title, color = Colors.Black)
-        IconWithText(painter = painterResource(Res.drawable.ic_clock), text = "${challenge.durationDays} days")
-        IconWithText(painter = painterResource(Res.drawable.ic_lightning), text = challenge.difficulty.name)
+        Texts.Option(
+            text = challenge.title,
+            color = Colors.Black,
+            textAlign = TextAlign.Start,
+
+            )
+        IconWithText(
+            painter = painterResource(Res.drawable.ic_clock),
+            text = "${challenge.durationDays} days"
+        )
+        IconWithText(
+            painter = painterResource(Res.drawable.ic_lightning),
+            text = challenge.difficulty.name
+        )
         Buttons.Button(
             onClick = onClickMore,
             shape = RoundedCornerShape(10.dp),
