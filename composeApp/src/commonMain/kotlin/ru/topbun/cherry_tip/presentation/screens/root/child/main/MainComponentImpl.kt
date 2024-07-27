@@ -41,7 +41,7 @@ class MainComponentImpl(
         Config.Challenge -> {
             val onClickBack = { navigation.pop() }
             val openChallengeDetail = { navigation.pushToFront(Config.ChallengeDetail) }
-            val component: ChallengeComponentImpl = getKoin().get{ parametersOf(componentContext, onClickBack, openChallengeDetail) }
+            val component: ChallengeComponentImpl = getKoin().get{ parametersOf(componentContext, onClickBack, openChallengeDetail, onOpenAuth) }
             MainComponent.Child.Challenge(component)
         }
         Config.ChallengeDetail -> {

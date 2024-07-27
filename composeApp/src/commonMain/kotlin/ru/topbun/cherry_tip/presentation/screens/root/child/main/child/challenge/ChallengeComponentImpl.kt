@@ -6,12 +6,14 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
 import ru.topbun.cherry_tip.utills.componentScope
 
 class ChallengeComponentImpl(
     componentContext: ComponentContext,
     private val onClickBack: () -> Unit,
     private val onOpenChallengeDetail: () -> Unit,
+    private val onOpenAuth: () -> Unit,
     private val storeFactory: ChallengeStoreFactory
 ) : ChallengeComponent, ComponentContext by componentContext{
 
@@ -24,6 +26,7 @@ class ChallengeComponentImpl(
                 when(it){
                     ChallengeStore.Label.OnClick -> onClickBack()
                     ChallengeStore.Label.OpenChallengeDetail -> onOpenChallengeDetail()
+                    ChallengeStore.Label.OpenAuthScreen -> onOpenAuth()
                 }
             }
         }
@@ -31,5 +34,7 @@ class ChallengeComponentImpl(
 
     override fun clickBack() = store.accept(ChallengeStore.Intent.OnClick)
     override fun openChallengeDetail() = store.accept(ChallengeStore.Intent.OpenChallengeDetail)
+    override fun loadChallenge(status: ChallengeStatus) = store.accept(ChallengeStore.Intent.LoadChallenge(status))
+    override fun choiceChallengeStatus(index: Int) = store.accept(ChallengeStore.Intent.ChangeStatusChallenge(index))
 
 }

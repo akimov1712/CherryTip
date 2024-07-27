@@ -48,9 +48,20 @@ private fun Module.challengeDetailModule(){
 }
 
 private fun Module.challengeModule(){
-    factory<ChallengeStoreFactory> { ChallengeStoreFactory(get()) }
-    factory { (componentContext: ComponentContext, onClickBack: () -> Unit, openChallengeDetail: () -> Unit) ->
-        ChallengeComponentImpl(componentContext, onClickBack, openChallengeDetail, get())
+    factory<ChallengeStoreFactory> { ChallengeStoreFactory(get(),get()) }
+    factory { (
+        componentContext: ComponentContext,
+        onClickBack: () -> Unit,
+        onOpenChallengeDetail: () -> Unit,
+        onOpenAuth: () -> Unit
+    ) ->
+        ChallengeComponentImpl(
+            componentContext = componentContext,
+            onClickBack = onClickBack,
+            onOpenChallengeDetail = onOpenChallengeDetail,
+            onOpenAuth = onOpenAuth,
+            storeFactory = get()
+        )
     }
 }
 
