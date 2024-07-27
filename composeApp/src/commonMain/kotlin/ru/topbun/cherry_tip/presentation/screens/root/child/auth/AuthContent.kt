@@ -10,7 +10,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.Lo
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyScreen
-import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashScreen
 
 @Composable
 fun AuthScreen(

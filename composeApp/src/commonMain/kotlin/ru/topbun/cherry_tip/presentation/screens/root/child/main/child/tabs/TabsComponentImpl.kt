@@ -15,6 +15,7 @@ class TabsComponentImpl(
     private val componentContext: ComponentContext,
     private val onOpenChallenge: () -> Unit,
     private val onOpenChallengeDetail: () -> Unit,
+    private val onOpenAuth: () -> Unit,
 ) : TabsComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -32,7 +33,7 @@ class TabsComponentImpl(
         componentContext: ComponentContext
     ): TabsComponent.Child = when (config) {
         Config.Home -> {
-            val component: HomeComponentImpl = getKoin().get { parametersOf(componentContext, onOpenChallenge, onOpenChallengeDetail) }
+            val component: HomeComponentImpl = getKoin().get { parametersOf(componentContext, onOpenChallenge, onOpenChallengeDetail, onOpenAuth) }
             TabsComponent.Child.Home(component)
         }
     }

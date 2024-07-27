@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.splash
+package ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween

@@ -16,7 +16,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.Lo
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashComponentImpl
 
 class AuthComponentImpl(
     componentContext: ComponentContext,

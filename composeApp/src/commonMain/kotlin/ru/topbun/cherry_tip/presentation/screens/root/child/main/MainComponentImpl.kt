@@ -17,7 +17,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 
 class MainComponentImpl(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    private val onOpenAuth: () -> Unit
 ) : MainComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -34,7 +35,7 @@ class MainComponentImpl(
         Config.Tabs -> {
             val openChallenge = { navigation.pushToFront(Config.Challenge) }
             val openChallengeDetail = { navigation.pushToFront(Config.ChallengeDetail) }
-            val component: TabsComponentImpl = getKoin().get{ parametersOf(componentContext, openChallenge, openChallengeDetail) }
+            val component: TabsComponentImpl = getKoin().get{ parametersOf(componentContext, openChallenge, openChallengeDetail, onOpenAuth) }
             MainComponent.Child.Tabs(component)
         }
         Config.Challenge -> {

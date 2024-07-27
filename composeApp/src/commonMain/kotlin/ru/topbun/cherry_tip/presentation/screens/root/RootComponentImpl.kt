@@ -39,7 +39,8 @@ class RootComponentImpl(
             }
 
             Config.Main -> {
-                val component: MainComponentImpl = getKoin().get{ parametersOf(componentContext) }
+                val onOpenAuth = { navigation.replaceAll(Config.Auth) }
+                val component: MainComponentImpl = getKoin().get{ parametersOf(componentContext, onOpenAuth) }
                 RootComponent.Child.Main(component)
             }
         }

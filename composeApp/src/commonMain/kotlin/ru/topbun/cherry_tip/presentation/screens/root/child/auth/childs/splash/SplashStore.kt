@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.splash
+package ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
@@ -8,9 +8,9 @@ import io.ktor.client.network.sockets.ConnectTimeoutException
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.useCases.user.CheckAccountInfoCompleteUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.TokenIsValidUseCase
-import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashStore.Intent
-import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashStore.Label
-import ru.topbun.cherry_tip.presentation.screens.root.child.splash.SplashStore.State
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashStore.Intent
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashStore.Label
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashStore.State
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.FailedExtractTokenException
 

@@ -12,6 +12,7 @@ class HomeComponentImpl(
     componentContext: ComponentContext,
     private val onOpenChallenge: () -> Unit,
     private val onOpenChallengeDetail: () -> Unit,
+    private val onOpenAuth: () -> Unit,
     private val storeFactory: HomeStoreFactory
 ): HomeComponent, ComponentContext by componentContext {
 
@@ -24,6 +25,7 @@ class HomeComponentImpl(
                 when(it){
                     HomeStore.Label.OpenChallengeScreen -> onOpenChallenge()
                     HomeStore.Label.OpenChallengeDetailScreen -> onOpenChallengeDetail()
+                    HomeStore.Label.OpenAuthScreen -> onOpenAuth()
                 }
             }
         }

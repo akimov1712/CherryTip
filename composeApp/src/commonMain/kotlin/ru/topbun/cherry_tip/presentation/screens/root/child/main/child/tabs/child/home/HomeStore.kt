@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.ktor.client.utils.EmptyContent.status
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
@@ -18,6 +19,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.chil
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.Const
+import ru.topbun.cherry_tip.utills.FailedExtractTokenException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
 import kotlin.math.ceil
 
@@ -61,6 +63,7 @@ interface HomeStore : Store<Intent, State, Label> {
     sealed interface Label{
         data object OpenChallengeScreen: Label
         data object OpenChallengeDetailScreen: Label
+        data object OpenAuthScreen: Label
     }
 
 }
@@ -92,6 +95,9 @@ class HomeStoreFactory(
         data object ChallengeLoadingStatus: Action
         data class ChallengeErrorStatus(val text: String): Action
         data class ChallengeResultStatus(val state: State.ChallengeState): Action
+
+        data object OpenAuthScreen: Action
+
     }
 
     private sealed interface Msg {
@@ -106,8 +112,11 @@ class HomeStoreFactory(
 
     private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
         override fun invoke() {
-            scope.launch { sendChallenge() }
-            scope.launch { sendGlass() }
+            val handlerTokenException = CoroutineExceptionHandler{_,throwable ->
+                if(throwable is FailedExtractTokenException) dispatch(Action.OpenAuthScreen) }
+
+            scope.launch(handlerTokenException) { sendChallenge() }
+            scope.launch(handlerTokenException) { sendGlass() }
         }
 
         private suspend fun sendChallenge() {
@@ -156,6 +165,7 @@ class HomeStoreFactory(
                 is Action.ChallengeErrorStatus -> dispatch(Msg.ChallengeErrorStatus(action.text))
                 Action.ChallengeLoadingStatus -> dispatch(Msg.ChallengeLoadingStatus)
                 is Action.ChallengeResultStatus -> dispatch(Msg.ChallengeResultStatus(action.state))
+                Action.OpenAuthScreen -> publish(Label.OpenAuthScreen)
             }
         }
 
@@ -167,7 +177,6 @@ class HomeStoreFactory(
                         addDrinkGlassUseCase()
                     }
                 }
-
                 Intent.OpenChallengeScreen -> publish(Label.OpenChallengeScreen)
                 Intent.OpenChallengeDetailScreen -> publish(Label.OpenChallengeDetailScreen)
             }
