@@ -2,6 +2,7 @@ package ru.topbun.cherry_tip.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import io.github.aakira.napier.Napier
 import io.ktor.client.call.body
 import ru.topbun.cherry_tip.data.mapper.toEntityList
 import ru.topbun.cherry_tip.data.source.local.getToken

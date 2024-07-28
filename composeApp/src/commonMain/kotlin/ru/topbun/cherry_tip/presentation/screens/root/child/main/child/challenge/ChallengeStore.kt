@@ -120,7 +120,7 @@ class ChallengeStoreFactory(
 
                 is Intent.ChangeStatusChallenge -> {
                     sendChallenge(state().items[intent.index])
-                    (Msg.ChangeStatusChallenge(intent.index))
+                    dispatch(Msg.ChangeStatusChallenge(intent.index))
                 }
             }
         }

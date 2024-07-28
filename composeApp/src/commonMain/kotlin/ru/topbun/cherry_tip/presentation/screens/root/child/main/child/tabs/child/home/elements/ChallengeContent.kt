@@ -157,7 +157,7 @@ private fun InfoChallenge(
             color = Colors.Black,
             textAlign = TextAlign.Start,
 
-            )
+        )
         IconWithText(
             painter = painterResource(Res.drawable.ic_clock),
             text = "${challenge.durationDays} days"

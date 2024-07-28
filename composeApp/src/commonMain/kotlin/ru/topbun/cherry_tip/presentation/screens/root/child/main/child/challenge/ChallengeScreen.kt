@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
@@ -63,31 +64,33 @@ fun ChallengeScreen(
         modifier = modifier.fillMaxSize().padding(top = 20.dp, start = 20.dp, end = 20.dp)
     ) {
         val state by component.state.collectAsState()
-        var selectedIndex by rememberSaveable { mutableStateOf(0) }
         BackWithTitle { component.clickBack() }
         Spacer(Modifier.height(30.dp))
         CustomTabRow(
             items = state.items.map { it.toString() },
-            selectedIndex = selectedIndex
+            selectedIndex = state.selectedIndex
         ) {
-            selectedIndex = it
+            component.choiceChallengeStatus(it)
         }
         Spacer(Modifier.height(16.dp))
-        Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+        Box(modifier = Modifier.fillMaxSize()) {
             when (val screenState = state.challengeStateStatus) {
                 is ChallengeStore.State.ChallengeState.Error -> {
                     Texts.Error(text = screenState.text)
                 }
 
                 ChallengeStore.State.ChallengeState.Loading -> {
-                    CircularProgressIndicator(color = Colors.Purple)
+                    CircularProgressIndicator(Modifier.align(Alignment.Center), color = Colors.Purple)
                 }
 
                 is ChallengeStore.State.ChallengeState.Result -> {
                     if (screenState.challenges.isEmpty()) {
                         Texts.Option(
-                            stringResource(Res.string.challenges_is_empty),
-                            color = Colors.Black
+                            modifier = Modifier.fillMaxSize(),
+                            text = stringResource(Res.string.challenges_is_empty),
+                            color = Colors.Black,
+                            textAlign = TextAlign.Center
+
                         )
                     } else {
                         LazyColumn(
@@ -163,10 +166,14 @@ private fun InfoChallenge(challenge: ChallengeEntity, modifier: Modifier, onClic
         modifier = modifier.padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Texts.Option(challenge.title, color = Colors.Black)
+        Texts.Option(
+            text = challenge.title,
+            color = Colors.Black,
+            textAlign = TextAlign.Start
+        )
         IconWithText(
             painter = painterResource(Res.drawable.ic_clock),
-            text = "${challenge.durationDays} days"
+            text = "${challenge.durationDays} days",
         )
         IconWithText(
             painter = painterResource(Res.drawable.ic_lightning),
