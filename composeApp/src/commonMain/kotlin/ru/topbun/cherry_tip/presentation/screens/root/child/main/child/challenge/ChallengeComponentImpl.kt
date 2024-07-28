@@ -12,7 +12,7 @@ import ru.topbun.cherry_tip.utills.componentScope
 class ChallengeComponentImpl(
     componentContext: ComponentContext,
     private val onClickBack: () -> Unit,
-    private val onOpenChallengeDetail: () -> Unit,
+    private val onOpenChallengeDetail: (Int) -> Unit,
     private val onOpenAuth: () -> Unit,
     private val storeFactory: ChallengeStoreFactory
 ) : ChallengeComponent, ComponentContext by componentContext{
@@ -25,7 +25,7 @@ class ChallengeComponentImpl(
             store.labels.collect{
                 when(it){
                     ChallengeStore.Label.OnClick -> onClickBack()
-                    ChallengeStore.Label.OpenChallengeDetail -> onOpenChallengeDetail()
+                    is ChallengeStore.Label.OpenChallengeDetail -> onOpenChallengeDetail(it.id)
                     ChallengeStore.Label.OpenAuthScreen -> onOpenAuth()
                 }
             }
@@ -33,7 +33,7 @@ class ChallengeComponentImpl(
     }
 
     override fun clickBack() = store.accept(ChallengeStore.Intent.OnClick)
-    override fun openChallengeDetail() = store.accept(ChallengeStore.Intent.OpenChallengeDetail)
+    override fun openChallengeDetail(id: Int) = store.accept(ChallengeStore.Intent.OpenChallengeDetail(id))
     override fun loadChallenge(status: ChallengeStatus) = store.accept(ChallengeStore.Intent.LoadChallenge(status))
     override fun choiceChallengeStatus(index: Int) = store.accept(ChallengeStore.Intent.ChangeStatusChallenge(index))
 

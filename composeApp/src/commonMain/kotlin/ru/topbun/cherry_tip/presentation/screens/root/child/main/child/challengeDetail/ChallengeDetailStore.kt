@@ -5,9 +5,20 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.launch
+import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
+import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
+import ru.topbun.cherry_tip.domain.useCases.challenge.CancelChallengeUseCase
+import ru.topbun.cherry_tip.domain.useCases.challenge.GetUserChallengeByIdUseCase
+import ru.topbun.cherry_tip.domain.useCases.challenge.StartChallengeUseCase
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailStore.Label
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailStore.State
+import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
+import ru.topbun.cherry_tip.utills.ClientException
+import ru.topbun.cherry_tip.utills.FailedExtractTokenException
+import ru.topbun.cherry_tip.utills.RequestTimeoutException
 
 interface ChallengeDetailStore : Store<Intent, State, Label> {
 
@@ -15,34 +26,76 @@ interface ChallengeDetailStore : Store<Intent, State, Label> {
         data object ClickBack: Intent
     }
 
-    data class State(val todo: Unit = Unit)
+    data class State(
+        val challengeState: ChallengeState
+    ){
+
+        sealed interface ChallengeState{
+            data object Initial: ChallengeState
+            data object Loading: ChallengeState
+            data class Error(val text: String): ChallengeState
+            data class Success(val challenge: ChallengeEntity): ChallengeState
+        }
+    }
 
     sealed interface Label {
         data object ClickBack: Label
+        data object OpenAuthScreen : Label
     }
 }
 
 class ChallengeDetailStoreFactory(
-    private val storeFactory: StoreFactory
+    private val storeFactory: StoreFactory,
+    private val getUserChallengeByIdUseCase: GetUserChallengeByIdUseCase,
+    private val startChallengeUseCase: StartChallengeUseCase,
+    private val cancelChallengeUseCase: CancelChallengeUseCase,
 ) {
 
-    fun create(): ChallengeDetailStore =
+    fun create(id: Int): ChallengeDetailStore =
         object : ChallengeDetailStore, Store<Intent, State, Label> by storeFactory.create(
             name = "ChallengeDetailStore",
-            initialState = State(),
-            bootstrapper = BootstrapperImpl(),
+            initialState = State(
+                challengeState = State.ChallengeState.Initial
+            ),
+            bootstrapper = BootstrapperImpl(id),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {}
 
     private sealed interface Action {
+        data object ChallengeLoading: Action
+        data class ChallengeError(val text: String): Action
+        data class ChallengeSuccess(val challenge: ChallengeEntity): Action
+        data object OpenAuthScreen : Action
     }
 
     private sealed interface Msg {
+        data object ChallengeLoading: Msg
+        data class ChallengeError(val text: String): Msg
+        data class ChallengeSuccess(val challenge: ChallengeEntity): Msg
     }
 
-    private class BootstrapperImpl : CoroutineBootstrapper<Action>() {
+    private inner class BootstrapperImpl(private val id: Int) : CoroutineBootstrapper<Action>() {
         override fun invoke() {
+            val handlerTokenException = CoroutineExceptionHandler { _, throwable ->
+                if (throwable is FailedExtractTokenException) dispatch(Action.OpenAuthScreen)
+            }
+
+            scope.launch(handlerTokenException) { sendChallenge() }
+        }
+
+        private suspend fun sendChallenge() {
+            try {
+                dispatch(Action.ChallengeLoading)
+                val result = getUserChallengeByIdUseCase(id)
+                dispatch(Action.ChallengeSuccess(result))
+            } catch (e: AccountInfoNotCompleteException) {
+                dispatch(Action.ChallengeError(e.message ?: ""))
+            } catch (e: RequestTimeoutException) {
+                dispatch(Action.ChallengeError(e.message ?: ""))
+            } catch (e: ClientException) {
+                dispatch(Action.ChallengeError(e.errorText))
+            }
         }
     }
 
@@ -53,11 +106,29 @@ class ChallengeDetailStoreFactory(
                 Intent.ClickBack -> publish(Label.ClickBack)
             }
         }
+
+        override fun executeAction(action: Action) {
+            super.executeAction(action)
+            when(action){
+                is Action.ChallengeError -> dispatch(Msg.ChallengeError(action.text))
+                Action.ChallengeLoading -> dispatch(Msg.ChallengeLoading)
+                is Action.ChallengeSuccess -> dispatch(Msg.ChallengeSuccess(action.challenge))
+                Action.OpenAuthScreen -> publish(Label.OpenAuthScreen)
+            }
+        }
     }
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State = when (message) {
-            else -> {copy()}
+            is Msg.ChallengeError -> copy(
+                challengeState = State.ChallengeState.Error(message.text)
+            )
+            Msg.ChallengeLoading -> copy(
+                challengeState = State.ChallengeState.Loading
+            )
+            is Msg.ChallengeSuccess -> copy(
+                challengeState = State.ChallengeState.Success(message.challenge)
+            )
         }
     }
 }

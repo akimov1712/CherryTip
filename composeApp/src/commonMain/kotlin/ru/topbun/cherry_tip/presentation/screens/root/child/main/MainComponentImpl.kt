@@ -34,19 +34,21 @@ class MainComponentImpl(
     private fun createChild(config: Config, componentContext: ComponentContext): MainComponent.Child = when(config){
         Config.Tabs -> {
             val openChallenge = { navigation.pushToFront(Config.Challenge) }
-            val openChallengeDetail = { navigation.pushToFront(Config.ChallengeDetail) }
+            val openChallengeDetail = {id: Int ->  navigation.pushToFront(Config.ChallengeDetail(id)) }
             val component: TabsComponentImpl = getKoin().get{ parametersOf(componentContext, openChallenge, openChallengeDetail, onOpenAuth) }
             MainComponent.Child.Tabs(component)
         }
         Config.Challenge -> {
             val onClickBack = { navigation.pop() }
-            val openChallengeDetail = { navigation.pushToFront(Config.ChallengeDetail) }
+            val openChallengeDetail = { id: Int -> navigation.pushToFront(Config.ChallengeDetail(id)) }
             val component: ChallengeComponentImpl = getKoin().get{ parametersOf(componentContext, onClickBack, openChallengeDetail, onOpenAuth) }
             MainComponent.Child.Challenge(component)
         }
-        Config.ChallengeDetail -> {
+        is Config.ChallengeDetail -> {
             val onClickBack = {navigation.pop()}
-            val component: ChallengeDetailComponentImpl = getKoin().get{ parametersOf(componentContext, onClickBack) }
+            val component: ChallengeDetailComponentImpl = getKoin().get{
+                parametersOf(componentContext, onClickBack, onOpenAuth, config.id)
+            }
             MainComponent.Child.ChallengeDetail(component)
         }
         Config.TipsDetail -> TODO()
@@ -62,7 +64,7 @@ class MainComponentImpl(
         data object Challenge: Config
 
         @Serializable
-        data object ChallengeDetail: Config
+        data class ChallengeDetail(val id: Int): Config
 
         @Serializable
         data object TipsDetail: Config

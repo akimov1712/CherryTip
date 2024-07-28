@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import io.github.aakira.napier.Napier
 import io.ktor.client.call.body
+import ru.topbun.cherry_tip.data.mapper.toEntity
 import ru.topbun.cherry_tip.data.mapper.toEntityList
 import ru.topbun.cherry_tip.data.source.local.getToken
 import ru.topbun.cherry_tip.data.source.network.dto.challenge.ChallengeDto
@@ -23,6 +24,19 @@ class ChallengeRepositoryImpl(
     override suspend fun getChallenges(status: ChallengeStatus): List<ChallengeEntity> = exceptionWrapper {
         api.getChallenge(token = dataStore.getToken(), status = status)
             .codeResultWrapper().body<List<ChallengeDto>>().toEntityList()
+    }
+
+    override suspend fun startChallenge(id: Int): Unit = exceptionWrapper{
+        api.startChallenge(token = dataStore.getToken(), id = id).codeResultWrapper()
+    }
+
+    override suspend fun cancelChallenge(id: Int): Unit = exceptionWrapper{
+        api.cancelChallenge(token = dataStore.getToken(), id = id).codeResultWrapper()
+    }
+
+    override suspend fun getUserChallengeById(id: Int): ChallengeEntity = exceptionWrapper{
+        api.getUserChallengeById(token = dataStore.getToken(), id = id)
+            .codeResultWrapper().body<ChallengeDto>().toEntity()
     }
 
 }

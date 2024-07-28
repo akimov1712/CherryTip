@@ -1,16 +1,18 @@
 package ru.topbun.cherry_tip.data.source.network.dto.challenge
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.topbun.cherry_tip.domain.entity.challenge.Difficulty
 
 @Serializable
 data class ChallengeDto(
-    val id: Int,
-    val title: String,
-    val description: String,
-    val image: String,
-    val color: String,
-    val durationDays: Int,
-    val difficulty: Difficulty,
-    val tips: List<String>
+    @SerialName("id") val id: Int,
+    @SerialName("title") val title: String,
+    @SerialName("description") val description: String,
+    @SerialName("image") val image: String,
+    @SerialName("color") val color: String,
+    @SerialName("durationDays") val durationDays: Int,
+    @SerialName("difficulty") val difficulty: Difficulty,
+    @SerialName("tips") val tips: List<String>,
+    @SerialName("userChallenge") val userChallenge: UserChallengeDto? = null
 )

@@ -98,7 +98,7 @@ fun ChallengeScreen(
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             items(items = screenState.challenges, key = { it.id }) {
-                                ChallengeItem(challenge = it) { component.openChallengeDetail() }
+                                ChallengeItem(challenge = it) { component.openChallengeDetail(it.id) }
                             }
                         }
                     }

@@ -99,7 +99,7 @@ fun Challenge(component: HomeComponent) {
                         contentPadding = PaddingValues(horizontal = 20.dp)
                     ) {
                         items(items = screenState.result.challengeStatus, key = { it.title }) {
-                            ChallengeItem(it) { component.openChallengeDetail() }
+                            ChallengeItem(it) { component.openChallengeDetail(it.id) }
                         }
                     }
                 }

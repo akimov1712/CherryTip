@@ -41,9 +41,19 @@ val decomposeModule = module {
 }
 
 private fun Module.challengeDetailModule(){
-    factory<ChallengeDetailStoreFactory> { ChallengeDetailStoreFactory(get()) }
-    factory { (componentContext: ComponentContext, onClickBack: () -> Unit) ->
-        ChallengeDetailComponentImpl(componentContext, onClickBack, get())
+    factory<ChallengeDetailStoreFactory> { ChallengeDetailStoreFactory(get(), get(), get(), get()) }
+    factory { (
+        componentContext: ComponentContext,
+        onClickBack: () -> Unit,
+        onOpenAuth: () -> Unit,
+        id: Int) ->
+        ChallengeDetailComponentImpl(
+            componentContext = componentContext,
+            onClickBack = onClickBack,
+            onOpenAuth = onOpenAuth,
+            id = id,
+            storeFactory = get()
+        )
     }
 }
 
@@ -52,7 +62,7 @@ private fun Module.challengeModule(){
     factory { (
         componentContext: ComponentContext,
         onClickBack: () -> Unit,
-        onOpenChallengeDetail: () -> Unit,
+        onOpenChallengeDetail: (Int) -> Unit,
         onOpenAuth: () -> Unit
     ) ->
         ChallengeComponentImpl(
@@ -81,7 +91,7 @@ private fun Module.tabsModule(){
     factory { (
         componentContext: ComponentContext,
         onOpenChallenge: () -> Unit,
-        onOpenChallengeDetail: () -> Unit,
+        onOpenChallengeDetail: (Int) -> Unit,
         onOpenAuth: () -> Unit) ->
         TabsComponentImpl(
             componentContext = componentContext,
@@ -97,7 +107,7 @@ private fun Module.homeModule(){
     factory { (
         componentContext: ComponentContext,
         onOpenChallenge: () -> Unit,
-        openChallengeDetail: () -> Unit,
+        openChallengeDetail: (Int) -> Unit,
         onOpenAuth: () -> Unit) ->
         HomeComponentImpl(
             componentContext = componentContext,

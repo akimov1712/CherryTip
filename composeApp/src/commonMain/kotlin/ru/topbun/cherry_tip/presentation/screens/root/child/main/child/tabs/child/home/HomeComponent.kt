@@ -8,6 +8,6 @@ interface HomeComponent {
 
     fun addDrinkGlass()
     fun openChallenge()
-    fun openChallengeDetail()
+    fun openChallengeDetail(id: Int)
 
 }

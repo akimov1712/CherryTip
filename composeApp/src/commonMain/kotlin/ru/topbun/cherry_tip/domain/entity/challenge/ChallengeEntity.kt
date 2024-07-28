@@ -12,5 +12,6 @@ data class ChallengeEntity(
     val color: Color,
     val durationDays: Int,
     val difficulty: Difficulty,
-    val tips: List<String>
+    val tips: List<String>,
+    val userChallenge: UserChallengeEntity?
 )

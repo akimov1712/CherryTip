@@ -4,7 +4,10 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import ru.topbun.cherry_tip.domain.useCases.auth.LoginUseCase
 import ru.topbun.cherry_tip.domain.useCases.auth.SignUpUseCase
+import ru.topbun.cherry_tip.domain.useCases.challenge.CancelChallengeUseCase
 import ru.topbun.cherry_tip.domain.useCases.challenge.GetChallengeUseCase
+import ru.topbun.cherry_tip.domain.useCases.challenge.GetUserChallengeByIdUseCase
+import ru.topbun.cherry_tip.domain.useCases.challenge.StartChallengeUseCase
 import ru.topbun.cherry_tip.domain.useCases.glass.AddDrinkGlassUseCase
 import ru.topbun.cherry_tip.domain.useCases.glass.GetCountGlassUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CheckAccountInfoCompleteUseCase
@@ -26,6 +29,9 @@ val useCaseModule = module {
 
 private fun Module.challengeModule(){
     single { GetChallengeUseCase(get()) }
+    single { StartChallengeUseCase(get()) }
+    single { CancelChallengeUseCase(get()) }
+    single { GetUserChallengeByIdUseCase(get()) }
 }
 
 private fun Module.glassModule(){

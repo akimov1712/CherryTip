@@ -11,11 +11,13 @@ import ru.topbun.cherry_tip.utills.componentScope
 
 class ChallengeDetailComponentImpl(
     componentContext: ComponentContext,
+    private val id: Int,
     private val onClickBack: () -> Unit,
+    private val onOpenAuth: () -> Unit,
     private val storeFactory: ChallengeDetailStoreFactory
 ) : ChallengeDetailComponent, ComponentContext by componentContext {
 
-    private val store = instanceKeeper.getStore { storeFactory.create() }
+    private val store = instanceKeeper.getStore { storeFactory.create(id) }
     override val state = store.stateFlow
 
     init {
@@ -23,6 +25,7 @@ class ChallengeDetailComponentImpl(
             store.labels.collect{
                 when(it){
                     ChallengeDetailStore.Label.ClickBack -> onClickBack()
+                    ChallengeDetailStore.Label.OpenAuthScreen -> onOpenAuth()
                 }
             }
         }

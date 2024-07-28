@@ -14,7 +14,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.chil
 class TabsComponentImpl(
     private val componentContext: ComponentContext,
     private val onOpenChallenge: () -> Unit,
-    private val onOpenChallengeDetail: () -> Unit,
+    private val onOpenChallengeDetail: (Int) -> Unit,
     private val onOpenAuth: () -> Unit,
 ) : TabsComponent, ComponentContext by componentContext {
 

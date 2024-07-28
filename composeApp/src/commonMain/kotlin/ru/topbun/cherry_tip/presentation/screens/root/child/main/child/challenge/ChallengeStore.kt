@@ -23,7 +23,7 @@ interface ChallengeStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object OnClick : Intent
-        data object OpenChallengeDetail : Intent
+        data class OpenChallengeDetail(val id: Int) : Intent
         data class LoadChallenge(val status: ChallengeStatus) : Intent
         data class ChangeStatusChallenge(val index: Int) : Intent
     }
@@ -44,7 +44,7 @@ interface ChallengeStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data object OnClick : Label
-        data object OpenChallengeDetail : Label
+        data class OpenChallengeDetail(val id: Int) : Label
         data object OpenAuthScreen : Label
     }
 }
@@ -58,7 +58,7 @@ class ChallengeStoreFactory(
         object : ChallengeStore, Store<Intent, State, Label> by storeFactory.create(
             name = "ChallengeStore",
             initialState = State(
-                items = ChallengeStatus.entries.toList(),
+                items = listOf(ChallengeStatus.All, ChallengeStatus.Active, ChallengeStatus.Finished),
                 selectedIndex = 0,
                 challengeStateStatus = State.ChallengeState.Initial
             ),
@@ -113,7 +113,7 @@ class ChallengeStoreFactory(
             super.executeIntent(intent)
             when (intent) {
                 Intent.OnClick -> publish(Label.OnClick)
-                Intent.OpenChallengeDetail -> publish(Label.OpenChallengeDetail)
+                is Intent.OpenChallengeDetail -> publish(Label.OpenChallengeDetail(intent.id))
                 is Intent.LoadChallenge -> {
                     sendChallenge(intent.status)
                 }
