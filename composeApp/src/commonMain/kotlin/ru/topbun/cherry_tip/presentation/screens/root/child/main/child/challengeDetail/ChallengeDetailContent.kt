@@ -1,6 +1,5 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,12 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -38,21 +38,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
+import cherrytip.composeapp.generated.resources.challenge_completed
 import cherrytip.composeapp.generated.resources.challenges
+import cherrytip.composeapp.generated.resources.error
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_bulb
-import cherrytip.composeapp.generated.resources.ic_calendar
 import cherrytip.composeapp.generated.resources.ic_play
 import cherrytip.composeapp.generated.resources.ic_stop
+import cherrytip.composeapp.generated.resources.loading
 import cherrytip.composeapp.generated.resources.preparing_challenge
+import cherrytip.composeapp.generated.resources.start
+import cherrytip.composeapp.generated.resources.start_again
+import cherrytip.composeapp.generated.resources.stop
 import io.ktor.util.date.GMTDate
-import io.ktor.util.date.plus
-import kotlinx.coroutines.NonCancellable.isActive
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.elements.Challenge
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
@@ -71,29 +76,48 @@ fun ChallengeDetailScreen(
         }
     ) {
         Column(
-            modifier = modifier.fillMaxSize().padding(20.dp)
+            modifier = modifier
+                .fillMaxSize()
+                .padding(20.dp)
         ) {
             val state by component.state.collectAsState()
-            BackWithTitle{ component.clickBack() }
+            var title by rememberSaveable { mutableStateOf<String?>(null) }
+            BackWithTitle(title) { component.clickBack() }
             Spacer(Modifier.height(30.dp))
-            when(val screenState = state.challengeState){
+            when (val screenState = state.challengeState) {
                 is ChallengeDetailStore.State.ChallengeState.Error -> {
+                    title = stringResource(Res.string.error)
                     rememberCoroutineScope().launch {
                         snackBarHost.showSnackbar(screenState.text)
                     }
                 }
+
                 ChallengeDetailStore.State.ChallengeState.Loading -> {
-                    Box(Modifier.fillMaxSize()){
+                    title = stringResource(Res.string.loading)
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = Colors.Purple)
                     }
                 }
+
                 is ChallengeDetailStore.State.ChallengeState.Success -> {
+                    title = screenState.challenge.title
                     InfoDateChallenge(screenState.challenge)
-                    Spacer(Modifier.height(20.dp))
+                    Spacer(Modifier.height(10.dp))
+                    if (screenState.challenge.userChallenge?.status == ChallengeStatus.Finished){
+                        Texts.General(
+                            text = stringResource(Res.string.challenge_completed),
+                            color = Colors.GreenDark,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+
+                    Spacer(Modifier.height(10.dp))
                     ChallengeButton(component, screenState.challenge)
                     Spacer(Modifier.height(20.dp))
                     Preparing(screenState.challenge)
                 }
+
                 else -> {}
             }
         }
@@ -154,37 +178,43 @@ private fun TipItem(text: String) {
 
 @Composable
 private fun ChallengeButton(component: ChallengeDetailComponent, challenge: ChallengeEntity) {
-    val isFinished = challenge.userChallenge?.let { it.status == ChallengeStatus.Finished } ?: false
     val color = challenge.userChallenge?.let {
-        when(it.status){
+        when (it.status) {
             ChallengeStatus.Active -> Colors.Red
-            ChallengeStatus.Finished -> Colors.GrayDark
+            ChallengeStatus.Finished -> Colors.Green
             ChallengeStatus.Canceled -> Colors.Green
-            else -> { throw RuntimeException("Challenge cannot have this status") }
+            else -> {
+                throw RuntimeException("Challenge cannot have this status")
+            }
         }
     } ?: Colors.Green
-    val text = challenge.userChallenge?.let {
-        when(it.status){
-            ChallengeStatus.Active -> "Stop"
-            ChallengeStatus.Finished -> "Finished"
-            ChallengeStatus.Canceled -> "Start"
-            else -> { throw RuntimeException("Challenge cannot have this status") }
-        }
-    } ?: "Start"
+    val text = stringResource(
+        challenge.userChallenge?.let {
+            when (it.status) {
+                ChallengeStatus.Active -> Res.string.stop
+                ChallengeStatus.Finished -> Res.string.start_again
+                ChallengeStatus.Canceled -> Res.string.start
+                else -> {
+                    throw RuntimeException("Challenge cannot have this status")
+                }
+            }
+        } ?: Res.string.start
+    )
     val iconRes = challenge.userChallenge?.let {
-        when(it.status){
+        when (it.status) {
             ChallengeStatus.Active -> Res.drawable.ic_stop
-            ChallengeStatus.Finished -> null
-            ChallengeStatus.Canceled ->  Res.drawable.ic_play
-            else -> { throw RuntimeException("Challenge cannot have this status") }
+            ChallengeStatus.Finished -> Res.drawable.ic_play
+            ChallengeStatus.Canceled -> Res.drawable.ic_play
+            else -> {
+                throw RuntimeException("Challenge cannot have this status")
+            }
         }
     } ?: Res.drawable.ic_play
     Buttons.Button(
         modifier = Modifier.fillMaxWidth(),
-        onClick = {  },
+        onClick = { component.changeChallengeStatus() },
         shape = RoundedCornerShape(13.dp),
         colors = ButtonDefaults.buttonColors(containerColor = color),
-        enabled = !isFinished,
         contentPadding = PaddingValues(vertical = 18.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -192,15 +222,13 @@ private fun ChallengeButton(component: ChallengeDetailComponent, challenge: Chal
                 text = text,
                 color = Colors.White
             )
-            if (!isFinished){
-                Spacer(Modifier.width(7.dp))
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    painter = painterResource(iconRes),
-                    tint = Colors.White,
-                    contentDescription = null
-                )
-            }
+            Spacer(Modifier.width(7.dp))
+            Icon(
+                modifier = Modifier.size(16.dp),
+                painter = painterResource(iconRes),
+                tint = Colors.White,
+                contentDescription = null
+            )
         }
     }
 }
@@ -222,7 +250,7 @@ private fun InfoDateChallenge(challenge: ChallengeEntity) {
 }
 
 @Composable
-private fun TextWithDate(text: String, date : String) {
+private fun TextWithDate(text: String, date: String) {
     Row(modifier = Modifier.height(55.dp), verticalAlignment = Alignment.CenterVertically) {
         Texts.Option(
             text = text,
@@ -244,7 +272,7 @@ private fun TextWithDate(text: String, date : String) {
 }
 
 @Composable
-private fun BackWithTitle(clickBack: () -> Unit) {
+private fun BackWithTitle(title: String?, clickBack: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Buttons.Icon(
             modifier = Modifier.size(24.dp),
@@ -256,12 +284,21 @@ private fun BackWithTitle(clickBack: () -> Unit) {
             border = null
         )
         Spacer(Modifier.width(10.dp))
-        Texts.Title(text = stringResource(Res.string.challenges))
+        Texts.Title(text = title ?: stringResource(Res.string.challenges))
     }
 }
 
 private fun formatDate(challenge: ChallengeEntity): ChallengeDetailDate {
+    val nowDate = run {
+        val startDate = GMTDate()
+        val endDate = calculateEndDate(startDate, challenge.durationDays)
+        ChallengeDetailDate(
+            startDate = formatDateTime(startDate),
+            endDate = formatDateTime(endDate)
+        )
+    }
     return challenge.userChallenge?.let { userChallenge ->
+        if(userChallenge.status == ChallengeStatus.Canceled) return nowDate
         val startDate = userChallenge.startDate
         val endDate = calculateEndDate(startDate, challenge.durationDays)
 
@@ -269,7 +306,7 @@ private fun formatDate(challenge: ChallengeEntity): ChallengeDetailDate {
             startDate = formatDateTime(startDate),
             endDate = formatDateTime(endDate)
         )
-    } ?: ChallengeDetailDate("", "")
+    } ?: nowDate
 }
 
 private fun calculateEndDate(startDate: GMTDate, durationDays: Int): GMTDate {
@@ -278,9 +315,11 @@ private fun calculateEndDate(startDate: GMTDate, durationDays: Int): GMTDate {
 }
 
 private fun formatDateTime(date: GMTDate): String {
-    val month = date.month.name
+    val month = date.month.name.lowercase().capitalize().take(3)
     val day = date.dayOfMonth
-    val time = "${date.hours}:${date.minutes.toString().padStart(2, '0')}"
+    val hours = date.hours.toString().padStart(2, '0')
+    val minutes = date.minutes.toString().padStart(2, '0')
+    val time = "${hours}:${minutes}"
 
     return "$month.$day ; $time"
 }

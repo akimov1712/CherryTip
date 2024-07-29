@@ -9,4 +9,5 @@ data class UserChallengeDto(
     @SerialName("id") val id: Int,
     @SerialName("startDate") val startDate: String,
     @SerialName("status") val status: ChallengeStatusDto,
+    @SerialName("userId") val userId: String,
 )

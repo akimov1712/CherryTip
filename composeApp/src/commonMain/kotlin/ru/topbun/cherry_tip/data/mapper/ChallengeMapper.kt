@@ -1,6 +1,5 @@
 package ru.topbun.cherry_tip.data.mapper
 
-import androidx.compose.ui.graphics.Color
 import ru.topbun.cherry_tip.data.source.network.dto.challenge.ChallengeDto
 import ru.topbun.cherry_tip.data.source.network.dto.challenge.ChallengeStatusDto
 import ru.topbun.cherry_tip.data.source.network.dto.challenge.UserChallengeDto
@@ -24,12 +23,21 @@ fun ChallengeDto.toEntity() = ChallengeEntity(
 
 private fun UserChallengeDto?.toEntity() = this?.let {
     UserChallengeEntity(
-        id = this.id, startDate = this.startDate.parseToGMTDate(), status = when(this.status){
-            ChallengeStatusDto.Started -> ChallengeStatus.Active
-            ChallengeStatusDto.Canceled -> ChallengeStatus.Canceled
-            ChallengeStatusDto.Finished -> ChallengeStatus.Finished
-        }
-    )
-}
+    id = this.id, startDate = this.startDate.parseToGMTDate(), status = when (this.status) {
+        ChallengeStatusDto.Started -> ChallengeStatus.Active
+        ChallengeStatusDto.Canceled -> ChallengeStatus.Canceled
+        ChallengeStatusDto.Finished -> ChallengeStatus.Finished
+    }
+) }
+
+
+fun UserChallengeDto.toEntity() = UserChallengeEntity(
+    id = this.id, startDate = this.startDate.parseToGMTDate(), status = when (this.status) {
+        ChallengeStatusDto.Started -> ChallengeStatus.Active
+        ChallengeStatusDto.Canceled -> ChallengeStatus.Canceled
+        ChallengeStatusDto.Finished -> ChallengeStatus.Finished
+    }
+)
+
 
 fun List<ChallengeDto>.toEntityList() = map { it.toEntity() }

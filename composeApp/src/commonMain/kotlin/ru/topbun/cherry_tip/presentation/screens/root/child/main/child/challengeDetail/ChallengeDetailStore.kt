@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
+import ru.topbun.cherry_tip.domain.entity.challenge.UserChallengeEntity
 import ru.topbun.cherry_tip.domain.useCases.challenge.CancelChallengeUseCase
 import ru.topbun.cherry_tip.domain.useCases.challenge.GetUserChallengeByIdUseCase
 import ru.topbun.cherry_tip.domain.useCases.challenge.StartChallengeUseCase
@@ -24,11 +25,18 @@ interface ChallengeDetailStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object ClickBack: Intent
+        data object ChangeStatusChallenge: Intent
     }
 
     data class State(
-        val challengeState: ChallengeState
+        val challengeState: ChallengeState,
+        val changeStatusState: ChangeStatusState
     ){
+
+        sealed interface ChangeStatusState{
+            data object Calmly: ChangeStatusState
+            data object Loading: ChangeStatusState
+        }
 
         sealed interface ChallengeState{
             data object Initial: ChallengeState
@@ -55,7 +63,8 @@ class ChallengeDetailStoreFactory(
         object : ChallengeDetailStore, Store<Intent, State, Label> by storeFactory.create(
             name = "ChallengeDetailStore",
             initialState = State(
-                challengeState = State.ChallengeState.Initial
+                challengeState = State.ChallengeState.Initial,
+                changeStatusState = State.ChangeStatusState.Calmly
             ),
             bootstrapper = BootstrapperImpl(id),
             executorFactory = ::ExecutorImpl,
@@ -73,6 +82,10 @@ class ChallengeDetailStoreFactory(
         data object ChallengeLoading: Msg
         data class ChallengeError(val text: String): Msg
         data class ChallengeSuccess(val challenge: ChallengeEntity): Msg
+
+        data class ChangeStatusChallenge(val userChallenge: UserChallengeEntity): Msg
+        data object ChangeStatusLoading: Msg
+        data object ChangeStatusCalmly: Msg
     }
 
     private inner class BootstrapperImpl(private val id: Int) : CoroutineBootstrapper<Action>() {
@@ -99,11 +112,39 @@ class ChallengeDetailStoreFactory(
         }
     }
 
-    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
         override fun executeIntent(intent: Intent) {
             super.executeIntent(intent)
             when(intent){
                 Intent.ClickBack -> publish(Label.ClickBack)
+                is Intent.ChangeStatusChallenge -> {
+                    val handlerTokenException = CoroutineExceptionHandler { _, throwable ->
+                        if (throwable is FailedExtractTokenException) publish(Label.OpenAuthScreen)
+                    }
+                    scope.launch(handlerTokenException) { sendChangeStatus() }
+                }
+            }
+        }
+
+        private suspend fun sendChangeStatus() {
+            try {
+                dispatch(Msg.ChangeStatusLoading)
+                val isStarted = (state().challengeState as? State.ChallengeState.Success)
+                    ?.challenge
+                    ?.userChallenge
+                    ?.status == ChallengeStatus.Active
+                val id = (state().challengeState as? State.ChallengeState.Success)?.challenge?.id
+                    ?: run { throw ClientException("Failed to start challenge") }
+                val result = if (isStarted) cancelChallengeUseCase(id) else startChallengeUseCase(id)
+                dispatch(Msg.ChangeStatusChallenge(result))
+            } catch (e: AccountInfoNotCompleteException) {
+                dispatch(Msg.ChallengeError(e.message ?: ""))
+            } catch (e: RequestTimeoutException) {
+                dispatch(Msg.ChallengeError(e.message ?: ""))
+            } catch (e: ClientException) {
+                dispatch(Msg.ChallengeError(e.errorText))
+            } finally {
+                dispatch(Msg.ChangeStatusCalmly)
             }
         }
 
@@ -129,6 +170,21 @@ class ChallengeDetailStoreFactory(
             is Msg.ChallengeSuccess -> copy(
                 challengeState = State.ChallengeState.Success(message.challenge)
             )
+            Msg.ChangeStatusCalmly -> copy(changeStatusState = State.ChangeStatusState.Calmly)
+            is Msg.ChangeStatusChallenge -> {
+                when (val currentState = challengeState) {
+                    is State.ChallengeState.Success -> {
+                        copy(
+                            challengeState = currentState.copy(
+                                challenge = currentState.challenge.copy(
+                                    userChallenge = message.userChallenge
+                                )
+                            )
+                        )
+                    } else -> this
+                }
+            }
+            Msg.ChangeStatusLoading -> copy(changeStatusState = State.ChangeStatusState.Loading)
         }
     }
 }

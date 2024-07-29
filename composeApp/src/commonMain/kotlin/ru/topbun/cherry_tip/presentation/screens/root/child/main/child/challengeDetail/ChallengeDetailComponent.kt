@@ -7,5 +7,6 @@ interface ChallengeDetailComponent {
     val state: StateFlow<ChallengeDetailStore.State>
 
     fun clickBack()
+    fun changeChallengeStatus()
 
 }

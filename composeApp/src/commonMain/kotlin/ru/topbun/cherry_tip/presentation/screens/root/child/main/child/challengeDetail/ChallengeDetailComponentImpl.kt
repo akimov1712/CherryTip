@@ -32,5 +32,6 @@ class ChallengeDetailComponentImpl(
     }
 
     override fun clickBack() = store.accept(ChallengeDetailStore.Intent.ClickBack)
+    override fun changeChallengeStatus() = store.accept(ChallengeDetailStore.Intent.ChangeStatusChallenge)
 
 }

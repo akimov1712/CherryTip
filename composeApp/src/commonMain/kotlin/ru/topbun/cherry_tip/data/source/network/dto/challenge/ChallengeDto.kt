@@ -14,5 +14,6 @@ data class ChallengeDto(
     @SerialName("durationDays") val durationDays: Int,
     @SerialName("difficulty") val difficulty: Difficulty,
     @SerialName("tips") val tips: List<String>,
-    @SerialName("userChallenge") val userChallenge: UserChallengeDto? = null
+    @SerialName("userChallenge") val userChallenge: UserChallengeDto? = null,
+    @SerialName("challengeId") val challengeId: Int? = null
 )
