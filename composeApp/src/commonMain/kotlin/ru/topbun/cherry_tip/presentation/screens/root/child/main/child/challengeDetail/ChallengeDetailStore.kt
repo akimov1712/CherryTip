@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
@@ -103,9 +104,9 @@ class ChallengeDetailStoreFactory(
                 val result = getUserChallengeByIdUseCase(id)
                 dispatch(Action.ChallengeSuccess(result))
             } catch (e: AccountInfoNotCompleteException) {
-                dispatch(Action.ChallengeError(e.message ?: ""))
+                dispatch(Action.ChallengeError("Account info not complete"))
             } catch (e: RequestTimeoutException) {
-                dispatch(Action.ChallengeError(e.message ?: ""))
+                dispatch(Action.ChallengeError("Check internet connection"))
             } catch (e: ClientException) {
                 dispatch(Action.ChallengeError(e.errorText))
             }
@@ -138,9 +139,9 @@ class ChallengeDetailStoreFactory(
                 val result = if (isStarted) cancelChallengeUseCase(id) else startChallengeUseCase(id)
                 dispatch(Msg.ChangeStatusChallenge(result))
             } catch (e: AccountInfoNotCompleteException) {
-                dispatch(Msg.ChallengeError(e.message ?: ""))
+                dispatch(Msg.ChallengeError("Account info not complete"))
             } catch (e: RequestTimeoutException) {
-                dispatch(Msg.ChallengeError(e.message ?: ""))
+                dispatch(Msg.ChallengeError("Check internet connection"))
             } catch (e: ClientException) {
                 dispatch(Msg.ChallengeError(e.errorText))
             } finally {
@@ -181,7 +182,10 @@ class ChallengeDetailStoreFactory(
                                 )
                             )
                         )
-                    } else -> this
+                    } else -> {
+                    Napier.d{"COPY: ${this}"}
+                    this
+                }
                 }
             }
             Msg.ChangeStatusLoading -> copy(changeStatusState = State.ChangeStatusState.Loading)

@@ -18,18 +18,8 @@ fun ChallengeDto.toEntity() = ChallengeEntity(
     durationDays = durationDays,
     difficulty = difficulty,
     tips = tips,
-    userChallenge = userChallenge.toEntity()
+    userChallenge = userChallenge?.toEntity()
 )
-
-private fun UserChallengeDto?.toEntity() = this?.let {
-    UserChallengeEntity(
-    id = this.id, startDate = this.startDate.parseToGMTDate(), status = when (this.status) {
-        ChallengeStatusDto.Started -> ChallengeStatus.Active
-        ChallengeStatusDto.Canceled -> ChallengeStatus.Canceled
-        ChallengeStatusDto.Finished -> ChallengeStatus.Finished
-    }
-) }
-
 
 fun UserChallengeDto.toEntity() = UserChallengeEntity(
     id = this.id, startDate = this.startDate.parseToGMTDate(), status = when (this.status) {

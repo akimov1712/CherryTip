@@ -85,13 +85,14 @@ fun ChallengeScreen(
 
                 is ChallengeStore.State.ChallengeState.Result -> {
                     if (screenState.challenges.isEmpty()) {
-                        Texts.Option(
-                            modifier = Modifier.fillMaxSize(),
-                            text = stringResource(Res.string.challenges_is_empty),
-                            color = Colors.Black,
-                            textAlign = TextAlign.Center
-
-                        )
+                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                            Texts.Option(
+                                modifier = Modifier.fillMaxSize(),
+                                text = stringResource(Res.string.challenges_is_empty),
+                                color = Colors.Black,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxWidth(),

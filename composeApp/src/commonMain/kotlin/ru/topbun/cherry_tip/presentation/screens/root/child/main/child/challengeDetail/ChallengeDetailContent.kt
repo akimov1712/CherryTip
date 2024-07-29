@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,11 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -50,14 +48,13 @@ import cherrytip.composeapp.generated.resources.preparing_challenge
 import cherrytip.composeapp.generated.resources.start
 import cherrytip.composeapp.generated.resources.start_again
 import cherrytip.composeapp.generated.resources.stop
+import io.github.aakira.napier.Napier
 import io.ktor.util.date.GMTDate
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.elements.Challenge
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
@@ -68,58 +65,51 @@ fun ChallengeDetailScreen(
     component: ChallengeDetailComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
-    val snackBarHost = remember { SnackbarHostState() }
-    Scaffold(
-        modifier = modifier.statusBarsPadding(),
-        snackbarHost = {
-            SnackbarHost(snackBarHost)
-        }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp)
     ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(20.dp)
-        ) {
-            val state by component.state.collectAsState()
-            var title by rememberSaveable { mutableStateOf<String?>(null) }
-            BackWithTitle(title) { component.clickBack() }
-            Spacer(Modifier.height(30.dp))
-            when (val screenState = state.challengeState) {
-                is ChallengeDetailStore.State.ChallengeState.Error -> {
-                    title = stringResource(Res.string.error)
-                    rememberCoroutineScope().launch {
-                        snackBarHost.showSnackbar(screenState.text)
-                    }
-                }
-
-                ChallengeDetailStore.State.ChallengeState.Loading -> {
-                    title = stringResource(Res.string.loading)
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = Colors.Purple)
-                    }
-                }
-
-                is ChallengeDetailStore.State.ChallengeState.Success -> {
-                    title = screenState.challenge.title
-                    InfoDateChallenge(screenState.challenge)
-                    Spacer(Modifier.height(10.dp))
-                    if (screenState.challenge.userChallenge?.status == ChallengeStatus.Finished){
-                        Texts.General(
-                            text = stringResource(Res.string.challenge_completed),
-                            color = Colors.GreenDark,
-                            fontSize = 16.sp,
-                            textAlign = TextAlign.Start
-                        )
-                    }
-
-                    Spacer(Modifier.height(10.dp))
-                    ChallengeButton(component, screenState.challenge)
-                    Spacer(Modifier.height(20.dp))
-                    Preparing(screenState.challenge)
-                }
-
-                else -> {}
+        val state by component.state.collectAsState()
+        var title by rememberSaveable { mutableStateOf<String?>(null) }
+        BackWithTitle(title) { component.clickBack() }
+        Spacer(Modifier.height(30.dp))
+        when (val screenState = state.challengeState) {
+            is ChallengeDetailStore.State.ChallengeState.Error -> {
+                Texts.Error(
+                    modifier = Modifier.fillMaxSize(),
+                    text = screenState.text,
+                    color = Colors.Black,
+                    textAlign = TextAlign.Center
+                )
             }
+
+            ChallengeDetailStore.State.ChallengeState.Loading -> {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = Colors.Purple)
+                }
+            }
+
+            is ChallengeDetailStore.State.ChallengeState.Success -> {
+                title = screenState.challenge.title
+                InfoDateChallenge(screenState.challenge)
+                Spacer(Modifier.height(10.dp))
+                if (screenState.challenge.userChallenge?.status == ChallengeStatus.Finished){
+                    Texts.General(
+                        text = stringResource(Res.string.challenge_completed),
+                        color = Colors.GreenDark,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Start
+                    )
+                }
+
+                Spacer(Modifier.height(10.dp))
+                ChallengeButton(component, screenState.challenge)
+                Spacer(Modifier.height(20.dp))
+                Preparing(screenState.challenge)
+            }
+
+            else -> {}
         }
     }
 }
@@ -178,6 +168,8 @@ private fun TipItem(text: String) {
 
 @Composable
 private fun ChallengeButton(component: ChallengeDetailComponent, challenge: ChallengeEntity) {
+    val state by component.state.collectAsState()
+    val isLoading = state.changeStatusState == ChallengeDetailStore.State.ChangeStatusState.Loading
     val color = challenge.userChallenge?.let {
         when (it.status) {
             ChallengeStatus.Active -> Colors.Red
@@ -211,25 +203,35 @@ private fun ChallengeButton(component: ChallengeDetailComponent, challenge: Chal
         }
     } ?: Res.drawable.ic_play
     Buttons.Button(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().height(56.dp),
         onClick = { component.changeChallengeStatus() },
         shape = RoundedCornerShape(13.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = color),
+        enabled = !isLoading,
+        containerColor = color,
         contentPadding = PaddingValues(vertical = 18.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Texts.Button(
-                text = text,
-                color = Colors.White
+        if (isLoading){
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = Colors.White,
+                strokeWidth = 2.dp
             )
-            Spacer(Modifier.width(7.dp))
-            Icon(
-                modifier = Modifier.size(16.dp),
-                painter = painterResource(iconRes),
-                tint = Colors.White,
-                contentDescription = null
-            )
+        } else{
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Texts.Button(
+                    text = text,
+                    color = Colors.White
+                )
+                Spacer(Modifier.width(7.dp))
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    painter = painterResource(iconRes),
+                    tint = Colors.White,
+                    contentDescription = null
+                )
+            }
         }
+
     }
 }
 

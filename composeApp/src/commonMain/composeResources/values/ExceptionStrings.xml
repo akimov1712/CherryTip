@@ -1,0 +1,5 @@
+<resources>
+    <string name="account_info_not_complete">Account info not complete</string>
+    <string name="check_internet_connection">Check internet connection</string>
+
+</resources>

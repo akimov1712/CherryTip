@@ -87,7 +87,8 @@ object Buttons {
         elevation: ButtonElevation? = null,
         shape: Shape = RoundedCornerShape(16.dp),
         border: BorderStroke? = null,
-        colors: ButtonColors = ButtonDefaults.buttonColors(),
+        containerColor: Color = Color.Unspecified,
+        colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = containerColor, disabledContainerColor = containerColor),
         contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
         content: @Composable RowScope.() -> Unit
     ) {

@@ -97,9 +97,9 @@ class ChallengeStoreFactory(
                 val result = getChallengeUseCase(ChallengeStatus.All)
                 dispatch(Action.ChallengeResultStatus(result))
             } catch (e: AccountInfoNotCompleteException) {
-                dispatch(Action.ChallengeErrorStatus(e.message ?: ""))
+                dispatch(Action.ChallengeErrorStatus("Account info not complete"))
             } catch (e: RequestTimeoutException) {
-                dispatch(Action.ChallengeErrorStatus(e.message ?: ""))
+                dispatch(Action.ChallengeErrorStatus("Check internet connection"))
             } catch (e: ClientException) {
                 dispatch(Action.ChallengeErrorStatus(e.errorText))
             }
@@ -136,9 +136,9 @@ class ChallengeStoreFactory(
                     val result = getChallengeUseCase(status)
                     dispatch(Msg.ChallengeResultStatus(result))
                 } catch (e: AccountInfoNotCompleteException) {
-                    dispatch(Msg.ChallengeErrorStatus(e.message ?: ""))
+                    dispatch(Msg.ChallengeErrorStatus("Account info not complete"))
                 } catch (e: RequestTimeoutException) {
-                    dispatch(Msg.ChallengeErrorStatus(e.message ?: ""))
+                    dispatch(Msg.ChallengeErrorStatus("Check internet connection"))
                 } catch (e: ClientException) {
                     dispatch(Msg.ChallengeErrorStatus(e.errorText))
                 }
