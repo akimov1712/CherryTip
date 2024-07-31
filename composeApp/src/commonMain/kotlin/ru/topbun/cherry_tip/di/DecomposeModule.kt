@@ -15,15 +15,17 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.S
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeStoreFactory
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileStoreFactory
 
 val decomposeModule = module {
     single<StoreFactory>{ DefaultStoreFactory() }
@@ -33,11 +35,34 @@ val decomposeModule = module {
     signUpModule()
     reminderModule()
     surveyModule()
-    homeModule()
-    tabsModule()
+
     mainModule()
+    tabsModule()
+    homeModule()
+    profileModule()
     challengeModule()
     challengeDetailModule()
+}
+
+private fun Module.profileModule(){
+    factory<ProfileStoreFactory> { ProfileStoreFactory(get()) }
+    factory {
+            (
+                componentContext: ComponentContext,
+                onClickAccount: () -> Unit,
+                onClickProfile: () -> Unit,
+                onClickGoals: () -> Unit,
+                onClickUnits: () -> Unit,
+            ) ->
+        ProfileComponentImpl(
+            componentContext = componentContext,
+            onClickAccount = onClickAccount,
+            onClickProfile = onClickProfile,
+            onClickGoals = onClickGoals,
+            onClickUnits = onClickUnits,
+            storeFactory = get()
+        )
+    }
 }
 
 private fun Module.challengeDetailModule(){

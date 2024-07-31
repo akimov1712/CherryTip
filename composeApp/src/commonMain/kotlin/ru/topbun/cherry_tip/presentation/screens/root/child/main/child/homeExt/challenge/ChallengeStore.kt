@@ -1,19 +1,18 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import io.ktor.client.utils.EmptyContent.status
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
 import ru.topbun.cherry_tip.domain.useCases.challenge.GetChallengeUseCase
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeStore.Intent
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeStore.Label
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeStore.State
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeStore.Intent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeStore.Label
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeStore.State
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.FailedExtractTokenException

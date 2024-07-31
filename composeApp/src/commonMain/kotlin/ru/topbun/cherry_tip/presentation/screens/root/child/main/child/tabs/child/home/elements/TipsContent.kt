@@ -24,7 +24,7 @@ import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.nutrition_tips
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tipsDetail.Tips
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.tipsDetail.Tips
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 

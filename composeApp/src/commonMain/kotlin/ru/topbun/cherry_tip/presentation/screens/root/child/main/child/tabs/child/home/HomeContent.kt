@@ -21,8 +21,8 @@ import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.elements.Challenge
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.elements.Glass
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.elements.Tips
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tipsDetail.Tips
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tipsDetail.TipsDetailScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.tipsDetail.Tips
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.tipsDetail.TipsDetailScreen
 
 const val COUNT_GLASS_PAGE = 5
 

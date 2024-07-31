@@ -9,6 +9,7 @@ import org.koin.compose.getKoin
 import org.koin.core.parameter.parametersOf
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileScreen
 
 @Composable
 fun TabsScreen(
@@ -17,6 +18,7 @@ fun TabsScreen(
     Children(component.stack){
         when(val instance = it.instance){
             is TabsComponent.Child.Home -> HomeScreen(instance.component)
+            is TabsComponent.Child.Profile -> ProfileScreen(instance.component)
         }
     }
 

@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
@@ -14,9 +14,9 @@ import ru.topbun.cherry_tip.domain.entity.challenge.UserChallengeEntity
 import ru.topbun.cherry_tip.domain.useCases.challenge.CancelChallengeUseCase
 import ru.topbun.cherry_tip.domain.useCases.challenge.GetUserChallengeByIdUseCase
 import ru.topbun.cherry_tip.domain.useCases.challenge.StartChallengeUseCase
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailStore.Intent
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailStore.Label
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailStore.State
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailStore.Intent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailStore.Label
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailStore.State
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.FailedExtractTokenException

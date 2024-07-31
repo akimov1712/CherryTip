@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tipsDetail
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.tipsDetail
 
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color

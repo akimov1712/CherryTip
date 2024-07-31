@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus

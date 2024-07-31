@@ -1,10 +1,9 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
 import ru.topbun.cherry_tip.utills.componentScope

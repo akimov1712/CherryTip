@@ -2,10 +2,10 @@ package ru.topbun.cherry_tip.presentation.screens.root.child.main
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge.ChallengeComponent
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challengeDetail.ChallengeDetailComponent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponent
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tipsDetail.TipsDetailComponent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.tipsDetail.TipsDetailComponent
 
 interface MainComponent {
 

@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.challenge
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
