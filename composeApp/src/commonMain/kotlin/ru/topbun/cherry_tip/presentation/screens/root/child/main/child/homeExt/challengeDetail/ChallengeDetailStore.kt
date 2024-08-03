@@ -21,6 +21,8 @@ import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.FailedExtractTokenException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
+import ru.topbun.cherry_tip.utills.handlerTokenException
+import ru.topbun.cherry_tip.utills.wrapperStoreException
 
 interface ChallengeDetailStore : Store<Intent, State, Label> {
 
@@ -91,24 +93,16 @@ class ChallengeDetailStoreFactory(
 
     private inner class BootstrapperImpl(private val id: Int) : CoroutineBootstrapper<Action>() {
         override fun invoke() {
-            val handlerTokenException = CoroutineExceptionHandler { _, throwable ->
-                if (throwable is FailedExtractTokenException) dispatch(Action.OpenAuthScreen)
-            }
-
-            scope.launch(handlerTokenException) { sendChallenge() }
+            scope.launch(handlerTokenException{dispatch(Action.OpenAuthScreen)}) { sendChallenge() }
         }
 
         private suspend fun sendChallenge() {
-            try {
+            wrapperStoreException({
                 dispatch(Action.ChallengeLoading)
                 val result = getUserChallengeByIdUseCase(id)
                 dispatch(Action.ChallengeSuccess(result))
-            } catch (e: AccountInfoNotCompleteException) {
-                dispatch(Action.ChallengeError("Account info not complete"))
-            } catch (e: RequestTimeoutException) {
-                dispatch(Action.ChallengeError("Check internet connection"))
-            } catch (e: ClientException) {
-                dispatch(Action.ChallengeError(e.errorText))
+            }){
+                dispatch(Action.ChallengeError(it))
             }
         }
     }
@@ -119,16 +113,15 @@ class ChallengeDetailStoreFactory(
             when(intent){
                 Intent.ClickBack -> publish(Label.ClickBack)
                 is Intent.ChangeStatusChallenge -> {
-                    val handlerTokenException = CoroutineExceptionHandler { _, throwable ->
-                        if (throwable is FailedExtractTokenException) publish(Label.OpenAuthScreen)
+                    scope.launch(handlerTokenException{publish(Label.OpenAuthScreen)}) {
+                        sendChangeStatus()
                     }
-                    scope.launch(handlerTokenException) { sendChangeStatus() }
                 }
             }
         }
 
         private suspend fun sendChangeStatus() {
-            try {
+            wrapperStoreException({
                 dispatch(Msg.ChangeStatusLoading)
                 val isStarted = (state().challengeState as? State.ChallengeState.Success)
                     ?.challenge
@@ -138,14 +131,8 @@ class ChallengeDetailStoreFactory(
                     ?: run { throw ClientException("Failed to start challenge") }
                 val result = if (isStarted) cancelChallengeUseCase(id) else startChallengeUseCase(id)
                 dispatch(Msg.ChangeStatusChallenge(result))
-            } catch (e: AccountInfoNotCompleteException) {
-                dispatch(Msg.ChallengeError("Account info not complete"))
-            } catch (e: RequestTimeoutException) {
-                dispatch(Msg.ChallengeError("Check internet connection"))
-            } catch (e: ClientException) {
-                dispatch(Msg.ChallengeError(e.errorText))
-            } finally {
-                dispatch(Msg.ChangeStatusCalmly)
+            }, onFinally = {dispatch(Msg.ChangeStatusCalmly)}){
+                dispatch(Msg.ChallengeError(it))
             }
         }
 
@@ -183,9 +170,8 @@ class ChallengeDetailStoreFactory(
                             )
                         )
                     } else -> {
-                    Napier.d{"COPY: ${this}"}
-                    this
-                }
+                        this
+                    }
                 }
             }
             Msg.ChangeStatusLoading -> copy(changeStatusState = State.ChangeStatusState.Loading)

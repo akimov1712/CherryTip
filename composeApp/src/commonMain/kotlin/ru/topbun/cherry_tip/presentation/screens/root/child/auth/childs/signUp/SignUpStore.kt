@@ -16,6 +16,7 @@ import ru.topbun.cherry_tip.utills.ConnectException
 import ru.topbun.cherry_tip.utills.ParseBackendResponseException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
 import ru.topbun.cherry_tip.utills.ServerException
+import ru.topbun.cherry_tip.utills.wrapperStoreException
 
 interface SignUpStore : Store<Intent, State, Label> {
 
@@ -121,21 +122,13 @@ class SignUpStoreFactory(
                 Intent.ClickLogin -> publish(Label.ClickLogin)
                 is Intent.OnSignUp -> {
                     scope.launch {
-                        dispatch(Msg.SignUpLoading)
-                        try {
+                        wrapperStoreException({
+                            dispatch(Msg.SignUpLoading)
                             sendSingUp(state)
                             publish(Label.OnSignUp)
                             dispatch(Msg.CleanState)
-                        } catch (e: ParseBackendResponseException) {
-                            dispatch(Msg.SignUpError("Error while receiving data from the server"))
-                        } catch (e: RequestTimeoutException) {
-                            dispatch(Msg.SignUpError("Timed out"))
-                        } catch (e: ClientException) {
-                            dispatch(Msg.SignUpError(e.errorText))
-                        } catch (e: ServerException) {
-                            dispatch(Msg.SignUpError(e.errorText))
-                        } catch (e: ConnectException) {
-                            dispatch(Msg.SignUpError("A Failed to connect to the server, check your internet connection"))
+                        }){
+                            dispatch(Msg.SignUpError(it))
                         }
                     }
                 }

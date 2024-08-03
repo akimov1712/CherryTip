@@ -17,6 +17,7 @@ import ru.topbun.cherry_tip.utills.ConnectException
 import ru.topbun.cherry_tip.utills.ParseBackendResponseException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
 import ru.topbun.cherry_tip.utills.ServerException
+import ru.topbun.cherry_tip.utills.wrapperStoreException
 
 interface LoginStore: Store<Intent, State, Label> {
 
@@ -107,22 +108,16 @@ class LoginStoreFactory(
                 }
                 is Intent.OnLogin -> {
                     scope.launch {
-                        dispatch(Msg.LoginLoading)
                         try {
-                            sendLogin(state)
-                            checkAccountInfoCompleteUseCase()
-                            publish(Label.OnLogin)
-                            dispatch(Msg.OnLogin)
-                        } catch (e: ParseBackendResponseException) {
-                            dispatch(Msg.LoginError("Error while receiving data from the server"))
-                        } catch (e: RequestTimeoutException) {
-                            dispatch(Msg.LoginError("Timed out"))
-                        } catch (e: ClientException) {
-                            dispatch(Msg.LoginError(e.errorText))
-                        } catch (e: ServerException) {
-                            dispatch(Msg.LoginError(e.errorText))
-                        } catch (e: ConnectException) {
-                            dispatch(Msg.LoginError("A Failed to connect to the server, check your internet connection"))
+                            dispatch(Msg.LoginLoading)
+                            wrapperStoreException({
+                                sendLogin(state)
+                                checkAccountInfoCompleteUseCase()
+                                publish(Label.OnLogin)
+                                dispatch(Msg.OnLogin)
+                            }){
+                                dispatch(Msg.LoginError(it))
+                            }
                         } catch (e: AccountInfoNotCompleteException){
                             publish(Label.AccountInfoNotComplete)
                         }

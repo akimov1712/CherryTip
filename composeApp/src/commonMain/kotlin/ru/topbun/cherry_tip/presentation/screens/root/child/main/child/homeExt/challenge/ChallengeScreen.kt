@@ -52,6 +52,7 @@ import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
+import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
 import ru.topbun.cherry_tip.presentation.ui.components.CustomTabRow
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
@@ -64,7 +65,7 @@ fun ChallengeScreen(
         modifier = modifier.fillMaxSize().padding(top = 20.dp, start = 20.dp, end = 20.dp)
     ) {
         val state by component.state.collectAsState()
-        BackWithTitle { component.clickBack() }
+        BackWithTitle(stringResource(Res.string.challenges)) { component.clickBack() }
         Spacer(Modifier.height(30.dp))
         CustomTabRow(
             items = state.items.map { it.toString() },
@@ -108,23 +109,6 @@ fun ChallengeScreen(
                 else -> {}
             }
         }
-    }
-}
-
-@Composable
-private fun BackWithTitle(clickBack: () -> Unit) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Buttons.Icon(
-            modifier = Modifier.size(24.dp),
-            onClick = clickBack,
-            icon = painterResource(Res.drawable.ic_back),
-            containerColor = Colors.Transparent,
-            contentColor = Colors.Purple,
-            shape = CircleShape,
-            border = null
-        )
-        Spacer(Modifier.width(10.dp))
-        Texts.Title(text = stringResource(Res.string.challenges))
     }
 }
 

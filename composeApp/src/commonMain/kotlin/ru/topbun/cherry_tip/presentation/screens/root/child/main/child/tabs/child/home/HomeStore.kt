@@ -21,6 +21,8 @@ import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.Const
 import ru.topbun.cherry_tip.utills.FailedExtractTokenException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
+import ru.topbun.cherry_tip.utills.handlerTokenException
+import ru.topbun.cherry_tip.utills.wrapperStoreException
 import kotlin.math.ceil
 
 interface HomeStore : Store<Intent, State, Label> {
@@ -112,29 +114,24 @@ class HomeStoreFactory(
 
     private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
         override fun invoke() {
-            val handlerTokenException = CoroutineExceptionHandler{_,throwable ->
-                if(throwable is FailedExtractTokenException) dispatch(Action.OpenAuthScreen) }
+            val handlerTokenException = handlerTokenException { dispatch(Action.OpenAuthScreen) }
 
             scope.launch(handlerTokenException) { sendChallenge() }
             scope.launch(handlerTokenException) { sendGlass() }
         }
 
         private suspend fun sendChallenge() {
-            try {
+            wrapperStoreException({
                 dispatch(Action.ChallengeLoadingStatus)
                 val result = getChallengeUseCase(ChallengeStatus.All)
                 dispatch(Action.ChallengeResultStatus(State.ChallengeState(result)))
-            } catch (e: AccountInfoNotCompleteException){
-                dispatch(Action.ChallengeErrorStatus(e.message ?: ""))
-            } catch (e: RequestTimeoutException){
-                dispatch(Action.ChallengeErrorStatus(e.message ?: ""))
-            } catch (e: ClientException){
-                dispatch(Action.ChallengeErrorStatus(e.errorText))
+            }){
+                dispatch(Action.ChallengeErrorStatus(it))
             }
         }
 
         private suspend fun sendGlass() {
-            try {
+            wrapperStoreException({
                 dispatch(Action.GlassLoadingStatus)
                 getCountGlassUseCase().collect {
                     val glassState = State.GlassState(
@@ -146,9 +143,7 @@ class HomeStoreFactory(
                     )
                     dispatch(Action.GlassResultStatus(glassState))
                 }
-            } catch (e: AccountInfoNotCompleteException){
-                dispatch(Action.GlassErrorStatus)
-            } catch (e: RequestTimeoutException){
+            }){
                 dispatch(Action.GlassErrorStatus)
             }
         }
