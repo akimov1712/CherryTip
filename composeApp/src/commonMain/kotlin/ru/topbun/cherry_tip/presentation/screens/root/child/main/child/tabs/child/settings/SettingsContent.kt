@@ -1,6 +1,5 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,11 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImagePainter.State.Empty.painter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -31,7 +27,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
 fun ProfileScreen(
-    component: ProfileComponent,
+    component: SettingsComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val state by component.state.collectAsState()
@@ -44,10 +40,10 @@ fun ProfileScreen(
         state.items.forEach {
             ProfileItem(it){
                 when(it){
-                    Profile.Account -> component.clickAccount()
-                    Profile.Profile -> component.clickProfile()
-                    Profile.Goals -> component.clickGoals()
-                    Profile.Units -> component.clickUnits()
+                    Settings.Account -> component.clickAccount()
+                    Settings.Profile -> component.clickProfile()
+                    Settings.Goals -> component.clickGoals()
+                    Settings.Units -> component.clickUnits()
                 }
             }
         }
@@ -56,7 +52,7 @@ fun ProfileScreen(
 
 @Composable
 private fun ProfileItem(
-    profile: Profile,
+    profile: Settings,
     modifier: Modifier = Modifier,
     onClickItem: () -> Unit
 ) {

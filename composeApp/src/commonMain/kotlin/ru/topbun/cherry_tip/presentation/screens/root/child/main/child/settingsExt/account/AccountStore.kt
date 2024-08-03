@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
@@ -8,13 +8,13 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.useCases.user.GetAccountInfoUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.LogOutUseCase
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountStore.Intent
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountStore.Label
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountStore.State
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountStore.Intent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountStore.Label
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountStore.State
 import ru.topbun.cherry_tip.utills.handlerTokenException
 import ru.topbun.cherry_tip.utills.wrapperStoreException
 
-interface ProfileAccountStore : Store<Intent, State, Label> {
+interface AccountStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object LogOut: Intent
@@ -40,14 +40,14 @@ interface ProfileAccountStore : Store<Intent, State, Label> {
     }
 }
 
-class ProfileAccountStoreFactory(
+class AccountStoreFactory(
     private val storeFactory: StoreFactory,
     private val getAccountInfoUseCase: GetAccountInfoUseCase,
     private val logOutUseCase: LogOutUseCase
 ) {
 
-    fun create(): ProfileAccountStore =
-        object : ProfileAccountStore, Store<Intent, State, Label> by storeFactory.create(
+    fun create(): AccountStore =
+        object : AccountStore, Store<Intent, State, Label> by storeFactory.create(
             name = "ProfileAccountStore",
             initialState = State(State.ProfileState.Initial),
             executorFactory = ::ExecutorImpl,

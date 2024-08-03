@@ -1,15 +1,14 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileStore.Intent
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileStore.Label
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileStore.State
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsStore.Intent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsStore.Label
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsStore.State
 
-interface ProfileStore : Store<Intent, State, Label> {
+interface SettingsStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object ClickAccount: Intent
@@ -19,7 +18,7 @@ interface ProfileStore : Store<Intent, State, Label> {
     }
 
     data class State(
-        val items: List<Profile>
+        val items: List<Settings>
     )
 
     sealed interface Label {
@@ -30,15 +29,15 @@ interface ProfileStore : Store<Intent, State, Label> {
     }
 }
 
-class ProfileStoreFactory(
+class SettingsStoreFactory(
     private val storeFactory: StoreFactory
 ) {
 
-    fun create(): ProfileStore =
-        object : ProfileStore, Store<Intent, State, Label> by storeFactory.create(
+    fun create(): SettingsStore =
+        object : SettingsStore, Store<Intent, State, Label> by storeFactory.create(
             name = "ProfileStore",
             initialState = State(
-                items = Profile.entries
+                items = Settings.entries
             ),
             bootstrapper = null,
             executorFactory = ::ExecutorImpl,

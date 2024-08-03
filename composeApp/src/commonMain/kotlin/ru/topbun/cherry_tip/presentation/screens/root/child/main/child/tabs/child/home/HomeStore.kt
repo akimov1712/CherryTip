@@ -5,8 +5,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import io.ktor.client.utils.EmptyContent.status
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
@@ -16,11 +14,7 @@ import ru.topbun.cherry_tip.domain.useCases.glass.GetCountGlassUseCase
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore.Label
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore.State
-import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
-import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.Const
-import ru.topbun.cherry_tip.utills.FailedExtractTokenException
-import ru.topbun.cherry_tip.utills.RequestTimeoutException
 import ru.topbun.cherry_tip.utills.handlerTokenException
 import ru.topbun.cherry_tip.utills.wrapperStoreException
 import kotlin.math.ceil

@@ -8,9 +8,8 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainComponentImpl.Config
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsComponentImpl
 
 class TabsComponentImpl(
     private val componentContext: ComponentContext,
@@ -45,7 +44,7 @@ class TabsComponentImpl(
             val onClickProfile = {}
             val onClickGoals = {}
             val onClickUnits = {}
-            val component: ProfileComponentImpl = getKoin().get {
+            val component: SettingsComponentImpl = getKoin().get {
                 parametersOf(
                     componentContext,
                     onClickAccount,

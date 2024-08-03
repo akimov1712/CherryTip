@@ -1,8 +1,8 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings
 
 import kotlinx.coroutines.flow.StateFlow
 
-interface ProfileComponent {
+interface SettingsComponent {
 
     val state: StateFlow<ProfileStore.State>
 

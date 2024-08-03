@@ -6,7 +6,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailScreen
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.ProfileAccountScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsScreen
 
 @Composable

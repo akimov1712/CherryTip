@@ -4,8 +4,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import io.ktor.client.call.body
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import ru.topbun.cherry_tip.data.mapper.toDto
 import ru.topbun.cherry_tip.data.mapper.toEntity
 import ru.topbun.cherry_tip.data.source.local.dataStore.AppSettings
@@ -18,9 +16,7 @@ import ru.topbun.cherry_tip.domain.entity.user.ProfileEntity
 import ru.topbun.cherry_tip.domain.entity.user.UnitsEntity
 import ru.topbun.cherry_tip.domain.repository.UserRepository
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
-import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.FailedExtractTokenException
-import ru.topbun.cherry_tip.utills.ParseBackendResponseException
 import ru.topbun.cherry_tip.utills.codeResultWrapper
 import ru.topbun.cherry_tip.utills.exceptionWrapper
 

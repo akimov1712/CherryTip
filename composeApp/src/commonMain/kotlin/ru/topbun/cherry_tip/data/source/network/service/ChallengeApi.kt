@@ -1,10 +1,8 @@
 package ru.topbun.cherry_tip.data.source.network.service
 
-import io.github.aakira.napier.Napier
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
-import io.ktor.client.request.setBody
 import ru.topbun.cherry_tip.data.source.network.ApiFactory
 import ru.topbun.cherry_tip.data.source.network.dto.challenge.ChallengeStatusDto
 import ru.topbun.cherry_tip.data.source.network.token

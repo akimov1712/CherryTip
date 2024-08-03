@@ -1,8 +1,6 @@
 package ru.topbun.cherry_tip.domain.entity.challenge
 
 import androidx.compose.ui.graphics.Color
-import kotlinx.serialization.Serializable
-import ru.topbun.cherry_tip.domain.entity.challenge.Difficulty
 
 data class ChallengeEntity(
     val id: Int,

@@ -1,22 +1,20 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.topbun.cherry_tip.domain.entity.user.UnitsEntity
 import ru.topbun.cherry_tip.utills.componentScope
 
-class ProfileComponentImpl (
+class SettingsComponentImpl (
     componentContext: ComponentContext,
     private val onClickAccount: () -> Unit,
     private val onClickProfile: () -> Unit,
     private val onClickGoals: () -> Unit,
     private val onClickUnits: () -> Unit,
     private val storeFactory: ProfileStoreFactory
-): ProfileComponent, ComponentContext by componentContext {
+): SettingsComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { storeFactory.create() }
     override val state = store.stateFlow

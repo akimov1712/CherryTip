@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +28,6 @@ import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.account
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.logout
-import kotlinx.serialization.json.JsonNull.content
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -37,7 +36,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
 fun ProfileAccountScreen(
-    component: ProfileAccountComponent,
+    component: AccountComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     Column(
@@ -47,7 +46,7 @@ fun ProfileAccountScreen(
         BackWithTitle(stringResource(Res.string.account)){ component.clickBack() }
         Spacer(Modifier.height(30.dp))
         when(val screenState = state.profileState){
-            is ProfileAccountStore.State.ProfileState.Error -> {
+            is AccountStore.State.ProfileState.Error -> {
                 Texts.Error(
                     modifier = Modifier.fillMaxSize(),
                     text = screenState.text,
@@ -55,12 +54,12 @@ fun ProfileAccountScreen(
                     textAlign = TextAlign.Center
                 )
             }
-            ProfileAccountStore.State.ProfileState.Loading -> {
+            AccountStore.State.ProfileState.Loading -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
                     CircularProgressIndicator(color = Colors.Purple)
                 }
             }
-            is ProfileAccountStore.State.ProfileState.Result -> {
+            is AccountStore.State.ProfileState.Result -> {
                 Column{
                     ItemWrapper {
                         Texts.Option(

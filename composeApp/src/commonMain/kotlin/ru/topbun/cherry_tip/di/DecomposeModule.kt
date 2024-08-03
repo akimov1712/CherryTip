@@ -12,6 +12,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainComponentImpl
@@ -19,15 +21,13 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.c
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStoreFactory
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashStoreFactory
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountStoreFactory
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsStoreFactory
 
 val decomposeModule = module {
     single<StoreFactory>{ DefaultStoreFactory() }
@@ -41,21 +41,21 @@ val decomposeModule = module {
     mainModule()
     tabsModule()
     homeModule()
-    profileModule()
+    settingsModule()
     challengeModule()
     challengeDetailModule()
-    profileAccountModule()
+    profileModule()
 }
 
-private fun Module.profileAccountModule(){
-    factory<ProfileAccountStoreFactory> { ProfileAccountStoreFactory(get(), get(), get()) }
+private fun Module.profileModule(){
+    factory<AccountStoreFactory> { AccountStoreFactory(get(), get(), get()) }
     factory {
             (
                 componentContext: ComponentContext,
                 onLogOut: () -> Unit,
                 onClickBack: () -> Unit
             ) ->
-        ProfileAccountComponentImpl(
+        AccountComponentImpl(
             componentContext = componentContext,
             onLogOut = onLogOut,
             onClickBack = onClickBack,
@@ -64,8 +64,8 @@ private fun Module.profileAccountModule(){
     }
 }
 
-private fun Module.profileModule(){
-    factory<ProfileStoreFactory> { ProfileStoreFactory(get()) }
+private fun Module.settingsModule(){
+    factory<SettingsStoreFactory> { SettingsStoreFactory(get()) }
     factory {
             (
                 componentContext: ComponentContext,
@@ -74,7 +74,7 @@ private fun Module.profileModule(){
                 onClickGoals: () -> Unit,
                 onClickUnits: () -> Unit,
             ) ->
-        ProfileComponentImpl(
+        SettingsComponentImpl(
             componentContext = componentContext,
             onClickAccount = onClickAccount,
             onClickProfile = onClickProfile,

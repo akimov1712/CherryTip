@@ -15,8 +15,8 @@ import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpComponentImpl
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
 
 class AuthComponentImpl(
     componentContext: ComponentContext,

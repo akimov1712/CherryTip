@@ -5,8 +5,8 @@ import com.arkivanov.decompose.value.Value
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.reminder.ReminderComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.signUp.SignUpComponent
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashComponent
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponent
 
 interface AuthComponent {
 
