@@ -4,8 +4,9 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface ProfileAccountComponent {
 
-    val state: StateFlow<Nothing>
+    val state: StateFlow<ProfileAccountStore.State>
 
     fun logOut()
+    fun clickBack()
 
 }

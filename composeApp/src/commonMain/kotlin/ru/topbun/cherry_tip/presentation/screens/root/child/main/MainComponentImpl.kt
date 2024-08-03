@@ -12,7 +12,10 @@ import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountComponent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileComponentImpl
 
 class MainComponentImpl(
     componentContext: ComponentContext,
@@ -33,7 +36,16 @@ class MainComponentImpl(
         Config.Tabs -> {
             val openChallenge = { navigation.pushToFront(Config.Challenge) }
             val openChallengeDetail = {id: Int ->  navigation.pushToFront(Config.ChallengeDetail(id)) }
-            val component: TabsComponentImpl = getKoin().get{ parametersOf(componentContext, openChallenge, openChallengeDetail, onOpenAuth) }
+            val onClickAccount = { navigation.pushToFront(Config.ProfileAccount) }
+            val component: TabsComponentImpl = getKoin().get{
+                parametersOf(
+                    componentContext,
+                    openChallenge,
+                    openChallengeDetail,
+                    onOpenAuth,
+                    onClickAccount
+                )
+            }
             MainComponent.Child.Tabs(component)
         }
         Config.Challenge -> {
@@ -50,6 +62,13 @@ class MainComponentImpl(
             MainComponent.Child.ChallengeDetail(component)
         }
         Config.TipsDetail -> TODO()
+        Config.ProfileAccount -> {
+            val onClickBack = {navigation.pop()}
+            val component: ProfileAccountComponentImpl = getKoin().get {
+                parametersOf(componentContext, onOpenAuth, onClickBack)
+            }
+            MainComponent.Child.ProfileAccount(component)
+        }
     }
 
     @Serializable
@@ -66,6 +85,10 @@ class MainComponentImpl(
 
         @Serializable
         data object TipsDetail: Config
+
+
+        @Serializable
+        data object ProfileAccount: Config
 
     }
 

@@ -24,6 +24,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.chil
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.SplashStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.profileExt.account.ProfileAccountStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.profile.ProfileStoreFactory
 
@@ -42,6 +44,24 @@ val decomposeModule = module {
     profileModule()
     challengeModule()
     challengeDetailModule()
+    profileAccountModule()
+}
+
+private fun Module.profileAccountModule(){
+    factory<ProfileAccountStoreFactory> { ProfileAccountStoreFactory(get(), get(), get()) }
+    factory {
+            (
+                componentContext: ComponentContext,
+                onLogOut: () -> Unit,
+                onClickBack: () -> Unit
+            ) ->
+        ProfileAccountComponentImpl(
+            componentContext = componentContext,
+            onLogOut = onLogOut,
+            onClickBack = onClickBack,
+            storeFactory = get()
+        )
+    }
 }
 
 private fun Module.profileModule(){
@@ -117,12 +137,15 @@ private fun Module.tabsModule(){
         componentContext: ComponentContext,
         onOpenChallenge: () -> Unit,
         onOpenChallengeDetail: (Int) -> Unit,
-        onOpenAuth: () -> Unit) ->
+        onOpenAuth: () -> Unit,
+        onClickAccount: () -> Unit
+        ) ->
         TabsComponentImpl(
             componentContext = componentContext,
             onOpenChallenge = onOpenChallenge,
             onOpenChallengeDetail = onOpenChallengeDetail,
-            onOpenAuth = onOpenAuth
+            onOpenAuth = onOpenAuth,
+            onClickAccount = onClickAccount
         )
     }
 }

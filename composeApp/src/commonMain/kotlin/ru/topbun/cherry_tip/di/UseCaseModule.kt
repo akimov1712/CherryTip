@@ -15,6 +15,7 @@ import ru.topbun.cherry_tip.domain.useCases.user.CreateGoalUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CreateProfileUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CreateUnitsUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.GetAccountInfoUseCase
+import ru.topbun.cherry_tip.domain.useCases.user.LogOutUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.TokenIsValidUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.UpdateGoalUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.UpdateProfileUseCase
@@ -49,6 +50,7 @@ private fun Module.userModule(){
     single { GetAccountInfoUseCase(get()) }
     single { TokenIsValidUseCase(get()) }
     single { CheckAccountInfoCompleteUseCase(get()) }
+    single { LogOutUseCase(get()) }
 }
 
 private fun Module.authModule(){

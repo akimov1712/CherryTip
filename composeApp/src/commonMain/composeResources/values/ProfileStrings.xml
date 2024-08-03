@@ -3,4 +3,6 @@
     <string name="profile_profile">Profile</string>
     <string name="profile_goals">My Goals</string>
     <string name="profile_units">Units</string>
+    <string name="account">Account</string>
+    <string name="logout">Log Out</string>
 </resources>

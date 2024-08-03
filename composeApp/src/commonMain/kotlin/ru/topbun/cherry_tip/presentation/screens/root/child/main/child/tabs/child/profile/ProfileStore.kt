@@ -50,7 +50,15 @@ class ProfileStoreFactory(
     }
 
     private class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Msg, Label>() {
-
+        override fun executeIntent(intent: Intent) {
+            super.executeIntent(intent)
+            when(intent){
+                Intent.ClickAccount -> publish(Label.ClickAccount)
+                Intent.ClickGoals -> publish(Label.ClickGoals)
+                Intent.ClickProfile -> publish(Label.ClickProfile)
+                Intent.ClickUnits -> publish(Label.ClickUnits)
+            }
+        }
     }
 
     private object ReducerImpl : Reducer<State, Msg> {

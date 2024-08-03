@@ -17,6 +17,7 @@ interface UserRepository {
 
     suspend fun tokenIsValid()
     suspend fun checkAccountInfoComplete()
+    suspend fun logOut()
 
 
 }

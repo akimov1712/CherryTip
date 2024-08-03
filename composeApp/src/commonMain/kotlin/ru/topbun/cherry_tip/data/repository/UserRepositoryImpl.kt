@@ -2,6 +2,7 @@ package ru.topbun.cherry_tip.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import io.ktor.client.call.body
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -17,7 +18,9 @@ import ru.topbun.cherry_tip.domain.entity.user.ProfileEntity
 import ru.topbun.cherry_tip.domain.entity.user.UnitsEntity
 import ru.topbun.cherry_tip.domain.repository.UserRepository
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
+import ru.topbun.cherry_tip.utills.ClientException
 import ru.topbun.cherry_tip.utills.FailedExtractTokenException
+import ru.topbun.cherry_tip.utills.ParseBackendResponseException
 import ru.topbun.cherry_tip.utills.codeResultWrapper
 import ru.topbun.cherry_tip.utills.exceptionWrapper
 
@@ -62,5 +65,13 @@ class UserRepositoryImpl(
         getAccountInfo().apply {
             if (goal == null || units == null || profile == null) throw AccountInfoNotCompleteException()
         }
+    }
+
+    override suspend fun logOut() {
+        try {
+            dataStore.edit {
+                it[AppSettings.KEY_TOKEN] = ""
+            }
+        } catch (e: Exception){}
     }
 }
