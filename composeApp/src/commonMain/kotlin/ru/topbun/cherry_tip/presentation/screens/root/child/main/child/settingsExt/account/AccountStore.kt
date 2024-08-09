@@ -22,14 +22,14 @@ interface AccountStore : Store<Intent, State, Label> {
     }
 
     data class State(
-        val profileState: ProfileState
+        val profileState: AccountState
     ){
 
-        sealed interface ProfileState{
-            data object Initial: ProfileState
-            data object Loading: ProfileState
-            data class Error(val text: String): ProfileState
-            data class Result(val userId: String): ProfileState
+        sealed interface AccountState{
+            data object Initial: AccountState
+            data object Loading: AccountState
+            data class Error(val text: String): AccountState
+            data class Result(val userId: String): AccountState
         }
 
     }
@@ -48,8 +48,8 @@ class AccountStoreFactory(
 
     fun create(): AccountStore =
         object : AccountStore, Store<Intent, State, Label> by storeFactory.create(
-            name = "ProfileAccountStore",
-            initialState = State(State.ProfileState.Initial),
+            name = "AccountAccountStore",
+            initialState = State(State.AccountState.Initial),
             executorFactory = ::ExecutorImpl,
             bootstrapper = Bootstrapper(),
             reducer = ReducerImpl
@@ -59,28 +59,28 @@ class AccountStoreFactory(
         override fun invoke() {
             scope.launch(handlerTokenException { dispatch(Action.LogOut) }) {
                 wrapperStoreException({
-                    dispatch(Action.ProfileStateLoading)
+                    dispatch(Action.AccountStateLoading)
                     val userId = getAccountInfoUseCase().id
-                    dispatch(Action.ProfileStateResult(userId))
+                    dispatch(Action.AccountStateResult(userId))
                 }){
-                    dispatch(Action.ProfileStateError(it))
+                    dispatch(Action.AccountStateError(it))
                 }
             }
         }
     }
 
     private sealed interface Action {
-        data class ProfileStateError(val text: String): Action
-        data object ProfileStateLoading: Action
-        data class ProfileStateResult(val userId: String): Action
+        data class AccountStateError(val text: String): Action
+        data object AccountStateLoading: Action
+        data class AccountStateResult(val userId: String): Action
 
         data object LogOut: Action
     }
 
     private sealed interface Msg {
-        data class ProfileStateError(val text: String): Msg
-        data object ProfileStateLoading: Msg
-        data class ProfileStateResult(val userId: String): Msg
+        data class AccountStateError(val text: String): Msg
+        data object AccountStateLoading: Msg
+        data class AccountStateResult(val userId: String): Msg
     }
 
 
@@ -104,9 +104,9 @@ class AccountStoreFactory(
         override fun executeAction(action: Action) {
             super.executeAction(action)
             when(action){
-                is Action.ProfileStateError -> dispatch(Msg.ProfileStateError(action.text))
-                Action.ProfileStateLoading -> dispatch(Msg.ProfileStateLoading)
-                is Action.ProfileStateResult -> dispatch(Msg.ProfileStateResult(action.userId))
+                is Action.AccountStateError -> dispatch(Msg.AccountStateError(action.text))
+                Action.AccountStateLoading -> dispatch(Msg.AccountStateLoading)
+                is Action.AccountStateResult -> dispatch(Msg.AccountStateResult(action.userId))
                 Action.LogOut -> publish(Label.LogOut)
             }
         }
@@ -114,9 +114,9 @@ class AccountStoreFactory(
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State = when (message) {
-            is Msg.ProfileStateError -> copy(profileState = State.ProfileState.Error(message.text))
-            Msg.ProfileStateLoading -> copy(profileState = State.ProfileState.Loading)
-            is Msg.ProfileStateResult -> copy(profileState = State.ProfileState.Result(message.userId))
+            is Msg.AccountStateError -> copy(profileState = State.AccountState.Error(message.text))
+            Msg.AccountStateLoading -> copy(profileState = State.AccountState.Loading)
+            is Msg.AccountStateResult -> copy(profileState = State.AccountState.Result(message.userId))
         }
     }
 }

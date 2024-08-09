@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import kotlinx.coroutines.launch
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileStore
 import ru.topbun.cherry_tip.utills.componentScope
 
 class SettingsComponentImpl (
@@ -13,7 +14,7 @@ class SettingsComponentImpl (
     private val onClickProfile: () -> Unit,
     private val onClickGoals: () -> Unit,
     private val onClickUnits: () -> Unit,
-    private val storeFactory: ProfileStoreFactory
+    private val storeFactory: SettingsStoreFactory
 ): SettingsComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { storeFactory.create() }
@@ -23,18 +24,18 @@ class SettingsComponentImpl (
         componentScope.launch {
             store.labels.collect{
                 when(it){
-                    ProfileStore.Label.ClickAccount -> onClickAccount()
-                    ProfileStore.Label.ClickProfile -> onClickProfile()
-                    ProfileStore.Label.ClickGoals -> onClickGoals()
-                    ProfileStore.Label.ClickUnits -> onClickUnits()
+                   SettingsStore.Label.ClickAccount -> onClickAccount()
+                   SettingsStore.Label.ClickProfile -> onClickProfile()
+                   SettingsStore.Label.ClickGoals -> onClickGoals()
+                   SettingsStore.Label.ClickUnits -> onClickUnits()
                 }
             }
         }
     }
 
-    override fun clickAccount() = store.accept(ProfileStore.Intent.ClickAccount)
-    override fun clickProfile() = store.accept(ProfileStore.Intent.ClickProfile)
-    override fun clickGoals() = store.accept(ProfileStore.Intent.ClickGoals)
-    override fun clickUnits() = store.accept(ProfileStore.Intent.ClickUnits)
+    override fun clickAccount() = store.accept(SettingsStore.Intent.ClickAccount)
+    override fun clickProfile() = store.accept(SettingsStore.Intent.ClickProfile)
+    override fun clickGoals() = store.accept(SettingsStore.Intent.ClickGoals)
+    override fun clickUnits() = store.accept(SettingsStore.Intent.ClickUnits)
 
 }

@@ -12,6 +12,8 @@ import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 
 class MainComponentImpl(
@@ -33,14 +35,20 @@ class MainComponentImpl(
         Config.Tabs -> {
             val openChallenge = { navigation.pushToFront(Config.Challenge) }
             val openChallengeDetail = {id: Int ->  navigation.pushToFront(Config.ChallengeDetail(id)) }
-            val onClickAccount = { navigation.pushToFront(Config.ProfileAccount) }
+            val onClickAccount = { navigation.pushToFront(Config.Account) }
+            val onClickProfile = { navigation.pushToFront(Config.Profile) }
+            val onClickGoals = {  }
+            val onClickUnits = {  }
             val component: TabsComponentImpl = getKoin().get{
                 parametersOf(
                     componentContext,
                     openChallenge,
                     openChallengeDetail,
                     onOpenAuth,
-                    onClickAccount
+                    onClickAccount,
+                    onClickProfile,
+                    onClickGoals,
+                    onClickUnits,
                 )
             }
             MainComponent.Child.Tabs(component)
@@ -59,12 +67,20 @@ class MainComponentImpl(
             MainComponent.Child.ChallengeDetail(component)
         }
         Config.TipsDetail -> TODO()
-        Config.ProfileAccount -> {
+        Config.Account -> {
             val onClickBack = {navigation.pop()}
-            val component: ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponentImpl = getKoin().get {
+            val component: AccountComponentImpl = getKoin().get {
                 parametersOf(componentContext, onOpenAuth, onClickBack)
             }
-            MainComponent.Child.ProfileAccount(component)
+            MainComponent.Child.Account(component)
+        }
+
+        Config.Profile -> {
+            val onClickBack = {navigation.pop()}
+            val component: ProfileComponentImpl = getKoin().get {
+                parametersOf(componentContext, onOpenAuth, onClickBack)
+            }
+            MainComponent.Child.Profile(component)
         }
     }
 
@@ -83,9 +99,11 @@ class MainComponentImpl(
         @Serializable
         data object TipsDetail: Config
 
+        @Serializable
+        data object Account: Config
 
         @Serializable
-        data object ProfileAccount: Config
+        data object Profile: Config
 
     }
 

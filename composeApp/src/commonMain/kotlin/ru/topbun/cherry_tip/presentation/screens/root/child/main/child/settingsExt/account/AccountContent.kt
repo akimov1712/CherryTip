@@ -35,7 +35,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
-fun ProfileAccountScreen(
+fun AccountScreen(
     component: AccountComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
@@ -46,7 +46,7 @@ fun ProfileAccountScreen(
         BackWithTitle(stringResource(Res.string.account)){ component.clickBack() }
         Spacer(Modifier.height(30.dp))
         when(val screenState = state.profileState){
-            is AccountStore.State.ProfileState.Error -> {
+            is AccountStore.State.AccountState.Error -> {
                 Texts.Error(
                     modifier = Modifier.fillMaxSize(),
                     text = screenState.text,
@@ -54,12 +54,12 @@ fun ProfileAccountScreen(
                     textAlign = TextAlign.Center
                 )
             }
-            AccountStore.State.ProfileState.Loading -> {
+            AccountStore.State.AccountState.Loading -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
                     CircularProgressIndicator(color = Colors.Purple)
                 }
             }
-            is AccountStore.State.ProfileState.Result -> {
+            is AccountStore.State.AccountState.Result -> {
                 Column{
                     ItemWrapper {
                         Texts.Option(

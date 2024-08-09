@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface SettingsComponent {
 
-    val state: StateFlow<ProfileStore.State>
+    val state: StateFlow<SettingsStore.State>
 
     fun clickAccount()
     fun clickProfile()

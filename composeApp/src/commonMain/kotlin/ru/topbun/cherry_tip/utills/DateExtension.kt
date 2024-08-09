@@ -19,4 +19,5 @@ fun GMTDate.toLocalDate() =
     Instant.fromEpochMilliseconds(this.timestamp).toLocalDateTime(TimeZone.currentSystemDefault()).date
 
 fun GMTDate.toIso8601() = Instant.fromEpochMilliseconds(this.timestamp).toString()
+fun GMTDate.formatToString() = "${this.dayOfMonth} ${this.month.name.lowercase().capitalize()} ${this.year}"
 fun String.parseToGMTDate() = GMTDate(Instant.parse(this).toEpochMilliseconds())

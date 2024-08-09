@@ -23,6 +23,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.c
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStoreFactory
@@ -44,10 +46,26 @@ val decomposeModule = module {
     settingsModule()
     challengeModule()
     challengeDetailModule()
+    accountModule()
     profileModule()
 }
 
 private fun Module.profileModule(){
+    factory<ProfileStoreFactory> { ProfileStoreFactory(get(), get(), get()) }
+    factory { (
+        componentContext: ComponentContext,
+        onLogOut: () -> Unit,
+        onClickBack: () -> Unit) ->
+        ProfileComponentImpl(
+            componentContext = componentContext,
+            onLogOut = onLogOut,
+            onClickBack = onClickBack,
+            storeFactory = get()
+        )
+    }
+}
+
+private fun Module.accountModule(){
     factory<AccountStoreFactory> { AccountStoreFactory(get(), get(), get()) }
     factory {
             (
@@ -133,19 +151,25 @@ private fun Module.mainModule(){
 
 
 private fun Module.tabsModule(){
-    factory { (
-        componentContext: ComponentContext,
-        onOpenChallenge: () -> Unit,
-        onOpenChallengeDetail: (Int) -> Unit,
-        onOpenAuth: () -> Unit,
-        onClickAccount: () -> Unit
-        ) ->
+    factory { params ->
+        val componentContext = params.get<ComponentContext>()
+        val onOpenChallenge = params.get<() -> Unit>()
+        val onOpenChallengeDetail = params.get<(Int) -> Unit>()
+        val onOpenAuth = params.get<() -> Unit>()
+        val onClickAccount = params.get<() -> Unit>()
+        val onClickProfile = params.get<() -> Unit>()
+        val onClickGoals = params.get<() -> Unit>()
+        val onClickUnits = params.get<() -> Unit>()
+
         TabsComponentImpl(
             componentContext = componentContext,
             onOpenChallenge = onOpenChallenge,
             onOpenChallengeDetail = onOpenChallengeDetail,
             onOpenAuth = onOpenAuth,
-            onClickAccount = onClickAccount
+            onClickAccount = onClickAccount,
+            onClickProfile = onClickProfile,
+            onClickGoals = onClickGoals,
+            onClickUnits = onClickUnits,
         )
     }
 }

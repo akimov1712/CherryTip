@@ -6,7 +6,8 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailScreen
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.ProfileAccountScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsScreen
 
 @Composable
@@ -21,7 +22,8 @@ fun MainScreen(
                 is MainComponent.Child.ChallengeDetail -> defaultAnimationScreen
                 is MainComponent.Child.Tabs -> defaultAnimationScreen
                 is MainComponent.Child.TipsDetail -> defaultAnimationScreen
-                is MainComponent.Child.ProfileAccount -> defaultAnimationScreen
+                is MainComponent.Child.Account -> defaultAnimationScreen
+                is MainComponent.Child.Profile -> defaultAnimationScreen
             }
         }
     ) {
@@ -38,8 +40,11 @@ fun MainScreen(
             }
 
             is MainComponent.Child.TipsDetail -> {}
-            is MainComponent.Child.ProfileAccount -> {
-                ProfileAccountScreen(instance.component)
+            is MainComponent.Child.Account -> {
+                AccountScreen(instance.component)
+            }
+            is MainComponent.Child.Profile -> {
+                ProfileScreen(instance.component)
             }
         }
     }

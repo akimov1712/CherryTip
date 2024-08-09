@@ -16,7 +16,10 @@ class TabsComponentImpl(
     private val onOpenChallenge: () -> Unit,
     private val onOpenChallengeDetail: (Int) -> Unit,
     private val onOpenAuth: () -> Unit,
-    private val onClickAccount: () -> Unit
+    private val onClickAccount: () -> Unit,
+    private val onClickProfile: () -> Unit,
+    private val onClickGoals: () -> Unit,
+    private val onClickUnits: () -> Unit,
 ) : TabsComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -41,9 +44,6 @@ class TabsComponentImpl(
         }
 
         Config.Profile -> {
-            val onClickProfile = {}
-            val onClickGoals = {}
-            val onClickUnits = {}
             val component: SettingsComponentImpl = getKoin().get {
                 parametersOf(
                     componentContext,
