@@ -6,6 +6,7 @@
     <string name="account">Account</string>
     <string name="logout">Log Out</string>
     <string name="save">Save</string>
+    <string name="apply">Apply</string>
 
     <string name="profile_first_name">First Name</string>
     <string name="profile_last_name">Last Name</string>

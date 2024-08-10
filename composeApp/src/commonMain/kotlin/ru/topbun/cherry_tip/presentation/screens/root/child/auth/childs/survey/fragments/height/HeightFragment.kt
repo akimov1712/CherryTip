@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.what_your_height
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.FragmentsComponents
+import ru.topbun.cherry_tip.presentation.ui.components.SurveyComponents
 
 @Composable
 fun HeightFragmentContent(
@@ -22,13 +22,13 @@ fun HeightFragmentContent(
     onClickBack: () -> Unit,
     onClickContinue: (Int) -> Unit,
 ) {
-    FragmentsComponents.FragmentWrapper(
+    SurveyComponents.FragmentWrapper(
         modifier = modifier,
         title = stringResource(Res.string.what_your_height)
     ){
         var height by rememberSaveable{ mutableStateOf(height) }
         Spacer(Modifier.weight(1f))
-        FragmentsComponents.NumberSlidePicker(
+        SurveyComponents.NumberSlidePicker(
             modifier = Modifier.fillMaxWidth(),
             minValue = 100,
             maxValue = 250,
@@ -37,9 +37,9 @@ fun HeightFragmentContent(
             height = it
         }
         Spacer(Modifier.height(20.dp))
-        FragmentsComponents.WarningAboutChangingValues()
+        SurveyComponents.WarningAboutChangingValues()
         Spacer(Modifier.weight(1f))
-        FragmentsComponents.ButtonsNavigation(
+        SurveyComponents.ButtonsNavigation(
             onClickBack = onClickBack,
             onClickNext = { onClickContinue(height) }
         )

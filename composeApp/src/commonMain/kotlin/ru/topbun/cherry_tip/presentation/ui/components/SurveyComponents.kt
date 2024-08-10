@@ -1,8 +1,9 @@
-package ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments
+package ru.topbun.cherry_tip.presentation.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateSizeAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +52,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
@@ -59,16 +61,18 @@ import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_info
 import cherrytip.composeapp.generated.resources.ic_pointer
 import cherrytip.composeapp.generated.resources.warning_about_changing_values
+import dev.darkokoa.datetimewheelpicker.WheelDatePicker
+import dev.darkokoa.datetimewheelpicker.core.WheelPickerDefaults
+import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.Fonts
-import ru.topbun.cherry_tip.presentation.ui.components.Buttons
-import ru.topbun.cherry_tip.presentation.ui.components.Texts
+import ru.topbun.cherry_tip.utills.now
 import kotlin.math.abs
 import kotlin.math.round
 
-object FragmentsComponents{
+object SurveyComponents{
 
     @Composable
     fun ButtonsNavigation(
@@ -140,6 +144,30 @@ object FragmentsComponents{
         }
     }
 
+    @Composable
+    fun WheelDatePicker(
+        startDate: LocalDate,
+        onSnappedDate: (snappedDate: LocalDate) -> Unit = {}
+    ) {
+        WheelDatePicker(
+            modifier = Modifier.fillMaxWidth(),
+            minDate = LocalDate(1900, 1, 1),
+            maxDate = LocalDate(LocalDate.now().year, 12, 31),
+            textStyle = TextStyle(
+                fontSize = 18.sp,
+                fontFamily = Fonts.sfRegular
+            ),
+            startDate = startDate,
+            size = DpSize(310.dp, 140.dp),
+            textColor = Colors.Purple,
+            selectorProperties = WheelPickerDefaults.selectorProperties(
+                color = Colors.PurpleBackground,
+                border = BorderStroke(1.dp, Colors.Purple)
+            ),
+            onSnappedDate = onSnappedDate
+        )
+    }
+    
     @Composable
     fun TextField(
         modifier: Modifier = Modifier,

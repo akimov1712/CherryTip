@@ -17,7 +17,7 @@ import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.what_your_goal
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.FragmentsComponents
+import ru.topbun.cherry_tip.presentation.ui.components.SurveyComponents
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 
@@ -28,7 +28,7 @@ fun GoalFragmentContent(
     onClickBack: () -> Unit,
     onClickContinue: (GoalType) -> Unit
 ) {
-    FragmentsComponents.FragmentWrapper(
+    SurveyComponents.FragmentWrapper(
         modifier = modifier,
         title = stringResource(Res.string.what_your_goal)
     ){
@@ -37,7 +37,7 @@ fun GoalFragmentContent(
 
         GoalList(goals, selectedItem)
         Spacer(Modifier.weight(1f))
-        FragmentsComponents.ButtonsNavigation(onClickBack, { onClickContinue(selectedItem.value) } )
+        SurveyComponents.ButtonsNavigation(onClickBack, { onClickContinue(selectedItem.value) } )
         Spacer(Modifier.height(20.dp))
     }
 }
@@ -63,7 +63,7 @@ private fun GoalList(
                 },
                 contentPadding = PaddingValues(18.dp)
             ) {
-                FragmentsComponents.IconWithText(
+                SurveyComponents.IconWithText(
                     icon = painterResource(it.iconRes),
                     text = stringResource(it.textRes),
                     color = if (isSelected) Colors.White else Colors.Purple,

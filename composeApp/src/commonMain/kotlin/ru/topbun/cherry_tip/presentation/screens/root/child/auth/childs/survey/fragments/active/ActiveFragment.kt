@@ -20,7 +20,7 @@ import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.how_active_you
 import cherrytip.composeapp.generated.resources.start_now
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.FragmentsComponents
+import ru.topbun.cherry_tip.presentation.ui.components.SurveyComponents
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
@@ -31,7 +31,7 @@ fun ActiveFragmentContent(
     onClickBack: () -> Unit,
     onClickStart: (ActiveType) -> Unit
 ) {
-    FragmentsComponents.FragmentWrapper(
+    SurveyComponents.FragmentWrapper(
         modifier = modifier,
         title = stringResource(Res.string.how_active_you)
     ){
@@ -43,7 +43,7 @@ fun ActiveFragmentContent(
             selectedType = selectedType,
         )
         Spacer(Modifier.weight(1f))
-        FragmentsComponents.ButtonsNavigation(
+        SurveyComponents.ButtonsNavigation(
             onClickBack = onClickBack,
             onClickNext = { onClickStart(selectedType.value) },
             nextButtonText = stringResource(Res.string.start_now)

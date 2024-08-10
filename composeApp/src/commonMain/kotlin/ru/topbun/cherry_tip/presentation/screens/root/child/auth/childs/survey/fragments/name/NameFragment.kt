@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.what_your_name
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.FragmentsComponents
+import ru.topbun.cherry_tip.presentation.ui.components.SurveyComponents
 
 @Composable
 fun NameFragmentContent(
@@ -20,20 +20,20 @@ fun NameFragmentContent(
     name: String,
     onClickContinue: (String) -> Unit
 ) {
-    FragmentsComponents.FragmentWrapper(
+    SurveyComponents.FragmentWrapper(
         modifier = modifier,
         title = stringResource(Res.string.what_your_name)
     ) {
         var text by rememberSaveable {
             mutableStateOf(name)
         }
-        FragmentsComponents.TextField(
+        SurveyComponents.TextField(
             text = text,
             onValueChange = { if (it.length <= 20) text = it },
             placeholder = "John"
         )
         Spacer(Modifier.weight(1f))
-        FragmentsComponents.ButtonsNavigation(
+        SurveyComponents.ButtonsNavigation(
             onClickNext = {
                 onClickContinue(text)
             },

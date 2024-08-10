@@ -21,7 +21,7 @@ import dev.darkokoa.datetimewheelpicker.core.WheelPickerDefaults
 import io.ktor.util.date.GMTDate
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.FragmentsComponents
+import ru.topbun.cherry_tip.presentation.ui.components.SurveyComponents
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.Fonts
 import ru.topbun.cherry_tip.utills.now
@@ -35,31 +35,14 @@ fun AgeFragmentContent(
     onClickBack: () -> Unit,
     onClickContinue: (GMTDate) -> Unit
 ) {
-    FragmentsComponents.FragmentWrapper(
+    SurveyComponents.FragmentWrapper(
         modifier = modifier,
         title = stringResource(Res.string.how_old_are_you)
     ){
         var date by remember { mutableStateOf(age) }
-        WheelDatePicker(
-            modifier = Modifier.fillMaxWidth(),
-            minDate = LocalDate(1900, 1, 1),
-            maxDate = LocalDate(LocalDate.now().year, 12 , 31),
-            textStyle = TextStyle(
-                fontSize = 18.sp,
-                fontFamily = Fonts.sfRegular
-            ),
-            startDate = age.toLocalDate(),
-            size = DpSize(310.dp, 140.dp),
-            textColor = Colors.Purple,
-            selectorProperties = WheelPickerDefaults.selectorProperties(
-                color = Colors.PurpleBackground,
-                border = BorderStroke(1.dp, Colors.Purple)
-            )
-        ) {
-            date = it.toGMTDate()
-        }
+        SurveyComponents.WheelDatePicker(startDate = age.toLocalDate()){ date = it.toGMTDate() }
         Spacer(Modifier.weight(1f))
-        FragmentsComponents.ButtonsNavigation(
+        SurveyComponents.ButtonsNavigation(
             onClickBack = onClickBack,
             onClickNext = { onClickContinue(date) }
         )
