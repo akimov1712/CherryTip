@@ -81,9 +81,9 @@ class ProfileStoreFactory(
         ) {}
 
     private sealed interface Action {
-        data class AccountStateError(val text: String): Action
-        data object AccountStateLoading: Action
-        data class AccountStateResult(
+        data class ProfileStateError(val text: String): Action
+        data object ProfileStateLoading: Action
+        data class ProfileStateResult(
             val name: String,
             val surname: String,
             val city: String,
@@ -101,9 +101,9 @@ class ProfileStoreFactory(
         data class ChangeGender(val gender: Gender): Msg
         data class ChangeBirth(val birth: GMTDate): Msg
 
-        data class AccountStateError(val text: String): Msg
-        data object AccountStateLoading: Msg
-        data class AccountStateResult(
+        data class ProfileStateError(val text: String): Msg
+        data object ProfileStateLoading: Msg
+        data class ProfileStateResult(
             val name: String,
             val surname: String,
             val city: String,
@@ -116,9 +116,9 @@ class ProfileStoreFactory(
         override fun invoke() {
             scope.launch(handlerTokenException { dispatch(Action.LogOut) }) {
                 wrapperStoreException({
-                    dispatch(Action.AccountStateLoading)
+                    dispatch(Action.ProfileStateLoading)
                     val accountInfo = getAccountInfoUseCase()
-                    dispatch(Action.AccountStateResult(
+                    dispatch(Action.ProfileStateResult(
                         name = accountInfo.profile?.firstName ?: "",
                         surname = accountInfo.profile?.lastName ?: "",
                         city = accountInfo.profile?.city ?: "",
@@ -126,7 +126,7 @@ class ProfileStoreFactory(
                         birth = accountInfo.profile?.birth ?: GMTDate.START
                     ))
                 }){
-                    dispatch(Action.AccountStateError(it))
+                    dispatch(Action.ProfileStateError(it))
                 }
             }
         }
@@ -136,9 +136,9 @@ class ProfileStoreFactory(
         override fun executeAction(action: Action) {
             super.executeAction(action)
             when(action){
-                is Action.AccountStateError -> dispatch(Msg.AccountStateError(action.text))
-                Action.AccountStateLoading -> dispatch(Msg.AccountStateLoading)
-                is Action.AccountStateResult -> dispatch(Msg.AccountStateResult(
+                is Action.ProfileStateError -> dispatch(Msg.ProfileStateError(action.text))
+                Action.ProfileStateLoading -> dispatch(Msg.ProfileStateLoading)
+                is Action.ProfileStateResult -> dispatch(Msg.ProfileStateResult(
                     name = action.name,
                     surname = action.surname,
                     city = action.city,
@@ -173,7 +173,7 @@ class ProfileStoreFactory(
                             )
                             publish(Label.ClickBack)}
                         ){
-                            dispatch(Msg.AccountStateError(it))
+                            dispatch(Msg.ProfileStateError(it))
                         }
                     }
                 }
@@ -184,9 +184,9 @@ class ProfileStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State =
             when (message) {
-                is Msg.AccountStateError -> copy(profileState = State.ProfileState.Error(message.text))
-                Msg.AccountStateLoading -> copy(profileState = State.ProfileState.Loading)
-                is Msg.AccountStateResult -> copy(
+                is Msg.ProfileStateError -> copy(profileState = State.ProfileState.Error(message.text))
+                Msg.ProfileStateLoading -> copy(profileState = State.ProfileState.Loading)
+                is Msg.ProfileStateResult -> copy(
                     name = message.name,
                     surname = message.surname,
                     city = message.city,
