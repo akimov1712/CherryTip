@@ -28,18 +28,24 @@ import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.account
 import cherrytip.composeapp.generated.resources.apply
+import cherrytip.composeapp.generated.resources.profile_city
+import cherrytip.composeapp.generated.resources.profile_date_birth
+import cherrytip.composeapp.generated.resources.profile_first_name
+import cherrytip.composeapp.generated.resources.profile_last_name
+import cherrytip.composeapp.generated.resources.profile_sex
 import cherrytip.composeapp.generated.resources.save
 import io.ktor.util.date.GMTDate
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.gender.Gender
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.gender.GenderObjects
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileObjects.City
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileObjects.DateBirth
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileObjects.FirstName
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileObjects.LastName
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileObjects.Sex
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileButtons.City
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileButtons.DateBirth
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileButtons.FirstName
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileButtons.LastName
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileButtons.Sex
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
@@ -57,7 +63,7 @@ fun ProfileScreen(
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val snackbar = SnackbarHostState()
-    var dialogItem by remember{ mutableStateOf<ProfileObjects?>(null) }
+    var dialogItem by remember{ mutableStateOf<ProfileButtons?>(null) }
     val state by component.state.collectAsState()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -86,7 +92,7 @@ fun ProfileScreen(
                 Column(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    ProfileObjects.entries.forEach { item ->
+                    ProfileButtons.entries.forEach { item ->
                         SettingsItem(
                             modifier = Modifier.fillMaxWidth(),
                             title = stringResource(item.title),
@@ -232,4 +238,16 @@ private fun DialogChangeText(
             text = stringResource(Res.string.apply)
         )
     }
+}
+
+private enum class ProfileButtons(
+    val title: StringResource
+) {
+
+    FirstName(Res.string.profile_first_name),
+    LastName(Res.string.profile_last_name),
+    City(Res.string.profile_city),
+    Sex(Res.string.profile_sex),
+    DateBirth(Res.string.profile_date_birth),
+
 }

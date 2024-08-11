@@ -29,10 +29,14 @@ import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.account
 import cherrytip.composeapp.generated.resources.apply
 import cherrytip.composeapp.generated.resources.gain_weight
+import cherrytip.composeapp.generated.resources.goal_active
+import cherrytip.composeapp.generated.resources.goal_calorie
+import cherrytip.composeapp.generated.resources.goal_goal
 import cherrytip.composeapp.generated.resources.lose_weight
 import cherrytip.composeapp.generated.resources.save
 import cherrytip.composeapp.generated.resources.stay_healthy
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.active.ActiveObjects
@@ -40,7 +44,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.f
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalObjects
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType.*
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalItems.*
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalButtons.*
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
@@ -56,7 +60,7 @@ fun GoalScreen(
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val snackbar = SnackbarHostState()
-    var dialogItem by remember{ mutableStateOf<GoalItems?>(null) }
+    var dialogItem by remember{ mutableStateOf<GoalButtons?>(null) }
     val state by component.state.collectAsState()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -85,7 +89,7 @@ fun GoalScreen(
                 Column(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    GoalItems.entries.forEach { item ->
+                    GoalButtons.entries.forEach { item ->
                         SettingsItem(
                             modifier = Modifier.fillMaxWidth(),
                             title = stringResource(item.stringRes),
@@ -210,4 +214,12 @@ private fun DialogChangeGoal(
     }
 }
 
+private enum class GoalButtons(
+    val stringRes: StringResource
+) {
 
+    Goal(Res.string.goal_goal),
+    Active(Res.string.goal_active),
+    Calorie(Res.string.goal_calorie),
+
+}
