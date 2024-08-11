@@ -18,4 +18,9 @@
     <string name="goal_active">Activity Level</string>
     <string name="goal_calorie">Calorie Goal</string>
 
+    <string name="units_weight">Weight</string>
+    <string name="units_target_weight">Target Weight</string>
+    <string name="units_height">Height</string>
+    <string name="units_blood_glucose">Blood Glucose</string>
+
 </resources>

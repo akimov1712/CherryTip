@@ -15,6 +15,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.c
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 
 class MainComponentImpl(
@@ -39,7 +40,7 @@ class MainComponentImpl(
             val onClickAccount = { navigation.pushToFront(Config.Account) }
             val onClickProfile = { navigation.pushToFront(Config.Profile) }
             val onClickGoals = { navigation.pushToFront(Config.Goal) }
-            val onClickUnits = {  }
+            val onClickUnits = { navigation.pushToFront(Config.Units) }
             val component: TabsComponentImpl = getKoin().get{
                 parametersOf(
                     componentContext,
@@ -91,6 +92,14 @@ class MainComponentImpl(
             }
             MainComponent.Child.Goal(component)
         }
+
+        Config.Units -> {
+            val onClickBack = {navigation.pop()}
+            val component: UnitsComponentImpl = getKoin().get {
+                parametersOf(componentContext, onOpenAuth, onClickBack)
+            }
+            MainComponent.Child.Units(component)
+        }
     }
 
     @Serializable
@@ -103,7 +112,7 @@ class MainComponentImpl(
         @Serializable data object Account: Config
         @Serializable data object Profile: Config
         @Serializable data object Goal: Config
-
+        @Serializable data object Units: Config
     }
 
 }

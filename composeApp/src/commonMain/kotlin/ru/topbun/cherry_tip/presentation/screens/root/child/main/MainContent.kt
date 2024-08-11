@@ -9,6 +9,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.c
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsScreen
 
 @Composable
@@ -17,17 +18,7 @@ fun MainScreen(
 ) {
     Children(
         stack = component.stack,
-        animation = stackAnimation { child ->
-            when (child.instance) {
-                is MainComponent.Child.Challenge -> defaultAnimationScreen
-                is MainComponent.Child.ChallengeDetail -> defaultAnimationScreen
-                is MainComponent.Child.Tabs -> defaultAnimationScreen
-                is MainComponent.Child.TipsDetail -> defaultAnimationScreen
-                is MainComponent.Child.Account -> defaultAnimationScreen
-                is MainComponent.Child.Profile -> defaultAnimationScreen
-                is MainComponent.Child.Goal -> defaultAnimationScreen
-            }
-        }
+        animation = stackAnimation { child -> defaultAnimationScreen }
     ) {
         when (val instance = it.instance) {
             is MainComponent.Child.Challenge -> {
@@ -51,6 +42,10 @@ fun MainScreen(
 
             is MainComponent.Child.Goal -> {
                 GoalScreen(instance.component)
+            }
+
+            is MainComponent.Child.Units -> {
+                UnitsScreen(instance.component)
             }
         }
     }

@@ -27,6 +27,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsE
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStoreFactory
@@ -51,6 +53,22 @@ val decomposeModule = module {
     accountModule()
     profileModule()
     goalModule()
+    unitsModule()
+}
+
+private fun Module.unitsModule(){
+    factory<UnitsStoreFactory> { UnitsStoreFactory(get(), get(), get()) }
+    factory { (
+                  componentContext: ComponentContext,
+                  onLogOut: () -> Unit,
+                  onClickBack: () -> Unit) ->
+        UnitsComponentImpl(
+            componentContext = componentContext,
+            onLogOut = onLogOut,
+            onClickBack = onClickBack,
+            storeFactory = get()
+        )
+    }
 }
 
 private fun Module.goalModule(){

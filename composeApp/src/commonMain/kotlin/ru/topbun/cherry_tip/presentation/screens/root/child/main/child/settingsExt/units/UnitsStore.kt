@@ -141,9 +141,9 @@ class UnitsStoreFactory(
         override fun executeIntent(intent: Intent) {
             super.executeIntent(intent)
             when(intent){
-                is Intent.ChangeBloodGlucose -> dispatch(Msg.ChangeWeight(intent.bloodGlucose))
-                is Intent.ChangeHeight -> dispatch(Msg.ChangeWeight(intent.height))
-                is Intent.ChangeTargetWeight -> dispatch(Msg.ChangeWeight(intent.targetWeight))
+                is Intent.ChangeBloodGlucose -> dispatch(Msg.ChangeBloodGlucose(intent.bloodGlucose))
+                is Intent.ChangeHeight -> dispatch(Msg.ChangeHeight(intent.height))
+                is Intent.ChangeTargetWeight -> dispatch(Msg.ChangeTargetWeight(intent.targetWeight))
                 is Intent.ChangeWeight -> dispatch(Msg.ChangeWeight(intent.weight))
 
 
@@ -178,7 +178,13 @@ class UnitsStoreFactory(
             is Msg.ChangeWeight -> copy(weight = message.weight)
             is Msg.UnitsStateError -> copy(unitsState = State.UnitsState.Error(message.text))
             Msg.UnitsStateLoading -> copy(unitsState = State.UnitsState.Loading)
-            is Msg.UnitsStateResult -> copy(unitsState = State.UnitsState.Result)
+            is Msg.UnitsStateResult -> copy(
+                weight = message.weight,
+                targetWeight = message.targetWeight,
+                height = message.height,
+                bloodGlucose = message.bloodGlucose,
+                unitsState = State.UnitsState.Result
+            )
         }
     }
 }
