@@ -25,8 +25,8 @@ class GoalComponentImpl(
         componentScope.launch {
             store.labels.collect{
                 when(it){
-                    GoalStore.Label.ClickBack -> onClickBack
-                    GoalStore.Label.LogOut -> onLogOut
+                    GoalStore.Label.ClickBack -> onClickBack()
+                    GoalStore.Label.LogOut -> onLogOut()
                 }
             }
         }

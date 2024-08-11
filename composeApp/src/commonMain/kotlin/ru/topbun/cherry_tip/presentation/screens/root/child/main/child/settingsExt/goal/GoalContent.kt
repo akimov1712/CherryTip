@@ -1,5 +1,6 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -51,7 +53,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 @Composable
 fun GoalScreen(
     component: GoalComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val snackbar = SnackbarHostState()
     var dialogItem by remember{ mutableStateOf<GoalItems?>(null) }
@@ -140,15 +142,20 @@ private fun DialogChangeActive(
 ) {
     var selectedItem by remember { mutableStateOf(active) }
     val actives = ActiveObjects.entries
-    actives.forEach {
-        ActiveItem(
-            title = stringResource(it.titleRes),
-            descr = stringResource(it.descrRes),
-            isActive = selectedItem == it.type
-        ){
-            selectedItem = it.type
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        actives.forEach {
+            ActiveItem(
+                title = stringResource(it.titleRes),
+                descr = stringResource(it.descrRes),
+                isActive = selectedItem == it.type
+            ){
+                selectedItem = it.type
+            }
         }
     }
+
     Spacer(Modifier.height(32.dp))
     Buttons.Purple(
         modifier = Modifier.fillMaxWidth().height(57.dp),
@@ -168,25 +175,30 @@ private fun DialogChangeGoal(
 ) {
     var selectedItem by remember { mutableStateOf(goal) }
     val goals = GoalObjects.entries
-    goals.forEach {
-        val isSelected = selectedItem == it.goalType
-        Buttons.Button(
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                if (isSelected) Colors.Purple else Colors.PurpleBackground
-            ),
-            onClick = {
-                selectedItem = it.goalType
-            },
-            contentPadding = PaddingValues(18.dp)
-        ) {
-            SurveyComponents.IconWithText(
-                icon = painterResource(it.iconRes),
-                text = stringResource(it.textRes),
-                color = if (isSelected) Colors.White else Colors.Purple,
-            )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        goals.forEach {
+            val isSelected = selectedItem == it.goalType
+            Buttons.Button(
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    if (isSelected) Colors.Purple else Colors.PurpleBackground
+                ),
+                onClick = {
+                    selectedItem = it.goalType
+                },
+                contentPadding = PaddingValues(18.dp)
+            ) {
+                SurveyComponents.IconWithText(
+                    icon = painterResource(it.iconRes),
+                    text = stringResource(it.textRes),
+                    color = if (isSelected) Colors.White else Colors.Purple,
+                )
+            }
         }
     }
+
     Spacer(Modifier.height(32.dp))
     Buttons.Purple(
         modifier = Modifier.fillMaxWidth().height(57.dp),

@@ -13,6 +13,7 @@ import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 
@@ -83,7 +84,13 @@ class MainComponentImpl(
             MainComponent.Child.Profile(component)
         }
 
-        Config.Goal -> TODO()
+        Config.Goal -> {
+            val onClickBack = {navigation.pop()}
+            val component: GoalComponentImpl = getKoin().get {
+                parametersOf(componentContext, onOpenAuth, onClickBack)
+            }
+            MainComponent.Child.Goal(component)
+        }
     }
 
     @Serializable
