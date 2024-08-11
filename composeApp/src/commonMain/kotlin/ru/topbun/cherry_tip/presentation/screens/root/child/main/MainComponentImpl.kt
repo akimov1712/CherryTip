@@ -37,7 +37,7 @@ class MainComponentImpl(
             val openChallengeDetail = {id: Int ->  navigation.pushToFront(Config.ChallengeDetail(id)) }
             val onClickAccount = { navigation.pushToFront(Config.Account) }
             val onClickProfile = { navigation.pushToFront(Config.Profile) }
-            val onClickGoals = {  }
+            val onClickGoals = { navigation.pushToFront(Config.Goal) }
             val onClickUnits = {  }
             val component: TabsComponentImpl = getKoin().get{
                 parametersOf(
@@ -82,28 +82,20 @@ class MainComponentImpl(
             }
             MainComponent.Child.Profile(component)
         }
+
+        Config.Goal -> TODO()
     }
 
     @Serializable
     sealed interface Config{
 
-        @Serializable
-        data object Tabs: Config
-
-        @Serializable
-        data object Challenge: Config
-
-        @Serializable
-        data class ChallengeDetail(val id: Int): Config
-
-        @Serializable
-        data object TipsDetail: Config
-
-        @Serializable
-        data object Account: Config
-
-        @Serializable
-        data object Profile: Config
+        @Serializable data object Tabs: Config
+        @Serializable data object Challenge: Config
+        @Serializable data class ChallengeDetail(val id: Int): Config
+        @Serializable data object TipsDetail: Config
+        @Serializable data object Account: Config
+        @Serializable data object Profile: Config
+        @Serializable data object Goal: Config
 
     }
 

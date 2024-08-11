@@ -6,6 +6,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.c
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.tipsDetail.Tips
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponent
 
@@ -20,6 +21,7 @@ interface MainComponent {
         data class TipsDetail(val tip: Tips): Child
         data class Account(val component: AccountComponent): Child
         data class Profile(val component: ProfileComponent): Child
+        data class Goal(val component: GoalComponent): Child
     }
 
 
