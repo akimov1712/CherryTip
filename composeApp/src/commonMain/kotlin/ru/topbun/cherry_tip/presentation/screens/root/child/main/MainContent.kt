@@ -7,6 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsScreen
 
@@ -24,6 +25,7 @@ fun MainScreen(
                 is MainComponent.Child.TipsDetail -> defaultAnimationScreen
                 is MainComponent.Child.Account -> defaultAnimationScreen
                 is MainComponent.Child.Profile -> defaultAnimationScreen
+                is MainComponent.Child.Goal -> defaultAnimationScreen
             }
         }
     ) {
@@ -45,6 +47,10 @@ fun MainScreen(
             }
             is MainComponent.Child.Profile -> {
                 ProfileScreen(instance.component)
+            }
+
+            is MainComponent.Child.Goal -> {
+                GoalScreen(instance.component)
             }
         }
     }

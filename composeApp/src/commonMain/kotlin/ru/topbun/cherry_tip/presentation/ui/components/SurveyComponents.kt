@@ -30,6 +30,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -335,6 +337,41 @@ object SurveyComponents{
                 color = Colors.GrayDark,
                 textAlign = TextAlign.Start
             )
+        }
+    }
+
+    @Composable
+    fun ActiveItem(
+        modifier: Modifier = Modifier,
+        title: String,
+        descr: String,
+        isActive: Boolean,
+        onClick: () -> Unit
+    ) {
+        Card(
+            onClick = onClick,
+            modifier = modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(if (isActive) Colors.Purple else Colors.PurpleBackground),
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(18.dp)
+            ){
+                Texts.Option(
+                    text = title,
+                    color = if (isActive) Colors.White else Colors.Purple,
+                    textAlign = TextAlign.Start
+                )
+                Spacer(Modifier.height(10.dp))
+                Texts.General(
+                    text = descr,
+                    color = if (isActive) Colors.GrayLight else Colors.Gray,
+                    textAlign = TextAlign.Start
+                )
+            }
+
         }
     }
 

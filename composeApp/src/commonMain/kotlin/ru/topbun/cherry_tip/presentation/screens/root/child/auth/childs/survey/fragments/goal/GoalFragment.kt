@@ -32,10 +32,9 @@ fun GoalFragmentContent(
         modifier = modifier,
         title = stringResource(Res.string.what_your_goal)
     ){
-        val goals = listOf(GoalObjects.Lose, GoalObjects.Stay, GoalObjects.Gain)
         var selectedItem = remember { mutableStateOf(goal) }
 
-        GoalList(goals, selectedItem)
+        GoalList(selectedItem)
         Spacer(Modifier.weight(1f))
         SurveyComponents.ButtonsNavigation(onClickBack, { onClickContinue(selectedItem.value) } )
         Spacer(Modifier.height(20.dp))
@@ -45,12 +44,12 @@ fun GoalFragmentContent(
 
 @Composable
 private fun GoalList(
-    goals: List<GoalObjects>,
     selectedItem: MutableState<GoalType>
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
+        val goals = GoalObjects.entries
         goals.forEach {
             val isSelected = selectedItem.value == it.goalType
             Buttons.Button(

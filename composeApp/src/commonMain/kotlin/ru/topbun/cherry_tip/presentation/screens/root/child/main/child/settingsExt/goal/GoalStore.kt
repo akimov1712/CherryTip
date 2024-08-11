@@ -34,6 +34,7 @@ interface GoalStore : Store<Intent, State, Label> {
     data class State(
         val goal: GoalType,
         val active: ActiveType,
+        val calorie: Int,
         val goalState: GoalState
     ){
 
@@ -64,6 +65,7 @@ class GoalStoreFactory(
             initialState = State(
                 goal = GoalType.Lose,
                 active = ActiveType.Low,
+                calorie = 0,
                 goalState = State.GoalState.Initial
             ),
             bootstrapper = BootstrapperImpl(),
@@ -77,6 +79,7 @@ class GoalStoreFactory(
         data class GoalStateResult(
             val goal: GoalType,
             val active: ActiveType,
+            val calorie: Int
         ): Action
 
         data object LogOut: Action
@@ -91,6 +94,7 @@ class GoalStoreFactory(
         data class GoalStateResult(
             val goal: GoalType,
             val active: ActiveType,
+            val calorie: Int
         ): Msg
     }
 
@@ -102,7 +106,8 @@ class GoalStoreFactory(
                     val accountInfo = getAccountInfoUseCase()
                     dispatch(Action.GoalStateResult(
                         goal = accountInfo.goal?.goalType ?: GoalType.Lose,
-                        active = accountInfo.goal?.active ?: ActiveType.Low
+                        active = accountInfo.goal?.active ?: ActiveType.Low,
+                        calorie = accountInfo.goal?.calorieGoal ?: 0
                     ))
                 }){
                     dispatch(Action.GoalStateError(it))
@@ -119,7 +124,8 @@ class GoalStoreFactory(
                 Action.GoalStateLoading -> dispatch(Msg.GoalStateLoading)
                 is Action.GoalStateResult -> dispatch(Msg.GoalStateResult(
                     goal = action.goal,
-                    active = action.active
+                    active = action.active,
+                    calorie = action.calorie
                 ))
                 Action.LogOut -> publish(Label.ClickBack)
             }
@@ -136,7 +142,7 @@ class GoalStoreFactory(
                             updateGoalUseCase(
                                GoalEntity(
                                    active = state.active,
-                                   goalType = state.goal
+                                   goalType = state.goal,
                                )
                             )
                             publish(Label.ClickBack)}
@@ -158,7 +164,12 @@ class GoalStoreFactory(
             is Msg.ChangeGoal -> copy(goal = message.goal)
             is Msg.GoalStateError -> copy(goalState = State.GoalState.Error(message.text))
             Msg.GoalStateLoading -> copy(goalState = State.GoalState.Loading)
-            is Msg.GoalStateResult -> copy(goalState = State.GoalState.Result)
+            is Msg.GoalStateResult -> copy(
+                goal = message.goal,
+                active = message.active,
+                calorie = message.calorie,
+                goalState = State.GoalState.Result
+            )
         }
     }
 }

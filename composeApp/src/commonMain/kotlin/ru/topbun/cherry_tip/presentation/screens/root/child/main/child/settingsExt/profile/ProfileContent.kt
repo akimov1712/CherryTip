@@ -1,23 +1,17 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -30,14 +24,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.account
 import cherrytip.composeapp.generated.resources.apply
-import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.save
 import io.ktor.util.date.GMTDate
 import kotlinx.coroutines.launch
@@ -54,6 +44,7 @@ import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
 import ru.topbun.cherry_tip.presentation.ui.components.DialogWrapper
+import ru.topbun.cherry_tip.presentation.ui.components.SettingsItem
 import ru.topbun.cherry_tip.presentation.ui.components.SurveyComponents
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.utills.formatToString
@@ -96,7 +87,7 @@ fun ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     ProfileObjects.entries.forEach { item ->
-                        ProfileItem(
+                        SettingsItem(
                             modifier = Modifier.fillMaxWidth(),
                             title = stringResource(item.title),
                             value = when(item){
@@ -158,7 +149,7 @@ fun ProfileScreen(
 @Composable
 private fun DialogChangeBirth(
     date: GMTDate,
-    onClickSave: (GMTDate) -> Unit
+    onClickApply: (GMTDate) -> Unit
 ) {
     var date by remember { mutableStateOf(date) }
     SurveyComponents.WheelDatePicker(date.toLocalDate()){
@@ -167,7 +158,7 @@ private fun DialogChangeBirth(
     Spacer(Modifier.height(32.dp))
     Buttons.Purple(
         modifier = Modifier.fillMaxWidth().height(57.dp),
-        onClick = { onClickSave(date) }
+        onClick = { onClickApply(date) }
     ){
         Texts.Button(
             text = stringResource(Res.string.apply)
@@ -179,7 +170,7 @@ private fun DialogChangeBirth(
 @Composable
 private fun DialogChangeGender(
     gender: Gender,
-    onClickSave: (Gender) -> Unit
+    onClickApply: (Gender) -> Unit
 ) {
     var selectedItem by remember {  mutableStateOf(gender) }
     val items = listOf(GenderObjects.Male, GenderObjects.Female)
@@ -209,7 +200,7 @@ private fun DialogChangeGender(
     Spacer(Modifier.height(32.dp))
     Buttons.Purple(
         modifier = Modifier.fillMaxWidth().height(57.dp),
-        onClick = { onClickSave(selectedItem) }
+        onClick = { onClickApply(selectedItem) }
     ){
         Texts.Button(
             text = stringResource(Res.string.apply)
@@ -222,7 +213,7 @@ private fun DialogChangeGender(
 private fun DialogChangeText(
     text: String,
     placeholder: String = "John",
-    onClickSave: (String) -> Unit
+    onClickApply: (String) -> Unit
 ) {
     var text by remember{
         mutableStateOf(text)
@@ -235,53 +226,10 @@ private fun DialogChangeText(
     Spacer(Modifier.height(32.dp))
     Buttons.Purple(
         modifier = Modifier.fillMaxWidth().height(57.dp),
-        onClick = { onClickSave(text) }
+        onClick = { onClickApply(text) }
     ){
         Texts.Button(
             text = stringResource(Res.string.apply)
         )
     }
-}
-
-
-@Composable
-private fun ProfileItem(
-    title: String,
-    value: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ItemWrapper (modifier = modifier.clickable( indication = null, interactionSource = MutableInteractionSource()) {
-        onClick()
-    }){
-        Texts.Option(
-            text = title,
-            color = Colors.Black,
-            fontSize = 16.sp
-        )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Texts.Option(
-                text = value,
-                color = Colors.Gray,
-                fontSize = 16.sp
-            )
-            Spacer(Modifier.width(7.dp))
-            Icon(
-                modifier = Modifier.rotate(180f),
-                painter = painterResource(Res.drawable.ic_back),
-                contentDescription = null,
-                tint = Colors.Gray
-            )
-        }
-    }
-}
-
-@Composable
-private fun ItemWrapper(modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) {
-    Row (
-        modifier = modifier.fillMaxWidth().height(55.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        content = content
-    )
 }

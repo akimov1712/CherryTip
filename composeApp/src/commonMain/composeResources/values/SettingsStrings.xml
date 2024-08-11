@@ -1,8 +1,8 @@
 <resources>
-    <string name="profile_account">Account</string>
-    <string name="profile_profile">Profile</string>
-    <string name="profile_goals">My Goals</string>
-    <string name="profile_units">Units</string>
+    <string name="settings_account">Account</string>
+    <string name="settings_profile">Profile</string>
+    <string name="settings_goals">My Goals</string>
+    <string name="settings_units">Units</string>
     <string name="account">Account</string>
     <string name="logout">Log Out</string>
     <string name="save">Save</string>
@@ -13,4 +13,9 @@
     <string name="profile_city">City</string>
     <string name="profile_sex">Sex</string>
     <string name="profile_date_birth">Date of Birth</string>
+
+    <string name="goal_goal">Goal</string>
+    <string name="goal_active">Activity Level</string>
+    <string name="goal_calorie">Calorie Goal</string>
+
 </resources>
