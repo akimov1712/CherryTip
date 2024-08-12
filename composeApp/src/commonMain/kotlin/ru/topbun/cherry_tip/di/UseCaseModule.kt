@@ -10,6 +10,12 @@ import ru.topbun.cherry_tip.domain.useCases.challenge.GetUserChallengeByIdUseCas
 import ru.topbun.cherry_tip.domain.useCases.challenge.StartChallengeUseCase
 import ru.topbun.cherry_tip.domain.useCases.glass.AddDrinkGlassUseCase
 import ru.topbun.cherry_tip.domain.useCases.glass.GetCountGlassUseCase
+import ru.topbun.cherry_tip.domain.useCases.recipe.CreateRecipeUseCase
+import ru.topbun.cherry_tip.domain.useCases.recipe.DeleteRecipeUseCase
+import ru.topbun.cherry_tip.domain.useCases.recipe.EditRecipeUseCase
+import ru.topbun.cherry_tip.domain.useCases.recipe.GetCategoriesUseCase
+import ru.topbun.cherry_tip.domain.useCases.recipe.GetRecipeWithIdUseCase
+import ru.topbun.cherry_tip.domain.useCases.recipe.GetRecipesUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CheckAccountInfoCompleteUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CreateGoalUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CreateProfileUseCase
@@ -26,6 +32,16 @@ val useCaseModule = module {
     userModule()
     glassModule()
     challengeModule()
+    recipeModule()
+}
+
+private fun Module.recipeModule(){
+    single { CreateRecipeUseCase(get()) }
+    single { DeleteRecipeUseCase(get()) }
+    single { EditRecipeUseCase(get()) }
+    single { GetCategoriesUseCase(get()) }
+    single { GetRecipesUseCase(get()) }
+    single { GetRecipeWithIdUseCase(get()) }
 }
 
 private fun Module.challengeModule(){
