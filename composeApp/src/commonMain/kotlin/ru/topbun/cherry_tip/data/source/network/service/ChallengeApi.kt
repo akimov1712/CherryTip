@@ -20,7 +20,7 @@ class ChallengeApi(
                 ChallengeStatus.Finished -> ChallengeStatusDto.Finished
                 else -> return@get
             }
-            parameter("status", status)
+            parameter(STATUS, status)
         }
     }
 
@@ -34,5 +34,9 @@ class ChallengeApi(
 
     suspend fun getUserChallengeById(token: String, id: Int) = api.client.get("/v1/challenge/$id/status"){
         token(token)
+    }
+
+    private companion object{
+        const val STATUS = "status"
     }
 }
