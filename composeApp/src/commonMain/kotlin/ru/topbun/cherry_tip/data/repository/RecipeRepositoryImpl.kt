@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import io.ktor.client.call.body
 import ru.topbun.cherry_tip.data.mapper.toDto
 import ru.topbun.cherry_tip.data.mapper.toEntity
-import ru.topbun.cherry_tip.data.mapper.toEntityList
+import ru.topbun.cherry_tip.data.mapper.toRecipeEntityList
 import ru.topbun.cherry_tip.data.source.local.getToken
 import ru.topbun.cherry_tip.data.source.network.dto.recipe.CategoriesDto
 import ru.topbun.cherry_tip.data.source.network.dto.recipe.RecipeDto
@@ -59,6 +59,6 @@ class RecipeRepositoryImpl(
             category = category,
             diet = diet,
             preparation = preparation
-        ).body<List<RecipeDto>>().toEntityList()
+        ).body<List<RecipeDto>>().toRecipeEntityList()
     }
 }

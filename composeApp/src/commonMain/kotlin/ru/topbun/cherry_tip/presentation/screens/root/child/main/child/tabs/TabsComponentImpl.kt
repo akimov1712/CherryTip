@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsComponentImpl
 
 class TabsComponentImpl(
@@ -27,7 +28,7 @@ class TabsComponentImpl(
     override val stack: Value<ChildStack<*, TabsComponent.Child>> = childStack(
         source = navigation,
         serializer = Config.serializer(),
-        initialConfiguration = Config.Profile,
+        initialConfiguration = Config.Recipe,
         handleBackButton = true,
         childFactory = ::createChild
     )
@@ -43,7 +44,7 @@ class TabsComponentImpl(
             TabsComponent.Child.Home(component)
         }
 
-        Config.Profile -> {
+        Config.Settings -> {
             val component: SettingsComponentImpl = getKoin().get {
                 parametersOf(
                     componentContext,
@@ -53,18 +54,24 @@ class TabsComponentImpl(
                     onClickUnits
                 )
             }
-            TabsComponent.Child.Profile(component)
+            TabsComponent.Child.Settings(component)
+        }
+
+        Config.Recipe -> {
+            val openRecipe = {}
+            val component: RecipeComponentImpl = getKoin().get{
+                parametersOf(componentContext, onOpenAuth, openRecipe)
+            }
+            TabsComponent.Child.Recipe(component)
         }
     }
 
     @Serializable
     sealed interface Config {
 
-        @Serializable
-        data object Home : Config
-
-        @Serializable
-        data object Profile : Config
+        @Serializable data object Home : Config
+        @Serializable data object Recipe : Config
+        @Serializable data object Settings : Config
 
     }
 }

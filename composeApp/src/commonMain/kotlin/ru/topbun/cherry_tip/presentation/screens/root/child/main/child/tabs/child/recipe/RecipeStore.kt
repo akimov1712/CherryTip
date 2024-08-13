@@ -17,13 +17,14 @@ import ru.topbun.cherry_tip.utills.wrapperStoreException
 interface RecipeStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
-        data class Search(val query: String): Intent
         data class ChangeTab(val tab: RecipeTabs): Intent
+        data class ChangeQuery(val q: String): Intent
         data object ClickAddRecipe: Intent
     }
 
     data class State(
         val tab: RecipeTabs,
+        val query: String,
         val recipes: List<RecipeEntity>,
         val recipeState: RecipeState
     ){
@@ -51,6 +52,7 @@ class RecipeStoreFactory(
             name = "RecipeStore",
             initialState = State(
                 tab = RecipeTabs.Recipes,
+                query = "",
                 recipes = emptyList(),
                 recipeState = State.RecipeState.Initial
             ),
@@ -72,6 +74,7 @@ class RecipeStoreFactory(
         data class RecipeStateError(val text: String): Msg
         data class RecipeStateResult(val recipes: List<RecipeEntity>): Msg
         data class ChangeTab(val tab: RecipeTabs): Msg
+        data class ChangeQuery(val query: String): Msg
     }
 
     private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
@@ -105,12 +108,13 @@ class RecipeStoreFactory(
             when(intent){
                 is Intent.ChangeTab -> dispatch(Msg.ChangeTab(intent.tab))
                 Intent.ClickAddRecipe -> publish(Label.ClickAddRecipe)
-                is Intent.Search -> {
+                is Intent.ChangeQuery -> {
                     scope.launch(handlerTokenException { publish(Label.LogOut) }) {
+                        dispatch(Msg.ChangeQuery(intent.q))
                         wrapperStoreException({
                             dispatch(Msg.RecipeStateLoading)
                             val isMyRecipe = state.tab == RecipeTabs.MyRecipes
-                            val result = getRecipesUseCase(q = intent.query, isMyRecipe = isMyRecipe, skip = state.recipes.size)
+                            val result = getRecipesUseCase(q = intent.q, isMyRecipe = isMyRecipe, skip = state.recipes.size)
                             dispatch(Msg.RecipeStateResult(result))
                         }){
                             dispatch(Msg.RecipeStateError(it))
@@ -127,6 +131,7 @@ class RecipeStoreFactory(
             is Msg.RecipeStateError -> copy(recipeState = State.RecipeState.Error(message.text))
             Msg.RecipeStateLoading -> copy(recipeState = State.RecipeState.Loading)
             is Msg.RecipeStateResult -> copy(recipes = recipes + message.recipes,recipeState = State.RecipeState.Result)
+            is Msg.ChangeQuery -> copy(query = message.query)
         }
     }
 }

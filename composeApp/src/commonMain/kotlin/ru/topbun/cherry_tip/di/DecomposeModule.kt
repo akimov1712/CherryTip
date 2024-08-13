@@ -32,6 +32,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsE
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsStoreFactory
 
@@ -54,14 +56,31 @@ val decomposeModule = module {
     profileModule()
     goalModule()
     unitsModule()
+    recipeModule()
 }
+
+private fun Module.recipeModule(){
+    factory<RecipeStoreFactory> { RecipeStoreFactory(get(), get()) }
+    factory { (
+        componentContext: ComponentContext,
+        onLogOut: () -> Unit,
+        onClickAddRecipe: () -> Unit) ->
+        RecipeComponentImpl(
+            componentContext = componentContext,
+            onLogOut = onLogOut,
+            onClickAddRecipe = onClickAddRecipe,
+            storeFactory = get()
+        )
+    }
+}
+
 
 private fun Module.unitsModule(){
     factory<UnitsStoreFactory> { UnitsStoreFactory(get(), get(), get()) }
     factory { (
-                  componentContext: ComponentContext,
-                  onLogOut: () -> Unit,
-                  onClickBack: () -> Unit) ->
+        componentContext: ComponentContext,
+        onLogOut: () -> Unit,
+        onClickBack: () -> Unit) ->
         UnitsComponentImpl(
             componentContext = componentContext,
             onLogOut = onLogOut,

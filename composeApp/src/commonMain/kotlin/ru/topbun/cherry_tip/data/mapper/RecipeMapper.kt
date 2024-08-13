@@ -23,7 +23,7 @@ fun RecipeEntity.toDto() = RecipeDto(
     preparationId = preparationId,
 )
 
-fun List<RecipeDto>.toEntityList() = map{ it.toEntity() }
+fun List<RecipeDto>.toRecipeEntityList() = map{ it.toEntity() }
 
 fun RecipeDto.toEntity() = RecipeEntity(
     id = id,

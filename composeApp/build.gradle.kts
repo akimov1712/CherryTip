@@ -97,7 +97,7 @@ kotlin {
 
 android {
     namespace = "ru.topbun.cherry_tip"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = 35
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
@@ -105,8 +105,8 @@ android {
 
     defaultConfig {
         applicationId = "ru.topbun.cherry_tip"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdkVersion(libs.versions.android.minSdk.get().toInt())
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
     }
@@ -127,6 +127,7 @@ android {
     buildFeatures {
         compose = true
     }
+    buildToolsVersion = "35.0.0 rc3"
     dependencies {
         debugImplementation(compose.uiTooling)
         implementation(libs.kotlinx.coroutines.android)

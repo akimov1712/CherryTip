@@ -16,24 +16,24 @@ class RecipeApi(
     private val api: ApiFactory
 ) {
 
-    suspend fun deleteRecipe(id: Int, token: String) = api.client.delete("/recipe/$id") {
+    suspend fun deleteRecipe(id: Int, token: String) = api.client.delete("/v1/recipe/$id") {
         token(token)
     }
 
     suspend fun editRecipe(recipe: RecipeDto, token: String) =
-        api.client.put("/recipe/${recipe.id}") {
+        api.client.put("/v1/recipe/${recipe.id}") {
             setBody(recipe)
             token(token)
         }
 
-    suspend fun getRecipeWithId(id: Int) = api.client.get("/recipe/$id")
+    suspend fun getRecipeWithId(id: Int) = api.client.get("/v1/recipe/$id")
 
-    suspend fun createRecipe(recipe: RecipeDto, token: String) = api.client.post("/recipe/") {
+    suspend fun createRecipe(recipe: RecipeDto, token: String) = api.client.post("/v1/recipe/") {
         setBody(recipe)
         token(token)
     }
 
-    suspend fun getCategories() = api.client.get("/recipe/tags")
+    suspend fun getCategories() = api.client.get("/v1/recipe/tags")
 
     suspend fun getRecipes(
         q: String?,
@@ -45,7 +45,7 @@ class RecipeApi(
         preparation: Int?,
         token: String
     ): HttpResponse {
-        val route = if(isMyRecipe) "/recipe/my" else "/recipe/search"
+        val route = "/v1/recipe/" + if(isMyRecipe) "my" else "search"
         return api.client.get(route){
             parameter(QUERY, q)
             parameter(TAKE, take)

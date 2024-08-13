@@ -29,7 +29,7 @@ class RecipeComponentImpl(
         }
     }
 
-    override fun search(query: String) = store.accept(RecipeStore.Intent.Search(query))
+    override fun changeQuery(query: String) = store.accept(RecipeStore.Intent.ChangeQuery(query))
     override fun changeTab(tab: RecipeTabs) = store.accept(RecipeStore.Intent.ChangeTab(tab))
     override fun clickAddRecipe() = store.accept(RecipeStore.Intent.ClickAddRecipe)
 }
