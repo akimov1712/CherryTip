@@ -9,11 +9,12 @@ class GetRecipesUseCase(
 
     suspend operator fun invoke(
         q: String? = null,
+        isMyRecipe:Boolean = false,
         take: Int? = null,
         skip: Int? = null,
         category: Int? = null,
         diet: Int? = null,
         preparation: Int? = null
-    ) = repository.getRecipes(q, take, skip, category, diet, preparation)
+    ) = repository.getRecipes(q, isMyRecipe, take, skip, category, diet, preparation)
 
 }

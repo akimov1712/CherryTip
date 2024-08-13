@@ -10,6 +10,6 @@ interface RecipeRepository {
     suspend fun getRecipeWithId(id: Int): RecipeEntity
     suspend fun createRecipe(recipe: RecipeEntity)
     suspend fun getCategories(): CategoriesEntity
-    suspend fun getRecipes(q: String?, take: Int?, skip: Int?, category: Int?, diet: Int?, preparation: Int?): List<RecipeEntity>
+    suspend fun getRecipes(q: String?, isMyRecipe:Boolean, take: Int?, skip: Int?, category: Int?, diet: Int?, preparation: Int?): List<RecipeEntity>
 
 }

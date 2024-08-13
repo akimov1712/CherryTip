@@ -6,6 +6,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import ru.topbun.cherry_tip.data.source.network.ApiFactory
 import ru.topbun.cherry_tip.data.source.network.dto.recipe.RecipeDto
 import ru.topbun.cherry_tip.data.source.network.token
@@ -36,18 +37,24 @@ class RecipeApi(
 
     suspend fun getRecipes(
         q: String?,
+        isMyRecipe: Boolean,
         take: Int?,
         skip: Int?,
         category: Int?,
         diet: Int?,
-        preparation: Int?
-    ) = api.client.get("/recipe/search"){
-        parameter(QUERY, q)
-        parameter(TAKE, take)
-        parameter(SKIP, skip)
-        parameter(CATEGORY, category)
-        parameter(DIET, diet)
-        parameter(PREPARATION, preparation)
+        preparation: Int?,
+        token: String
+    ): HttpResponse {
+        val route = if(isMyRecipe) "/recipe/my" else "/recipe/search"
+        return api.client.get(route){
+            parameter(QUERY, q)
+            parameter(TAKE, take)
+            parameter(SKIP, skip)
+            parameter(CATEGORY, category)
+            parameter(DIET, diet)
+            parameter(PREPARATION, preparation)
+            if (isMyRecipe) token(token)
+        }
     }
 
     private companion object{

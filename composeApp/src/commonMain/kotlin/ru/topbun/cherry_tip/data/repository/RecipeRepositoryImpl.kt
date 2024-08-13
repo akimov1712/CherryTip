@@ -43,6 +43,7 @@ class RecipeRepositoryImpl(
 
     override suspend fun getRecipes(
         q: String?,
+        isMyRecipe: Boolean,
         take: Int?,
         skip: Int?,
         category: Int?,
@@ -50,7 +51,9 @@ class RecipeRepositoryImpl(
         preparation: Int?
     ): List<RecipeEntity> = exceptionWrapper {
         recipeApi.getRecipes(
+            token = dataStore.getToken(),
             q = q,
+            isMyRecipe = isMyRecipe,
             take = take,
             skip = skip,
             category = category,
