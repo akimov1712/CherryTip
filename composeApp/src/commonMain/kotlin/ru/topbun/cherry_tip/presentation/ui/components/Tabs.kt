@@ -28,7 +28,7 @@ fun CustomTabRow(
         containerColor = Color.Transparent,
         modifier = modifier
             .fillMaxWidth()
-            .size(57.dp)
+            .size(60.dp)
             .background(Colors.PurpleBackground, RoundedCornerShape(16.dp))
             .padding(vertical = 5.dp, horizontal = 2.dp),
         indicator = {},

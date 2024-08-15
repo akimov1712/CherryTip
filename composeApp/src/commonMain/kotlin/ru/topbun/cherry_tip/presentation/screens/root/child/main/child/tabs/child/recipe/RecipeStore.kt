@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.recipe.RecipeEntity
 import ru.topbun.cherry_tip.domain.useCases.recipe.GetRecipesUseCase
@@ -17,13 +18,14 @@ import ru.topbun.cherry_tip.utills.wrapperStoreException
 interface RecipeStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
-        data class ChangeTab(val tab: RecipeTabs): Intent
+        data class ChangeTab(val index: Int): Intent
         data class ChangeQuery(val q: String): Intent
         data object ClickAddRecipe: Intent
     }
 
     data class State(
-        val tab: RecipeTabs,
+        val tabs: List<RecipeTabs>,
+        val selectedIndex: Int,
         val query: String,
         val recipes: List<RecipeEntity>,
         val recipeState: RecipeState
@@ -51,7 +53,8 @@ class RecipeStoreFactory(
         object : RecipeStore, Store<Intent, State, Label> by storeFactory.create(
             name = "RecipeStore",
             initialState = State(
-                tab = RecipeTabs.Recipes,
+                tabs = RecipeTabs.entries,
+                selectedIndex = 0,
                 query = "",
                 recipes = emptyList(),
                 recipeState = State.RecipeState.Initial
@@ -73,7 +76,7 @@ class RecipeStoreFactory(
         data object RecipeStateLoading: Msg
         data class RecipeStateError(val text: String): Msg
         data class RecipeStateResult(val recipes: List<RecipeEntity>): Msg
-        data class ChangeTab(val tab: RecipeTabs): Msg
+        data class ChangeTab(val index: Int): Msg
         data class ChangeQuery(val query: String): Msg
     }
 
@@ -104,16 +107,19 @@ class RecipeStoreFactory(
 
         override fun executeIntent(intent: Intent) {
             super.executeIntent(intent)
+            var searchJob: Job? = null
+
             val state = state()
             when(intent){
-                is Intent.ChangeTab -> dispatch(Msg.ChangeTab(intent.tab))
+                is Intent.ChangeTab -> dispatch(Msg.ChangeTab(intent.index))
                 Intent.ClickAddRecipe -> publish(Label.ClickAddRecipe)
                 is Intent.ChangeQuery -> {
-                    scope.launch(handlerTokenException { publish(Label.LogOut) }) {
+                    searchJob?.cancel()
+                    searchJob = scope.launch(handlerTokenException { publish(Label.LogOut) }) {
                         dispatch(Msg.ChangeQuery(intent.q))
                         wrapperStoreException({
                             dispatch(Msg.RecipeStateLoading)
-                            val isMyRecipe = state.tab == RecipeTabs.MyRecipes
+                            val isMyRecipe = state.tabs[state.selectedIndex] == RecipeTabs.MyRecipes
                             val result = getRecipesUseCase(q = intent.q, isMyRecipe = isMyRecipe, skip = state.recipes.size)
                             dispatch(Msg.RecipeStateResult(result))
                         }){
@@ -127,7 +133,7 @@ class RecipeStoreFactory(
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State = when (message) {
-            is Msg.ChangeTab -> copy(tab = message.tab)
+            is Msg.ChangeTab -> copy(selectedIndex = message.index)
             is Msg.RecipeStateError -> copy(recipeState = State.RecipeState.Error(message.text))
             Msg.RecipeStateLoading -> copy(recipeState = State.RecipeState.Loading)
             is Msg.RecipeStateResult -> copy(recipes = recipes + message.recipes,recipeState = State.RecipeState.Result)

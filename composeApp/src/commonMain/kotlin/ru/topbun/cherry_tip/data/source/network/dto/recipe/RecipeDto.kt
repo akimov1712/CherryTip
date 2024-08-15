@@ -13,6 +13,7 @@ data class RecipeDto(
     @SerialName("video") val video: String?,
     @SerialName("cookingTime") val cookingTime: Int?,
     @SerialName("difficulty") val difficulty: Difficulty?,
+    @SerialName("calories") val calories: Int?,
     @SerialName("protein") val protein: Int,
     @SerialName("fat") val fat: Int,
     @SerialName("carbs") val carbs: Int,

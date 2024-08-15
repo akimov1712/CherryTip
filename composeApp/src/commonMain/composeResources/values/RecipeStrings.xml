@@ -2,5 +2,10 @@
     <string name="recipes">Recipes</string>
     <string name="my_recipes">My Recipes</string>
     <string name="search">Search</string>
+    <string name="unknown">Unknown</string>
+
+    <string name="protein">Protein</string>
+    <string name="carbs">Carbs</string>
+    <string name="fat">Fat</string>
 
 </resources>

@@ -15,6 +15,7 @@ fun RecipeEntity.toDto() = RecipeDto(
     video = video,
     cookingTime = cookingTime,
     difficulty = difficulty,
+    calories = calories,
     protein = protein,
     fat = fat,
     carbs = carbs,
@@ -25,21 +26,28 @@ fun RecipeEntity.toDto() = RecipeDto(
 
 fun List<RecipeDto>.toRecipeEntityList() = map{ it.toEntity() }
 
-fun RecipeDto.toEntity() = RecipeEntity(
-    id = id,
-    title = title,
-    descr = descr,
-    image = image,
-    video = video,
-    cookingTime = cookingTime,
-    difficulty = difficulty,
-    protein = protein,
-    fat = fat,
-    carbs = carbs,
-    categoryId = categoryId,
-    dietsTypeId = dietsTypeId,
-    preparationId = preparationId,
-)
+fun RecipeDto.toEntity(): RecipeEntity{
+    val nutrients = protein + fat + carbs.toFloat()
+    return RecipeEntity(
+        id = id,
+        title = title,
+        descr = descr,
+        image = image,
+        video = video,
+        cookingTime = cookingTime,
+        difficulty = difficulty,
+        calories = calories,
+        protein = protein,
+        proteinPercent = protein / nutrients,
+        fat = fat,
+        fatPercent = fat / nutrients,
+        carbs = carbs,
+        carbsPercent = carbs / nutrients,
+        categoryId = categoryId,
+        dietsTypeId = dietsTypeId,
+        preparationId = preparationId,
+    )
+}
 
 fun CategoriesEntity.toDto() = CategoriesDto(
     types = types.toDtoList(),

@@ -7,7 +7,7 @@ interface RecipeComponent {
     val state: StateFlow<RecipeStore.State>
 
     fun changeQuery(query: String)
-    fun changeTab(tab: RecipeTabs)
+    fun changeTab(index: Int)
     fun clickAddRecipe()
 
 
