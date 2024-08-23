@@ -20,6 +20,7 @@ interface RecipeStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data class ChangeTab(val index: Int): Intent
         data class ChangeQuery(val q: String): Intent
+        data object LoadRecipes: Intent
         data object ClickAddRecipe: Intent
     }
 
@@ -28,6 +29,7 @@ interface RecipeStore : Store<Intent, State, Label> {
         val selectedIndex: Int,
         val query: String,
         val recipes: List<RecipeEntity>,
+        val isAllReceived: Boolean,
         val recipeState: RecipeState
     ){
         sealed interface RecipeState{
@@ -57,9 +59,10 @@ class RecipeStoreFactory(
                 selectedIndex = 0,
                 query = "",
                 recipes = emptyList(),
+                isAllReceived = false,
                 recipeState = State.RecipeState.Initial
             ),
-            bootstrapper = BootstrapperImpl(),
+            bootstrapper = null,
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {}
@@ -77,21 +80,9 @@ class RecipeStoreFactory(
         data class RecipeStateError(val text: String): Msg
         data class RecipeStateResult(val recipes: List<RecipeEntity>): Msg
         data class ChangeTab(val index: Int): Msg
+        data class ChangeAllReceived(val value: Boolean): Msg
         data class ChangeQuery(val query: String): Msg
-    }
-
-    private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
-        override fun invoke() {
-            scope.launch(handlerTokenException { dispatch(Action.LogOut) }) {
-                wrapperStoreException({
-                    dispatch(Action.RecipeStateLoading)
-                    val result = getRecipesUseCase()
-                    dispatch(Action.RecipeStateResult(result))
-                }){
-                    dispatch(Action.RecipeStateError(it))
-                }
-            }
-        }
+        data class LoadNextRecipes(val recipes: List<RecipeEntity>): Msg
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
@@ -108,24 +99,45 @@ class RecipeStoreFactory(
         override fun executeIntent(intent: Intent) {
             super.executeIntent(intent)
             var searchJob: Job? = null
-
             val state = state()
             when(intent){
-                is Intent.ChangeTab -> dispatch(Msg.ChangeTab(intent.index))
+                is Intent.ChangeTab -> {
+                    loadRecipes(searchJob, false){dispatch(Msg.ChangeTab(intent.index))}
+                }
                 Intent.ClickAddRecipe -> publish(Label.ClickAddRecipe)
                 is Intent.ChangeQuery -> {
-                    searchJob?.cancel()
-                    searchJob = scope.launch(handlerTokenException { publish(Label.LogOut) }) {
-                        dispatch(Msg.ChangeQuery(intent.q))
-                        wrapperStoreException({
-                            dispatch(Msg.RecipeStateLoading)
-                            val isMyRecipe = state.tabs[state.selectedIndex] == RecipeTabs.MyRecipes
-                            val result = getRecipesUseCase(q = intent.q, isMyRecipe = isMyRecipe, skip = state.recipes.size)
-                            dispatch(Msg.RecipeStateResult(result))
-                        }){
-                            dispatch(Msg.RecipeStateError(it))
-                        }
-                    }
+                    loadRecipes(searchJob, false){dispatch(Msg.ChangeQuery(intent.q))}
+                }
+                Intent.LoadRecipes -> { loadRecipes(searchJob, true) }
+            }
+        }
+
+        private fun ExecutorImpl.loadRecipes(
+            job: Job?,
+            isLoadNextRecipes: Boolean,
+            preAction: (() -> Unit)? = null
+        ) {
+            val state = state()
+            if (!isLoadNextRecipes) dispatch(Msg.ChangeAllReceived(false))
+            var searchJob = job
+            searchJob?.cancel()
+            searchJob = scope.launch(handlerTokenException { publish(Label.LogOut) }) {
+                wrapperStoreException({
+                    preAction?.let { it() }
+                    dispatch(Msg.RecipeStateLoading)
+                    val isMyRecipe = state.tabs[state.selectedIndex] == RecipeTabs.MyRecipes
+                    val result = getRecipesUseCase(
+                        q = state.query,
+                        isMyRecipe = isMyRecipe,
+                        skip = if (isLoadNextRecipes) state.recipes.size else null
+                    )
+                    dispatch(Msg.ChangeAllReceived(result.isEmpty()))
+                    dispatch(
+                        if (isLoadNextRecipes) Msg.LoadNextRecipes(result)
+                        else Msg.RecipeStateResult(result)
+                    )
+                }) {
+                    dispatch(Msg.RecipeStateError(it))
                 }
             }
         }
@@ -134,10 +146,12 @@ class RecipeStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State = when (message) {
             is Msg.ChangeTab -> copy(selectedIndex = message.index)
-            is Msg.RecipeStateError -> copy(recipeState = State.RecipeState.Error(message.text))
-            Msg.RecipeStateLoading -> copy(recipeState = State.RecipeState.Loading)
-            is Msg.RecipeStateResult -> copy(recipes = recipes + message.recipes,recipeState = State.RecipeState.Result)
+            is Msg.RecipeStateError -> copy(recipeState = State.RecipeState.Error(message.text),)
+            Msg.RecipeStateLoading -> copy(recipeState = State.RecipeState.Loading,)
+            is Msg.RecipeStateResult -> copy(recipes = message.recipes, recipeState = State.RecipeState.Result)
             is Msg.ChangeQuery -> copy(query = message.query)
+            is Msg.LoadNextRecipes -> copy(recipes = recipes + message.recipes,recipeState = State.RecipeState.Result)
+            is Msg.ChangeAllReceived -> copy(isAllReceived = message.value)
         }
     }
 }

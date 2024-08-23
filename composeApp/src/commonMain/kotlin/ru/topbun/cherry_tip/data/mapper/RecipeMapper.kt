@@ -9,13 +9,16 @@ import ru.topbun.cherry_tip.domain.entity.recipe.TagEntity
 
 fun RecipeEntity.toDto() = RecipeDto(
     id = id,
+    createdAt = null,
+    updatedAt = null,
     title = title,
     descr = descr,
     image = image,
     video = video,
+    calories = calories,
     cookingTime = cookingTime,
     difficulty = difficulty,
-    calories = calories,
+    userId = null,
     protein = protein,
     fat = fat,
     carbs = carbs,

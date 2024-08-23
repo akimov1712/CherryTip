@@ -8,4 +8,6 @@
     <string name="carbs">Carbs</string>
     <string name="fat">Fat</string>
 
+    <string name="empty">Empty</string>
+
 </resources>

@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -52,7 +54,8 @@ fun RecipeItem(
     Card(
         modifier = modifier.fillMaxWidth().padding(16.dp),
         shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, Colors.PurpleBackground)
+        border = BorderStroke(1.dp, Colors.PurpleBackground),
+        colors = CardDefaults.cardColors(Colors.White)
     ) {
         InfoRecipe(recipe)
         Spacer(Modifier.height(16.dp))
@@ -165,7 +168,7 @@ private fun RecipeImage(recipe: RecipeEntity) {
         contentAlignment = Alignment.Center
     ) {
         var isLoading by rememberSaveable { mutableStateOf(true) }
-        if (isLoading) CircularProgressIndicator(color = Colors.Purple)
+        if (isLoading) CircularProgressIndicator(color = Colors.Purple, modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
         AsyncImage(
             model = recipe.image,
             contentDescription = recipe.title,

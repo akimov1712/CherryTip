@@ -9,6 +9,7 @@ interface RecipeComponent {
     fun changeQuery(query: String)
     fun changeTab(index: Int)
     fun clickAddRecipe()
+    fun loadRecipes()
 
 
 }

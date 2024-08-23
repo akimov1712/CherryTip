@@ -2,6 +2,7 @@ package ru.topbun.cherry_tip.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import io.github.aakira.napier.Napier
 import io.ktor.client.call.body
 import ru.topbun.cherry_tip.data.mapper.toDto
 import ru.topbun.cherry_tip.data.mapper.toEntity
@@ -50,7 +51,7 @@ class RecipeRepositoryImpl(
         diet: Int?,
         preparation: Int?
     ): List<RecipeEntity> = exceptionWrapper {
-        recipeApi.getRecipes(
+        val recipes = recipeApi.getRecipes(
             token = dataStore.getToken(),
             q = q,
             isMyRecipe = isMyRecipe,
@@ -59,6 +60,9 @@ class RecipeRepositoryImpl(
             category = category,
             diet = diet,
             preparation = preparation
-        ).body<List<RecipeDto>>().toRecipeEntityList()
+        ).body<List<RecipeDto>>()
+        Napier.d(tag = "Recipe", message = recipes.toString())
+        Napier.d(tag = "Recipe", message = recipes.toRecipeEntityList().toString())
+        recipes.toRecipeEntityList()
     }
 }
