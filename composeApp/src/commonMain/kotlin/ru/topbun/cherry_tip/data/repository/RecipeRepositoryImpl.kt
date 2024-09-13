@@ -1,7 +1,6 @@
 package ru.topbun.cherry_tip.data.repository
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import ru.topbun.cherry_tip.data.source.local.dataStore.Settings
 import io.github.aakira.napier.Napier
 import io.ktor.client.call.body
 import ru.topbun.cherry_tip.data.mapper.toDto
@@ -19,7 +18,7 @@ import ru.topbun.cherry_tip.utills.exceptionWrapper
 
 class RecipeRepositoryImpl(
     private val recipeApi: RecipeApi,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: Settings
 ) : RecipeRepository {
 
     override suspend fun deleteRecipe(id: Int): Unit = exceptionWrapper {

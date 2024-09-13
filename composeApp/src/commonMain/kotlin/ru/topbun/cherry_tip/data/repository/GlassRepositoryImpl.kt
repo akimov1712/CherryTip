@@ -1,7 +1,6 @@
 package ru.topbun.cherry_tip.data.repository
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import ru.topbun.cherry_tip.data.source.local.dataStore.Settings
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -20,7 +19,7 @@ import ru.topbun.cherry_tip.utills.now
 
 class GlassRepositoryImpl(
     private val userRepository: UserRepository,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: Settings
 ): GlassRepository {
 
     private val glass = dataStore.data.

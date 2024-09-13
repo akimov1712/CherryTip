@@ -127,7 +127,7 @@ android {
     buildFeatures {
         compose = true
     }
-    buildToolsVersion = "35.0.0 rc3"
+    buildToolsVersion = "35.0.0"
     dependencies {
         debugImplementation(compose.uiTooling)
         implementation(libs.kotlinx.coroutines.android)

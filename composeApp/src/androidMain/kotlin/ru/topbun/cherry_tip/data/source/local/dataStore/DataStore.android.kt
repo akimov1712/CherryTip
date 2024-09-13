@@ -1,10 +1,9 @@
 package ru.topbun.cherry_tip.data.source.local.dataStore
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import ru.topbun.cherry_tip.data.source.local.dataStore.Settings
 
-actual fun createDataStore(context: Any?): DataStore<Preferences> {
+actual fun createDataStore(context: Any?): Settings {
     require(
         value = context is Context
     )

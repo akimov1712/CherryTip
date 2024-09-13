@@ -12,9 +12,9 @@ object AppSettings {
 
     const val FILE_NAME = "settings.preferences_pb"
     private val lock = SynchronizedObject()
-    private lateinit var dataStore: DataStore<Preferences>
+    private lateinit var dataStore: Settings
 
-    fun getDataStore(producePath: () -> String): DataStore<Preferences>{
+    fun getDataStore(producePath: () -> String): Settings{
         return synchronized(lock){
             if (AppSettings::dataStore.isInitialized) dataStore
             else PreferenceDataStoreFactory.createWithPath {

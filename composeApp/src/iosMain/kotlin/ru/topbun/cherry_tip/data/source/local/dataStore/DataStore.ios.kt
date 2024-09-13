@@ -1,11 +1,10 @@
 package ru.topbun.cherry_tip.data.source.local.dataStore
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import ru.topbun.cherry_tip.data.source.local.dataStore.Settings
 import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
-actual fun createDataStore(context: Any?): DataStore<Preferences> {
+actual fun createDataStore(context: Any?): Settings {
     return AppSettings.getDataStore(
         producePath = {
             val documentDirectory: NSURL? = NSFileManager.defaultManager.URLForDirectory(

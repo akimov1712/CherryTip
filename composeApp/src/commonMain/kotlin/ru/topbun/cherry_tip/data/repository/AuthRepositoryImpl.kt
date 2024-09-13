@@ -1,7 +1,6 @@
 package ru.topbun.cherry_tip.data.repository
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import ru.topbun.cherry_tip.data.source.local.dataStore.Settings
 import androidx.datastore.preferences.core.edit
 import io.ktor.client.call.body
 import ru.topbun.cherry_tip.data.mapper.toDto
@@ -18,7 +17,7 @@ import ru.topbun.cherry_tip.utills.exceptionWrapper
 
 class AuthRepositoryImpl(
     private val authApi: AuthApi,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: Settings
 ): AuthRepository {
 
     override suspend fun login(login: LoginEntity): Unit = exceptionWrapper{
