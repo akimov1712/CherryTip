@@ -47,7 +47,7 @@ import ru.topbun.cherry_tip.presentation.ui.utills.getFileFromResource
 @Composable
 fun SplashScreen(
     component: SplashComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.background(Colors.White)
 ) {
     val state by component.state.collectAsState()
     val showModal = state.splashState is SplashStore.State.SplashState.NotAuth

@@ -17,7 +17,7 @@ import io.ktor.serialization.kotlinx.json.json
 class ApiFactory {
 
     private companion object{
-         const val BASE_URL = "http://127.0.0.1:3000/"
+         const val BASE_URL = "http://192.168.31.125:3000/"
     }
 
     val client = HttpClient {

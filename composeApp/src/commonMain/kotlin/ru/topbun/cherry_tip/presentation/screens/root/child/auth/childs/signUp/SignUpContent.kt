@@ -67,7 +67,7 @@ import ru.topbun.cherry_tip.utills.validEmail
 @Composable
 fun SignUpScreen(
     component: SignUpComponent,
-    modifier: Modifier = Modifier.statusBarsPadding()
+    modifier: Modifier = Modifier.background(Colors.White).statusBarsPadding()
 ) {
     val state by component.state.collectAsState()
     var errorText by rememberSaveable { mutableStateOf<String?>(null) }

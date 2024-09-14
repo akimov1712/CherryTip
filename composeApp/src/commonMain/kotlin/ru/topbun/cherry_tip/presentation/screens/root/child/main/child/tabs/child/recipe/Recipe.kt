@@ -1,4 +1,4 @@
-package ru.topbun.cherry_tip.presentation.ui.components
+package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -27,6 +26,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +45,8 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.recipe.RecipeEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
+import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
+import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.utills.formatMinutesToTime
 
 @Composable
@@ -52,16 +55,20 @@ fun RecipeItem(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.fillMaxWidth().padding(16.dp),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(1.dp, Colors.PurpleBackground),
         colors = CardDefaults.cardColors(Colors.White)
     ) {
-        InfoRecipe(recipe)
-        Spacer(Modifier.height(16.dp))
-        Box(Modifier.fillMaxWidth().height(1.dp).background(Colors.PurpleBackground))
-        Spacer(Modifier.height(16.dp))
-        Nutrients(recipe)
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ){
+            InfoRecipe(recipe)
+            Spacer(Modifier.height(16.dp))
+            Box(Modifier.fillMaxWidth().height(1.dp).background(Colors.PurpleBackground))
+            Spacer(Modifier.height(16.dp))
+            Nutrients(recipe)
+        }
     }
 }
 
@@ -69,22 +76,25 @@ fun RecipeItem(
 private fun Nutrients(recipe: RecipeEntity) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         NutrientsItem(
             text = stringResource(Res.string.protein),
             value = recipe.protein,
-            progress = recipe.proteinPercent
+            progress = recipe.proteinPercent,
+            progressColor = Colors.GreenLight
         )
         NutrientsItem(
             text = stringResource(Res.string.carbs),
             value = recipe.carbs,
-            progress = recipe.carbsPercent
+            progress = recipe.carbsPercent,
+            progressColor = Colors.Blue
         )
         NutrientsItem(
             text = stringResource(Res.string.fat),
             value = recipe.fat,
-            progress = recipe.fatPercent
+            progress = recipe.fatPercent,
+            progressColor = Colors.Yellow
         )
     }
 }
@@ -94,11 +104,18 @@ private fun NutrientsItem(
     text: String,
     value: Int,
     progress: Float,
+    progressColor: Color
 ) {
-    Column{
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
         ProgressBars.Default(
+            modifier = Modifier
+                .size(66.dp, 10.dp)
+                .clip(CircleShape),
             progress = progress,
-            progressColor = Colors.GreenLight,
+            progressColor = progressColor,
             shapeProgress = CircleShape
         )
         Spacer(Modifier.height(10.dp))
@@ -124,7 +141,6 @@ private fun InfoRecipe(recipe: RecipeEntity) {
                 fontSize = 16.sp,
                 color = Colors.Black
             )
-            Spacer(Modifier.height(7.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 IconWithText(
                     text = recipe.cookingTime?.formatMinutesToTime() ?: stringResource(Res.string.unknown),
@@ -147,18 +163,22 @@ private fun IconWithText(
     text: String,
     contentDescription: String? = null
 ) {
-    Icon(
-        painter = painterResource(iconRes),
-        contentDescription = contentDescription,
-        tint = Colors.GrayDark
-    )
-    Spacer(Modifier.width(7.dp))
-    Texts.Option(
-        text = text,
-        textAlign = TextAlign.Start,
-        fontSize = 14.sp,
-        color = Colors.GrayDark
-    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = contentDescription,
+            tint = Colors.GrayDark
+        )
+        Spacer(Modifier.width(7.dp))
+        Texts.Option(
+            text = text,
+            textAlign = TextAlign.Start,
+            fontSize = 14.sp,
+            color = Colors.GrayDark
+        )
+    }
 }
 
 @Composable
@@ -173,6 +193,7 @@ private fun RecipeImage(recipe: RecipeEntity) {
             model = recipe.image,
             contentDescription = recipe.title,
             onState = { isLoading = it is AsyncImagePainter.State.Loading },
+            contentScale = ContentScale.Crop
         )
     }
 }

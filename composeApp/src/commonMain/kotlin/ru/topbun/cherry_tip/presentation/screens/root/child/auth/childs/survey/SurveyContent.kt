@@ -1,5 +1,6 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,7 +40,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 @Composable
 fun SurveyScreen(
     component: SurveyComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.background(Colors.White)
 ) {
     val snackBarHost = remember { SnackbarHostState() }
     Scaffold(
@@ -70,11 +71,15 @@ fun SurveyScreen(
             Spacer(Modifier.height(40.dp))
 
             when (state.selectedFragment) {
-                SurveyFragments.NAME -> NameFragmentContent(name = state.name) {
+                SurveyFragments.NAME -> NameFragmentContent(
+                    modifier = modifier,
+                    name = state.name
+                ) {
                     component.changeName(it)
                     component.nextFragment()
                 }
                 SurveyFragments.GOAL -> GoalFragmentContent(
+                    modifier = modifier,
                     onClickBack = { component.previousFragment() },
                     goal = state.goalType
                 ) {
@@ -82,6 +87,7 @@ fun SurveyScreen(
                     component.nextFragment()
                 }
                 SurveyFragments.GENDER -> GenderFragmentContent(
+                    modifier = modifier,
                     onClickBack = { component.previousFragment() },
                     gender = state.gender
                 ) {
@@ -89,6 +95,7 @@ fun SurveyScreen(
                     component.nextFragment()
                 }
                 SurveyFragments.AGE -> AgeFragmentContent(
+                    modifier = modifier,
                     onClickBack = { component.previousFragment() },
                     age = state.age
                 ) {
@@ -96,6 +103,7 @@ fun SurveyScreen(
                     component.nextFragment()
                 }
                 SurveyFragments.HEIGHT -> HeightFragmentContent(
+                    modifier = modifier,
                     onClickBack = { component.previousFragment() },
                     height = state.height
                 ) {
@@ -103,6 +111,7 @@ fun SurveyScreen(
                     component.nextFragment()
                 }
                 SurveyFragments.WEIGHT -> WeightFragmentContent(
+                    modifier = modifier,
                     onClickBack = { component.previousFragment() },
                     weight = state.weight
                 ) {
@@ -110,6 +119,7 @@ fun SurveyScreen(
                     component.nextFragment()
                 }
                 SurveyFragments.TARGET_WEIGHT -> TargetWeightFragmentContent(
+                    modifier = modifier,
                     onClickBack = { component.previousFragment() },
                     targetWeight = state.targetWeight
                 ) {
@@ -117,6 +127,7 @@ fun SurveyScreen(
                     component.nextFragment()
                 }
                 SurveyFragments.ACTIVE -> ActiveFragmentContent(
+                    modifier = modifier,
                     onClickBack = { component.previousFragment() },
                     active = state.active
                 ) {

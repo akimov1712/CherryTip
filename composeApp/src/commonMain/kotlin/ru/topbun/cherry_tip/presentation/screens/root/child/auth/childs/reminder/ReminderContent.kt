@@ -37,7 +37,7 @@ import ru.topbun.cherry_tip.presentation.ui.utills.getScreenSizeInfo
 @Composable
 fun ReminderScreen(
     component: ReminderComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.background(Colors.White)
 ) {
     val state by component.state.collectAsState()
     Box(modifier) {

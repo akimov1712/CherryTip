@@ -19,18 +19,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.empty
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeStore.State.RecipeState
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.CustomTabRow
-import ru.topbun.cherry_tip.presentation.ui.components.RecipeItem
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
@@ -97,21 +94,22 @@ private fun Recipes(
             RecipeItem(it)
         }
         item {
-            if (!state.isAllReceived && screenState == RecipeState.Result || screenState == RecipeState.Initial) {
-                SideEffect {
-                    component.loadRecipes()
-                }
-            } else if (screenState == RecipeState.Loading && state.recipes.isNotEmpty()){
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator(color = Colors.Purple)
+            if (!state.isEndList){
+                if (screenState == RecipeState.Result || screenState == RecipeState.Initial) {
+                    LaunchedEffect(state.recipes.toString()) {
+                        component.loadRecipes()
+                    }
+                } else if (screenState == RecipeState.Loading && state.recipes.isNotEmpty()){
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator(color = Colors.Purple)
+                    }
                 }
             }
-
         }
     }
 }
