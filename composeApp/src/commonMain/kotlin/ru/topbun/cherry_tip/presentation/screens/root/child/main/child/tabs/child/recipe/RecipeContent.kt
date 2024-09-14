@@ -2,15 +2,18 @@ package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.chi
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -22,11 +25,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.empty
+import cherrytip.composeapp.generated.resources.filter
+import cherrytip.composeapp.generated.resources.ic_filter
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeStore.State.RecipeState
 import ru.topbun.cherry_tip.presentation.ui.Colors
+import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.CustomTabRow
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
@@ -40,29 +48,48 @@ fun RecipeScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) }
     ) {
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 20.dp)
-        ) {
-            val state by component.state.collectAsState()
-            TextFields.Search(
-                value = state.query,
-                onValueChange = { if(it.length <= 40) component.changeQuery(it) },
-            )
-            Spacer(Modifier.height(16.dp))
-            CustomTabRow(
-                selectedIndex = state.selectedIndex,
-                items = state.tabs.map { stringResource(it.titleRes) }
-            ){
-                component.changeTab(it)
+                .padding(horizontal = 20.dp),
+        ){
+            Spacer(Modifier.height(20.dp))
+            Column{
+                val state by component.state.collectAsState()
+                TextFields.Search(
+                    value = state.query,
+                    onValueChange = { if(it.length <= 40) component.changeQuery(it) },
+                )
+                Spacer(Modifier.height(16.dp))
+                CustomTabRow(
+                    selectedIndex = state.selectedIndex,
+                    items = state.tabs.map { stringResource(it.titleRes) }
+                ){
+                    component.changeTab(it)
+                }
+                Spacer(Modifier.height(16.dp))
+                Recipes(
+                    component = component,
+                    modifier = Modifier.fillMaxWidth().weight(1f)
+                )
             }
-            Spacer(Modifier.height(16.dp))
-            Recipes(
-                component = component,
-                modifier = Modifier.fillMaxWidth().weight(1f)
-            )
+            Buttons.Purple(
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 20.dp),
+                onClick = { component.clickAddRecipe() },
+                contentPadding = PaddingValues(24.dp, 12.dp),
+            ){
+                Icon(
+                    painter = painterResource(Res.drawable.ic_filter),
+                    contentDescription = "Filter"
+                )
+                Spacer(Modifier.width(4.5.dp))
+                Texts.Button(
+                    text = stringResource(Res.string.filter),
+                    fontSize = 16.sp
+                )
+            }
         }
+
     }
 }
 
