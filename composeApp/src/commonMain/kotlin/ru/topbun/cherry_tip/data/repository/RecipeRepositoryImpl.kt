@@ -59,7 +59,7 @@ class RecipeRepositoryImpl(
             category = category,
             diet = diet,
             preparation = preparation
-        ).body<List<RecipeDto>>()
+        ).codeResultWrapper().body<List<RecipeDto>>()
         Napier.d(tag = "Recipe", message = recipes.toString())
         Napier.d(tag = "Recipe", message = recipes.toRecipeEntityList().toString())
         recipes.toRecipeEntityList()

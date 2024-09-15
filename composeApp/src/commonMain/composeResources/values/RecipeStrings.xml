@@ -10,5 +10,8 @@
 
     <string name="empty">Empty</string>
     <string name="filter">Filter</string>
+    <string name="add_recipe">Add Recipe</string>
+
+    <string name="details">Details</string>
 
 </resources>
