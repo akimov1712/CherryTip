@@ -146,3 +146,14 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
+project.afterEvaluate {
+    tasks.named("kspKotlinIosSimulatorArm64") {
+        dependsOn("generateMRiosSimulatorArm64Main")
+    }
+    tasks.named("kspKotlinIosX64") {
+        dependsOn("generateMRiosX64Main")
+    }
+    tasks.named("kspKotlinIosArm64") {
+        dependsOn("generateMRiosArm64Main")
+    }
+}

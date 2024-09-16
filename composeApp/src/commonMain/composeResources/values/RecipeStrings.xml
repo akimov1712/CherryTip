@@ -13,5 +13,23 @@
     <string name="add_recipe">Add Recipe</string>
 
     <string name="details">Details</string>
+    <string name="recipe_name">Recipe name</string>
+    <string name="short_descr">Short description</string>
+    <string name="numerical_indicators">Numerical indicators</string>
+    <string name="preparation_time">Preparation time(min)</string>
+    <string name="protein_100">Protein on 100 g</string>
+    <string name="carbs_100">Carbs on 100 g</string>
+    <string name="fat_100">Fat on 100 g</string>
+    <string name="kcal_100">Kcal on 100 g</string>
+
+    <string name="0_min">0 min</string>
+    <string name="0_g">0 g</string>
+
+    <string name="not_selected">Not selected</string>
+    <string name="difficulty">Difficulty</string>
+
+    <string name="meals">Meals</string>
+    <string name="preparation_method">Preparation method</string>
+    <string name="diets">Diets</string>
 
 </resources>

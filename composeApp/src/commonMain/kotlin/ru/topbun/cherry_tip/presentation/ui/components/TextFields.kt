@@ -1,5 +1,6 @@
 package ru.topbun.cherry_tip.presentation.ui.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -13,17 +14,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
+import cherrytip.composeapp.generated.resources.ic_drop_down
 import cherrytip.composeapp.generated.resources.ic_search
+import cherrytip.composeapp.generated.resources.not_selected
 import cherrytip.composeapp.generated.resources.search
 import coil3.compose.AsyncImagePainter.State.Empty.painter
 import org.jetbrains.compose.resources.painterResource
@@ -33,12 +40,41 @@ import ru.topbun.cherry_tip.presentation.ui.Fonts
 
 object TextFields {
 
-    private val textStyle
+    val textStyle
         @Composable get() = TextStyle(
         color = Colors.Black,
         fontSize = 18.sp,
         fontFamily = Fonts.hovesMedium,
+        textAlign = TextAlign.Start
     )
+
+    @Composable
+    fun OutlinedDropDownMenu(
+        modifier: Modifier = Modifier,
+        value: String,
+        placeholderText: String,
+        textStyle: TextStyle = this.textStyle.copy(textAlign = TextAlign.Start),
+        isOpen: Boolean = false
+    ) {
+        OutlinedTextField(
+            modifier = modifier,
+            value = value,
+            onValueChange = {},
+            readOnly = true,
+            placeholderText = placeholderText,
+            textStyle = textStyle,
+            singleLine = true,
+            trailingIcon = {
+                val animateRotate by animateFloatAsState(if (isOpen) 180f else 0f)
+                Icon(
+                    modifier = Modifier.rotate(animateRotate),
+                    painter = painterResource(Res.drawable.ic_drop_down),
+                    contentDescription = null,
+                    tint = Colors.Purple
+                )
+            }
+        )
+    }
 
     @Composable
     fun Search(
@@ -141,7 +177,14 @@ object TextFields {
         readOnly = readOnly,
         textStyle = textStyle,
         label = label,
-        placeholder = { Texts.Option( placeholderText, color = Colors.Gray) },
+        placeholder = { Texts.Option(
+            text = placeholderText,
+            color = Colors.Gray,
+            textAlign = textStyle.textAlign,
+            modifier = Modifier.fillMaxWidth(),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        ) },
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         prefix = prefix,
