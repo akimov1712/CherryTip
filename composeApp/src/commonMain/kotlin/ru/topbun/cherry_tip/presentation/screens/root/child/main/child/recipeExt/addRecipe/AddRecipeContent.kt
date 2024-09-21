@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -37,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -50,38 +49,49 @@ import cherrytip.composeapp.generated.resources._0_min
 import cherrytip.composeapp.generated.resources.add_recipe
 import cherrytip.composeapp.generated.resources.carbs_100
 import cherrytip.composeapp.generated.resources.details
+import cherrytip.composeapp.generated.resources.diets
+import cherrytip.composeapp.generated.resources.difficulty
 import cherrytip.composeapp.generated.resources.fat_100
 import cherrytip.composeapp.generated.resources.ic_important
 import cherrytip.composeapp.generated.resources.ic_send_image
 import cherrytip.composeapp.generated.resources.kcal_100
+import cherrytip.composeapp.generated.resources.meals
 import cherrytip.composeapp.generated.resources.not_selected
 import cherrytip.composeapp.generated.resources.numerical_indicators
+import cherrytip.composeapp.generated.resources.preparation_method
 import cherrytip.composeapp.generated.resources.preparation_time
 import cherrytip.composeapp.generated.resources.protein_100
 import cherrytip.composeapp.generated.resources.recipe_name
 import cherrytip.composeapp.generated.resources.short_descr
+import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.Difficulty
+import ru.topbun.cherry_tip.domain.entity.recipe.CategoriesEntity
+import ru.topbun.cherry_tip.domain.entity.recipe.TagEntity
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.choiceTag.ChoiceTagModal
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
+import ru.topbun.cherry_tip.presentation.ui.components.TextFields.textStyle
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.presentation.ui.utills.localWidth
 import ru.topbun.cherry_tip.utills.isNumber
+import kotlin.random.Random
 
 @Composable
 fun AddRecipeScreen(
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val scrollState = rememberScrollState()
+    var isOpenModalChoiceTags by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(20.dp)
     ) {
-        BackWithTitle(stringResource(Res.string.add_recipe)) {  }
+        BackWithTitle(stringResource(Res.string.add_recipe)) { }
         Spacer(Modifier.height(30.dp))
         Details()
         Box(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp).height(1.dp))
@@ -111,7 +121,7 @@ fun AddRecipeScreen(
                 placeholderText = stringResource(Res.string._0_g),
                 value = value,
                 isImportant = true,
-                onValueChange = {  }
+                onValueChange = { }
             )
 
             NumericalTextField(
@@ -119,7 +129,7 @@ fun AddRecipeScreen(
                 placeholderText = stringResource(Res.string._0_g),
                 value = value,
                 isImportant = true,
-                onValueChange = {  }
+                onValueChange = { }
             )
 
             NumericalTextField(
@@ -127,7 +137,7 @@ fun AddRecipeScreen(
                 placeholderText = stringResource(Res.string._0_g),
                 value = value,
                 isImportant = true,
-                onValueChange = {  }
+                onValueChange = { }
             )
 
             NumericalTextField(
@@ -135,38 +145,72 @@ fun AddRecipeScreen(
                 placeholderText = stringResource(Res.string._0_g),
                 isImportant = true,
                 value = value,
-                onValueChange = {  }
+                onValueChange = { }
             )
-            var selectedDiff by remember{
+            var selectedDiff by remember {
                 mutableStateOf<Difficulty?>(null)
             }
-            NumericalDropMenu(
+            NumericalDropMenuContent(
                 title = stringResource(Res.string.difficulty),
                 items = listOf<Difficulty?>(null) + Difficulty.values(),
                 selectedItem = selectedDiff,
                 onValueChange = { selectedDiff = it }
             )
+            NumericalTagItem(
+                title = stringResource(Res.string.meals),
+                tag = null,
+                onClickChangeTag = { isOpenModalChoiceTags = true }
+            )
+            NumericalTagItem(
+                title = stringResource(Res.string.preparation_method),
+                tag = null,
+                onClickChangeTag = { isOpenModalChoiceTags = true }
+            )
+            NumericalTagItem(
+                title = stringResource(Res.string.diets),
+                tag = null,
+                onClickChangeTag = { isOpenModalChoiceTags = true }
+            )
         }
     }
+    if (isOpenModalChoiceTags) {
+        val tags = mutableListOf<TagEntity>().apply {
+            repeat(10) {
+                add(
+                    TagEntity(
+                        it,
+                        Random.nextInt(0, 1000000).toString(),
+                        "https://thumbs.dreamstime.com/b/иллюстрация-жареного-куриного-яйца-на-тарелке-изображения-для-240298062.jpg"
+                    )
+                )
+            }
+        }
+        val categories = CategoriesEntity(
+            types = tags,
+            preparations = tags,
+            diets = tags
+        )
+        ChoiceTagModal(categories) { isOpenModalChoiceTags = false }
+    }
+
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun <T>NumericalDropMenu(
+private fun NumericalTagItem(
     title: String,
-    items: List<T>,
-    selectedItem: T,
+    tag: TagEntity?,
     isImportant: Boolean = false,
-    onValueChange: (T) -> Unit,
+    onClickChangeTag: () -> Unit,
 ) {
     Column {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(55.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                modifier = Modifier.weight(1f)
-            ){
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Texts.Option(
                     textAlign = TextAlign.Start,
                     text = title,
@@ -183,8 +227,73 @@ private fun <T>NumericalDropMenu(
                 }
             }
             Spacer(Modifier.width(20.dp))
-            var isDropMenuVisible by rememberSaveable{ mutableStateOf(false) }
-            var textFieldSize by remember { mutableStateOf(Size.Zero)}
+            Row(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .clip(RoundedCornerShape(13.dp))
+                    .clickable { onClickChangeTag() }
+                    .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(13.dp)),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                tag?.let {
+                    AsyncImage(
+                        modifier = Modifier.size(12.dp),
+                        model = it.icon,
+                        contentDescription = null
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    Texts.Button(
+                        text = title,
+                        color = Colors.Black
+                    )
+                } ?: Texts.Button(
+                    text = stringResource(Res.string.not_selected),
+                    color = Colors.Gray
+                )
+            }
+        }
+        Spacer(Modifier.height(10.dp))
+        Box(Modifier.fillMaxWidth().height(1.dp).background(Colors.PurpleBackground))
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun <T> NumericalDropMenuContent(
+    title: String,
+    items: List<T>,
+    selectedItem: T,
+    isImportant: Boolean = false,
+    onValueChange: (T) -> Unit,
+) {
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.weight(1f)
+            ) {
+                Texts.Option(
+                    textAlign = TextAlign.Start,
+                    text = title,
+                    color = Colors.Gray,
+                    fontSize = 16.sp
+                )
+                if (isImportant) {
+                    Icon(
+                        modifier = Modifier.size(6.dp).align(Alignment.Top),
+                        painter = painterResource(Res.drawable.ic_important),
+                        contentDescription = null,
+                        tint = Colors.Red
+                    )
+                }
+            }
+            Spacer(Modifier.width(20.dp))
+            var isDropMenuVisible by rememberSaveable { mutableStateOf(false) }
+            var textFieldSize by remember { mutableStateOf(Size.Zero) }
             ExposedDropdownMenuBox(
                 modifier = Modifier
                     .weight(1f),
@@ -264,7 +373,7 @@ private fun NumericalTextField(
                     color = Colors.Gray,
                     fontSize = 16.sp
                 )
-                if (isImportant){
+                if (isImportant) {
                     Icon(
                         modifier = Modifier.size(6.dp).align(Alignment.Top),
                         painter = painterResource(Res.drawable.ic_important),
@@ -279,7 +388,10 @@ private fun NumericalTextField(
                 value = value,
                 onValueChange = onValueChange,
                 placeholderText = placeholderText,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Go),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Go
+                ),
             )
         }
         Spacer(Modifier.height(10.dp))

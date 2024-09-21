@@ -29,7 +29,7 @@ fun TipsDetailScreen(
     onDismiss: () -> Unit
 ) {
     AppModalBottomSheet(
-        modifier = modifier,
+        modifier = modifier.padding(top = 64.dp),
         state = state,
         onDismiss = onDismiss
     ){

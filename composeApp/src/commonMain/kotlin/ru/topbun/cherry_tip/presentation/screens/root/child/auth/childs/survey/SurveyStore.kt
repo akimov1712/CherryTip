@@ -25,6 +25,8 @@ import ru.topbun.cherry_tip.utills.FailedExtractTokenException
 import ru.topbun.cherry_tip.utills.ParseBackendResponseException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
 import ru.topbun.cherry_tip.utills.ServerException
+import ru.topbun.cherry_tip.utills.handlerTokenException
+import ru.topbun.cherry_tip.utills.wrapperStoreException
 
 interface SurveyStore: Store<Intent, State, Label> {
 
@@ -132,24 +134,14 @@ class SurveyStoreFactory(
                 is Intent.ChangeWeight -> dispatch(Msg.ChangeWeight(intent.weight))
                 Intent.SendSurvey -> {
                     scope.launch {
-                        dispatch(Msg.SurveyLoading)
-                        try {
+                        wrapperStoreException({
+                            dispatch(Msg.SurveyLoading)
                             sendProfile(state)
                             sendUnits(state)
                             sendGoal(state)
                             publish(Label.SendSurvey)
-                        } catch (e: ParseBackendResponseException) {
-                            dispatch(Msg.SurveyError("Error while receiving data from the server"))
-                        } catch (e: RequestTimeoutException) {
-                            dispatch(Msg.SurveyError("Timed out"))
-                        } catch (e: ClientException) {
-                            dispatch(Msg.SurveyError(e.errorText))
-                        } catch (e: ServerException) {
-                            dispatch(Msg.SurveyError(e.errorText))
-                        } catch (e: ConnectException) {
-                            dispatch(Msg.SurveyError("A Failed to connect to the server, check your internet connection"))
-                        } catch (e: FailedExtractTokenException) {
-                            dispatch(Msg.SurveyError("Access token not available"))
+                        }){
+                            Msg.SurveyError(it)
                         }
                     }
                 }

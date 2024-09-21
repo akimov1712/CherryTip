@@ -31,7 +31,7 @@ fun AppModalBottomSheet(
     content: @Composable () -> Unit
 ) {
     ModalBottomSheet(
-        modifier = modifier.fillMaxSize().padding(top = 64.dp),
+        modifier = modifier.fillMaxSize(),
         sheetState = state,
         containerColor = Colors.Transparent,
         onDismissRequest = onDismiss,

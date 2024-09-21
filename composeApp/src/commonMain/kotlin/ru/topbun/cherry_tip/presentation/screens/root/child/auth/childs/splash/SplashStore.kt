@@ -14,6 +14,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.S
 import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.ConnectException
 import ru.topbun.cherry_tip.utills.FailedExtractTokenException
+import ru.topbun.cherry_tip.utills.RequestTimeoutException
 
 interface SplashStore : Store<Intent, State, Label> {
 
@@ -86,6 +87,8 @@ class SplashStoreFactory(
                             dispatch(Msg.SplashError("Check your internet connection"))
                         } catch (e: ConnectException){
                             dispatch(Msg.SplashError("Server side error"))
+                        } catch (e: RequestTimeoutException){
+                            dispatch(Msg.SplashError("Check your internet connection"))
                         }
                     }
                 }

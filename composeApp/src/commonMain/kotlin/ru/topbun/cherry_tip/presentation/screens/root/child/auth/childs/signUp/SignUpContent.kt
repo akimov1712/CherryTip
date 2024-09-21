@@ -79,7 +79,6 @@ fun SignUpScreen(
     }
     Column(
         modifier = modifier
-            .fillMaxWidth()
             .background(Colors.White)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp)
@@ -200,7 +199,7 @@ fun LoginFields(
                 component.changeUsernameError(it.length > 20 || it.length < 2)
                 component.changeUsername(it)
             },
-            supportingText = { if (state.usernameIsError) Texts.Error(stringResource(Res.string.username_error)) },
+            supportingText = if (state.usernameIsError) { { Texts.Error(stringResource(Res.string.username_error))} } else null,
             placeholderText = stringResource(Res.string.username)
         )
 
@@ -211,7 +210,7 @@ fun LoginFields(
                 component.changeEmailError(!it.validEmail())
                 component.changeEmail(it)
             },
-            supportingText = { if (state.emailIsError) Texts.Error(stringResource(Res.string.email_error)) },
+            supportingText = if (state.emailIsError) { { Texts.Error(stringResource(Res.string.email_error))} } else null,
             placeholderText = stringResource(Res.string.email),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next)
         )
@@ -225,7 +224,7 @@ fun LoginFields(
                 component.changePassword(it)
             },
             visualTransformation = if (state.isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
-            supportingText = { if (state.passwordIsError) Texts.Error(stringResource(Res.string.password_error)) },
+            supportingText = if (state.passwordIsError) { { Texts.Error(stringResource(Res.string.password_error))} } else null,
             placeholderText = stringResource(Res.string.password),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
             trailingIcon = {
@@ -247,7 +246,7 @@ fun LoginFields(
                 component.changeConfirmPassword(it)
             },
             visualTransformation = if (state.isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
-            supportingText = { if (state.confirmPasswordIsError) Texts.Error(stringResource(Res.string.confirm_password_error)) },
+            supportingText = if (state.confirmPasswordIsError) { { Texts.Error(stringResource(Res.string.confirm_password_error))} } else null,
             placeholderText = stringResource(Res.string.confirm_password),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             trailingIcon = {
