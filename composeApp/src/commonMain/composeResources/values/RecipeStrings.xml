@@ -33,5 +33,13 @@
     <string name="diets">Diets</string>
 
     <string name="clear">Clear</string>
+    <string name="add">Add</string>
+
+    <string name="recipe_add_error_name">Title length must be from 1 to 40 characters</string>
+    <string name="recipe_add_error_image">Add a photo of the recipe</string>
+    <string name="recipe_add_error_kcal">Indicate the calorie content of the dish</string>
+    <string name="recipe_add_error_protein">Enter protein per 100 grams of dish</string>
+    <string name="recipe_add_error_carbs">Enter carbs per 100 grams of dish</string>
+    <string name="recipe_add_error_fat">Enter fat per 100 grams of dish</string>
 
 </resources>

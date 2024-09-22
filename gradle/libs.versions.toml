@@ -29,6 +29,7 @@ sqlite = "2.5.0-alpha04"
 mvi = "4.1.0"
 datastore = "1.1.1"
 atomicfu = "0.23.2"
+peekaboo = "0.5.2"
 coilComposeCore = "3.0.0-alpha06"
 
 [libraries]
@@ -51,6 +52,7 @@ serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", v
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
 atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
+peekaboo-image-picker = { module = "io.github.onseok:peekaboo-image-picker", version.ref = "peekaboo" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }

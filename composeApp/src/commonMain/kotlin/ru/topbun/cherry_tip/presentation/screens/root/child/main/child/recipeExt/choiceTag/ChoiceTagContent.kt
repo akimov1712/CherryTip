@@ -53,7 +53,12 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChoiceTagModal(categories: CategoriesEntity, modifier: Modifier = Modifier, onDismiss: () -> Unit) {
+fun ChoiceTagModal(
+    categories: CategoriesEntity,
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+    onSave: (meal: TagEntity?, preparation: TagEntity?, diets: TagEntity?) -> Unit
+) {
     val scope = rememberCoroutineScope()
     val sheetState = SheetState(
         skipPartiallyExpanded = true,
@@ -78,9 +83,9 @@ fun ChoiceTagModal(categories: CategoriesEntity, modifier: Modifier = Modifier, 
                     .padding(bottom = 48.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                var mealsSelectedId by rememberSaveable{ mutableStateOf(-1) }
-                var preparationSelectedId by rememberSaveable{ mutableStateOf(-1) }
-                var dietsSelectedId by rememberSaveable{ mutableStateOf(-1) }
+                var mealsSelectedId by rememberSaveable{ mutableStateOf<Int?>(null) }
+                var preparationSelectedId by rememberSaveable{ mutableStateOf<Int?>(null) }
+                var dietsSelectedId by rememberSaveable{ mutableStateOf<Int?>(null) }
                 CategoriesItem(
                     title = stringResource(Res.string.meals),
                     tags = categories.types,
@@ -101,12 +106,16 @@ fun ChoiceTagModal(categories: CategoriesEntity, modifier: Modifier = Modifier, 
                 )
                 Buttons(
                     onClickClear = {
-                        mealsSelectedId = -1
-                        preparationSelectedId = -1
-                        dietsSelectedId = -1
+                        mealsSelectedId = null
+                        preparationSelectedId = null
+                        dietsSelectedId = null
                     },
                     onClickSave = {
-
+                        onSave(
+                            mealsSelectedId?.let { categories.types[it] },
+                            preparationSelectedId?.let { categories.preparations[it] },
+                            dietsSelectedId?.let { categories.diets[it] }
+                        )
                     }
                 )
             }
@@ -147,7 +156,7 @@ private fun Buttons(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun CategoriesItem(title: String, tags: List<TagEntity>, selectedId: Int, onClickItem: (Int) -> Unit) {
+private fun CategoriesItem(title: String, tags: List<TagEntity>, selectedId: Int?, onClickItem: (Int) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {

@@ -1,86 +1,84 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.toSize
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources._0_g
 import cherrytip.composeapp.generated.resources._0_min
+import cherrytip.composeapp.generated.resources.add
 import cherrytip.composeapp.generated.resources.add_recipe
 import cherrytip.composeapp.generated.resources.carbs_100
 import cherrytip.composeapp.generated.resources.details
 import cherrytip.composeapp.generated.resources.diets
 import cherrytip.composeapp.generated.resources.difficulty
 import cherrytip.composeapp.generated.resources.fat_100
-import cherrytip.composeapp.generated.resources.ic_important
 import cherrytip.composeapp.generated.resources.ic_send_image
 import cherrytip.composeapp.generated.resources.kcal_100
 import cherrytip.composeapp.generated.resources.meals
-import cherrytip.composeapp.generated.resources.not_selected
 import cherrytip.composeapp.generated.resources.numerical_indicators
 import cherrytip.composeapp.generated.resources.preparation_method
 import cherrytip.composeapp.generated.resources.preparation_time
 import cherrytip.composeapp.generated.resources.protein_100
 import cherrytip.composeapp.generated.resources.recipe_name
 import cherrytip.composeapp.generated.resources.short_descr
-import coil3.compose.AsyncImage
+import com.preat.peekaboo.image.picker.SelectionMode
+import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
+import com.preat.peekaboo.image.picker.toImageBitmap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.Difficulty
 import ru.topbun.cherry_tip.domain.entity.recipe.CategoriesEntity
 import ru.topbun.cherry_tip.domain.entity.recipe.TagEntity
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalDropMenuContent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalTagItem
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalTextField
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.choiceTag.ChoiceTagModal
 import ru.topbun.cherry_tip.presentation.ui.Colors
+import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
-import ru.topbun.cherry_tip.presentation.ui.components.TextFields.textStyle
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
-import ru.topbun.cherry_tip.presentation.ui.utills.localWidth
 import ru.topbun.cherry_tip.utills.isNumber
+import ru.topbun.cherry_tip.utills.toStringOrBlank
 import kotlin.random.Random
 
 @Composable
 fun AddRecipeScreen(
+    component: AddRecipeComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val scrollState = rememberScrollState()
@@ -91,86 +89,16 @@ fun AddRecipeScreen(
             .verticalScroll(scrollState)
             .padding(20.dp)
     ) {
-        BackWithTitle(stringResource(Res.string.add_recipe)) { }
+        BackWithTitle(stringResource(Res.string.add_recipe)) { component.clickBack() }
         Spacer(Modifier.height(30.dp))
-        Details()
+        Details(component)
         Box(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp).height(1.dp))
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Texts.Option(
-                text = stringResource(Res.string.numerical_indicators),
-                color = Colors.Black
-            )
-            var value by rememberSaveable {
-                mutableStateOf("")
-            }
-            NumericalTextField(
-                title = stringResource(Res.string.preparation_time),
-                placeholderText = stringResource(Res.string._0_min),
-                value = value,
-                onValueChange = {
-                    if ((it.isEmpty() || it.isNumber()) && it.length < 5) {
-                        value = it
-                    }
-                }
-            )
-            NumericalTextField(
-                title = stringResource(Res.string.protein_100),
-                placeholderText = stringResource(Res.string._0_g),
-                value = value,
-                isImportant = true,
-                onValueChange = { }
-            )
-
-            NumericalTextField(
-                title = stringResource(Res.string.carbs_100),
-                placeholderText = stringResource(Res.string._0_g),
-                value = value,
-                isImportant = true,
-                onValueChange = { }
-            )
-
-            NumericalTextField(
-                title = stringResource(Res.string.fat_100),
-                placeholderText = stringResource(Res.string._0_g),
-                value = value,
-                isImportant = true,
-                onValueChange = { }
-            )
-
-            NumericalTextField(
-                title = stringResource(Res.string.kcal_100),
-                placeholderText = stringResource(Res.string._0_g),
-                isImportant = true,
-                value = value,
-                onValueChange = { }
-            )
-            var selectedDiff by remember {
-                mutableStateOf<Difficulty?>(null)
-            }
-            NumericalDropMenuContent(
-                title = stringResource(Res.string.difficulty),
-                items = listOf<Difficulty?>(null) + Difficulty.values(),
-                selectedItem = selectedDiff,
-                onValueChange = { selectedDiff = it }
-            )
-            NumericalTagItem(
-                title = stringResource(Res.string.meals),
-                tag = null,
-                onClickChangeTag = { isOpenModalChoiceTags = true }
-            )
-            NumericalTagItem(
-                title = stringResource(Res.string.preparation_method),
-                tag = null,
-                onClickChangeTag = { isOpenModalChoiceTags = true }
-            )
-            NumericalTagItem(
-                title = stringResource(Res.string.diets),
-                tag = null,
-                onClickChangeTag = { isOpenModalChoiceTags = true }
-            )
+        NumericalContent(component){ isOpenModalChoiceTags = true }
+        Buttons.Purple(
+            modifier = Modifier.fillMaxWidth().height(57.dp),
+            onClick = {}
+        ){
+            Texts.Button(text = stringResource(Res.string.add))
         }
     }
     if (isOpenModalChoiceTags) {
@@ -190,217 +118,98 @@ fun AddRecipeScreen(
             preparations = tags,
             diets = tags
         )
-        ChoiceTagModal(categories) { isOpenModalChoiceTags = false }
+        ChoiceTagModal(
+            categories = categories,
+            onDismiss = { isOpenModalChoiceTags = false },
+            onSave = { meal, preparation, diets ->
+                component.changeMeals(meal)
+                component.changePreparation(preparation)
+                component.changeDiets(diets)
+            }
+        )
     }
 
 }
 
 @Composable
-private fun NumericalTagItem(
-    title: String,
-    tag: TagEntity?,
-    isImportant: Boolean = false,
-    onClickChangeTag: () -> Unit,
-) {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth().height(55.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Texts.Option(
-                    textAlign = TextAlign.Start,
-                    text = title,
-                    color = Colors.Gray,
-                    fontSize = 16.sp
-                )
-                if (isImportant) {
-                    Icon(
-                        modifier = Modifier.size(6.dp).align(Alignment.Top),
-                        painter = painterResource(Res.drawable.ic_important),
-                        contentDescription = null,
-                        tint = Colors.Red
-                    )
-                }
-            }
-            Spacer(Modifier.width(20.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-                    .clip(RoundedCornerShape(13.dp))
-                    .clickable { onClickChangeTag() }
-                    .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(13.dp)),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                tag?.let {
-                    AsyncImage(
-                        modifier = Modifier.size(12.dp),
-                        model = it.icon,
-                        contentDescription = null
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    Texts.Button(
-                        text = title,
-                        color = Colors.Black
-                    )
-                } ?: Texts.Button(
-                    text = stringResource(Res.string.not_selected),
-                    color = Colors.Gray
-                )
-            }
-        }
-        Spacer(Modifier.height(10.dp))
-        Box(Modifier.fillMaxWidth().height(1.dp).background(Colors.PurpleBackground))
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun <T> NumericalDropMenuContent(
-    title: String,
-    items: List<T>,
-    selectedItem: T,
-    isImportant: Boolean = false,
-    onValueChange: (T) -> Unit,
-) {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier.weight(1f)
-            ) {
-                Texts.Option(
-                    textAlign = TextAlign.Start,
-                    text = title,
-                    color = Colors.Gray,
-                    fontSize = 16.sp
-                )
-                if (isImportant) {
-                    Icon(
-                        modifier = Modifier.size(6.dp).align(Alignment.Top),
-                        painter = painterResource(Res.drawable.ic_important),
-                        contentDescription = null,
-                        tint = Colors.Red
-                    )
-                }
-            }
-            Spacer(Modifier.width(20.dp))
-            var isDropMenuVisible by rememberSaveable { mutableStateOf(false) }
-            var textFieldSize by remember { mutableStateOf(Size.Zero) }
-            ExposedDropdownMenuBox(
-                modifier = Modifier
-                    .weight(1f),
-                expanded = isDropMenuVisible,
-                onExpandedChange = { isDropMenuVisible = !isDropMenuVisible }
-            ) {
-                TextFields.OutlinedDropDownMenu(
-                    modifier = Modifier
-                        .menuAnchor()
-                        .onGloballyPositioned { coordinates ->
-                            textFieldSize = coordinates.size.toSize()
-                        },
-                    value = selectedItem?.toString() ?: "",
-                    placeholderText = stringResource(Res.string.not_selected),
-                    isOpen = isDropMenuVisible
-                )
-                DropMenuDifficulty(
-                    modifier = Modifier.localWidth(textFieldSize.width),
-                    isDropMenuVisible = isDropMenuVisible,
-                    items = items,
-                    onValueChange = onValueChange,
-                    onDismissRequest = { isDropMenuVisible = false }
-                )
-            }
-        }
-        Spacer(Modifier.height(10.dp))
-        Box(Modifier.fillMaxWidth().height(1.dp).background(Colors.PurpleBackground))
-    }
-}
-
-@Composable
-private fun <T> DropMenuDifficulty(
-    modifier: Modifier = Modifier,
-    isDropMenuVisible: Boolean,
-    items: List<T>,
-    onValueChange: (T) -> Unit,
-    onDismissRequest: () -> Unit,
-) {
-    DropdownMenu(
-        modifier = modifier.background(Colors.White),
-        expanded = isDropMenuVisible,
-        onDismissRequest = { onDismissRequest() },
+private fun NumericalContent(component: AddRecipeComponent, onOpenModal: () -> Unit) {
+    val state by component.getState()
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items.forEach {
-            DropdownMenuItem(
-                text = {
-                    Texts.General(
-                        text = it?.toString()
-                            ?: stringResource(Res.string.not_selected)
-                    )
-                },
-                onClick = { onValueChange(it); onDismissRequest() }
-            )
-        }
-    }
-}
-
-@Composable
-private fun NumericalTextField(
-    title: String,
-    placeholderText: String,
-    value: String,
-    isImportant: Boolean = false,
-    onValueChange: (String) -> Unit,
-) {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier.weight(1f),
-            ) {
-                Texts.Option(
-                    textAlign = TextAlign.Start,
-                    text = title,
-                    color = Colors.Gray,
-                    fontSize = 16.sp
-                )
-                if (isImportant) {
-                    Icon(
-                        modifier = Modifier.size(6.dp).align(Alignment.Top),
-                        painter = painterResource(Res.drawable.ic_important),
-                        contentDescription = null,
-                        tint = Colors.Red
-                    )
+        Texts.Option(
+            text = stringResource(Res.string.numerical_indicators),
+            color = Colors.Black
+        )
+        NumericalTextField(
+            title = stringResource(Res.string.preparation_time),
+            placeholderText = stringResource(Res.string._0_min),
+            value = state.cookingTime.toStringOrBlank(),
+            onValueChange = {
+                if ((it.isEmpty() || it.isNumber()) && it.length < 5) {
+                    component.changeCookingTime(it.toIntOrNull())
                 }
             }
-            Spacer(Modifier.width(20.dp))
-            TextFields.OutlinedTextField(
-                modifier = Modifier.weight(1f),
-                value = value,
-                onValueChange = onValueChange,
-                placeholderText = placeholderText,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Go
-                ),
-            )
-        }
-        Spacer(Modifier.height(10.dp))
-        Box(Modifier.fillMaxWidth().height(1.dp).background(Colors.PurpleBackground))
+        )
+        NumericalTextField(
+            title = stringResource(Res.string.protein_100),
+            placeholderText = stringResource(Res.string._0_g),
+            value = state.protein.toStringOrBlank(),
+            isImportant = true,
+            onValueChange = { component.changeProtein(it.toIntOrNull()) }
+        )
+
+        NumericalTextField(
+            title = stringResource(Res.string.carbs_100),
+            placeholderText = stringResource(Res.string._0_g),
+            value = state.carbs.toStringOrBlank(),
+            isImportant = true,
+            onValueChange = { }
+        )
+
+        NumericalTextField(
+            title = stringResource(Res.string.fat_100),
+            placeholderText = stringResource(Res.string._0_g),
+            value = state.fat.toStringOrBlank(),
+            isImportant = true,
+            onValueChange = { }
+        )
+
+        NumericalTextField(
+            title = stringResource(Res.string.kcal_100),
+            placeholderText = stringResource(Res.string._0_g),
+            isImportant = true,
+            value = state.kcal.toStringOrBlank(),
+            onValueChange = { }
+        )
+        NumericalDropMenuContent(
+            title = stringResource(Res.string.difficulty),
+            items = listOf<Difficulty?>(null) + Difficulty.values(),
+            selectedItem = state.difficulty,
+            onValueChange = { component.changeDifficulty(it)}
+        )
+        NumericalTagItem(
+            title = stringResource(Res.string.meals),
+            tag = state.meals,
+            onClickChangeTag = { onOpenModal() }
+        )
+        NumericalTagItem(
+            title = stringResource(Res.string.preparation_method),
+            tag = state.preparation,
+            onClickChangeTag = { onOpenModal() }
+        )
+        NumericalTagItem(
+            title = stringResource(Res.string.diets),
+            tag = state.diets,
+            onClickChangeTag = { onOpenModal() }
+        )
     }
 }
 
 @Composable
-private fun Details() {
+private fun Details(component: AddRecipeComponent) {
+    val state by component.getState()
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -409,22 +218,16 @@ private fun Details() {
             text = stringResource(Res.string.details),
             color = Colors.Black
         )
-        ButtonChoiceImage()
-        var title by rememberSaveable {
-            mutableStateOf("")
-        }
+        ButtonChoiceImage(component)
         TextFields.OutlinedTextField(
-            value = title,
-            onValueChange = { if (it.length <= 40) title = it },
+            value = state.title,
+            onValueChange = { if (it.length <= 40) component.changeTitle(it)},
             placeholderText = stringResource(Res.string.recipe_name)
         )
-        var descr by rememberSaveable {
-            mutableStateOf("")
-        }
         TextFields.OutlinedTextField(
             modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 100.dp),
-            value = descr,
-            onValueChange = { if (it.length <= 500) descr = it },
+            value = state.descr,
+            onValueChange = { if (it.length <= 500) component.changeDescr(it) },
             placeholderText = stringResource(Res.string.short_descr),
             singleLine = false
         )
@@ -432,7 +235,17 @@ private fun Details() {
 }
 
 @Composable
-private fun ButtonChoiceImage() {
+private fun ButtonChoiceImage(component: AddRecipeComponent) {
+    val state by component.getState()
+    val singleImagePicker = rememberImagePickerLauncher(
+        selectionMode = SelectionMode.Single,
+        scope = rememberCoroutineScope(),
+        onResult = { byteArrays ->
+            byteArrays.firstOrNull()?.let {
+                component.changeImage(it.toImageBitmap())
+            }
+        }
+    )
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -441,11 +254,31 @@ private fun ButtonChoiceImage() {
             .background(Colors.White)
             .border(2.dp, Colors.PurpleBackground, RoundedCornerShape(16.dp))
             .clickable {
-
+                singleImagePicker.launch()
             },
         contentAlignment = Alignment.Center
     ) {
-        Icon(
+        state.image?.let {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                bitmap = it,
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(Colors.PurpleBackground.copy(0.2f))
+                    .clickable { component.changeImage(null)}
+                    .padding(8.dp),
+                imageVector = Icons.Default.Close,
+                contentDescription = null,
+                tint = Colors.White
+            )
+        } ?: Icon(
             modifier = Modifier.size(48.dp),
             painter = painterResource(Res.drawable.ic_send_image),
             contentDescription = null,
@@ -453,3 +286,6 @@ private fun ButtonChoiceImage() {
         )
     }
 }
+
+@Composable
+private fun AddRecipeComponent.getState() = this.state.collectAsState()
