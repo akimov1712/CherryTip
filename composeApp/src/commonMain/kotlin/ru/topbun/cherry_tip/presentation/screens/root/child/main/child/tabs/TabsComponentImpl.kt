@@ -21,6 +21,7 @@ class TabsComponentImpl(
     private val onClickProfile: () -> Unit,
     private val onClickGoals: () -> Unit,
     private val onClickUnits: () -> Unit,
+    private val onClickAddRecipe: () -> Unit,
 ) : TabsComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -58,9 +59,8 @@ class TabsComponentImpl(
         }
 
         Config.Recipe -> {
-            val openRecipe = {}
             val component: RecipeComponentImpl = getKoin().get{
-                parametersOf(componentContext, onOpenAuth, openRecipe)
+                parametersOf(componentContext, onOpenAuth, onClickAddRecipe)
             }
             TabsComponent.Child.Recipe(component)
         }

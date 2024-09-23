@@ -33,8 +33,10 @@ class AddRecipeComponentImpl(
     }
 
     override fun clickBack() = store.accept(ClickBack)
+    override fun addRecipe() = store.accept(AddRecipe)
+    
     override fun changeTitle(name: String) = store.accept(ChangeName(name))
-    override fun changeImage(image: ImageBitmap?) = store.accept(ChangeImage(image))
+    override fun changeImage(image: ByteArray?) = store.accept(ChangeImage(image))
     override fun changeDescr(text: String) = store.accept(ChangeDescr(text))
     override fun changeCookingTime(time: Int?) = store.accept(ChangeCookingTime(time))
     override fun changeProtein(protein: Int?) = store.accept(ChangeProtein(protein))
@@ -45,5 +47,6 @@ class AddRecipeComponentImpl(
     override fun changeMeals(meals: TagEntity?) = store.accept(ChangeMeals(meals))
     override fun changePreparation(preparation: TagEntity?) = store.accept(ChangePreparation(preparation))
     override fun changeDiets(diets: TagEntity?) = store.accept(ChangeDiets(diets))
+    override fun loadCategories() = store.accept(LoadCategories)
 
 }

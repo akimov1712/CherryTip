@@ -119,7 +119,7 @@ private fun <T> DropMenuDifficulty(
         items.forEach {
             DropdownMenuItem(
                 text = {
-                    Texts.General(
+                    Texts.Option(
                         text = it?.toString()
                             ?: stringResource(Res.string.not_selected)
                     )

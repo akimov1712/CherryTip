@@ -1,20 +1,41 @@
 package ru.topbun.cherry_tip.data.source.network.service
 
 import io.ktor.client.request.delete
+import io.ktor.client.request.forms.InputProvider
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.utils.io.core.buildPacket
+import io.ktor.utils.io.core.writeFully
 import ru.topbun.cherry_tip.data.source.network.ApiFactory
 import ru.topbun.cherry_tip.data.source.network.dto.recipe.RecipeDto
 import ru.topbun.cherry_tip.data.source.network.token
-import ru.topbun.cherry_tip.domain.entity.recipe.CategoriesEntity
 
 class RecipeApi(
     private val api: ApiFactory
 ) {
+
+    suspend fun uploadImage(image: ByteArray, token: String) = api.client.submitFormWithBinaryData(
+        url = "/v1/recipe/upload/image",
+        formData = formData {
+            append("file", InputProvider {
+                buildPacket {
+                    writeFully(image)
+                }
+            }, Headers.build {
+                append(HttpHeaders.ContentType, "image/jpeg")
+                append(HttpHeaders.ContentDisposition, "filename=\"photo.jpg\"")
+            })
+        }
+    ) { token(token) }
+
 
     suspend fun deleteRecipe(id: Int, token: String) = api.client.delete("/v1/recipe/$id") {
         token(token)
@@ -45,8 +66,8 @@ class RecipeApi(
         preparation: Int?,
         token: String
     ): HttpResponse {
-        val route = "/v1/recipe/" + if(isMyRecipe) "my" else "search"
-        return api.client.get(route){
+        val route = "/v1/recipe/" + if (isMyRecipe) "my" else "search"
+        return api.client.get(route) {
             parameter(QUERY, q)
             parameter(TAKE, take)
             parameter(SKIP, skip)
@@ -57,7 +78,7 @@ class RecipeApi(
         }
     }
 
-    private companion object{
+    private companion object {
         const val QUERY = "q"
         const val TAKE = "take"
         const val SKIP = "skip"

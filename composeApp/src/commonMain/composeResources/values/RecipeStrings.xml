@@ -42,4 +42,7 @@
     <string name="recipe_add_error_carbs">Enter carbs per 100 grams of dish</string>
     <string name="recipe_add_error_fat">Enter fat per 100 grams of dish</string>
 
+    <string name="tag_loading_error">Tags loading error</string>
+    <string name="retry">Retry</string>
+
 </resources>

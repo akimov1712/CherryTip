@@ -14,17 +14,29 @@ suspend fun <T>exceptionWrapper(block: suspend () -> T): T {
     return try {
         block()
     } catch (e: TimeoutCancellationException){
+        println(e.toString())
         throw RequestTimeoutException()
     } catch (e: ConnectTimeoutException){
+        println(e.toString())
         throw RequestTimeoutException()
     } catch (e: HttpRequestTimeoutException){
+        println(e.toString())
         throw RequestTimeoutException()
     } catch (e: NoTransformationFoundException){
+        println(e.toString())
         throw ParseBackendResponseException()
     } catch (e: DoubleReceiveException){
+        println(e.toString())
         throw ParseBackendResponseException()
     } catch (e: SocketTimeoutException){
+        println(e.toString())
         throw RequestTimeoutException()
+    } catch (e: IllegalStateException){
+        println(e.toString())
+        throw ConnectException("Error sending data")
+    } catch (e: Exception){
+        println(e.toString())
+        throw ConnectException()
     }
 }
 

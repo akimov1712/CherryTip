@@ -16,6 +16,7 @@ import ru.topbun.cherry_tip.domain.useCases.recipe.EditRecipeUseCase
 import ru.topbun.cherry_tip.domain.useCases.recipe.GetCategoriesUseCase
 import ru.topbun.cherry_tip.domain.useCases.recipe.GetRecipeWithIdUseCase
 import ru.topbun.cherry_tip.domain.useCases.recipe.GetRecipesUseCase
+import ru.topbun.cherry_tip.domain.useCases.recipe.UploadImageUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CheckAccountInfoCompleteUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CreateGoalUseCase
 import ru.topbun.cherry_tip.domain.useCases.user.CreateProfileUseCase
@@ -42,6 +43,7 @@ private fun Module.recipeModule(){
     single { GetCategoriesUseCase(get()) }
     single { GetRecipesUseCase(get()) }
     single { GetRecipeWithIdUseCase(get()) }
+    single { UploadImageUseCase(get()) }
 }
 
 private fun Module.challengeModule(){

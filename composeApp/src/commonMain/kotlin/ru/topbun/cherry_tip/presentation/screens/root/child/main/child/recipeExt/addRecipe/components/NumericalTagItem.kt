@@ -37,6 +37,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 fun NumericalTagItem(
     title: String,
     tag: TagEntity?,
+    isLoading: Boolean = false,
     isImportant: Boolean = false,
     onClickChangeTag: () -> Unit,
 ) {
@@ -70,7 +71,7 @@ fun NumericalTagItem(
                     .fillMaxHeight()
                     .weight(1f)
                     .clip(RoundedCornerShape(13.dp))
-                    .clickable { onClickChangeTag() }
+                    .clickable { if (!isLoading) onClickChangeTag() }
                     .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(13.dp)),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
@@ -83,7 +84,7 @@ fun NumericalTagItem(
                     )
                     Spacer(Modifier.width(10.dp))
                     Texts.Button(
-                        text = title,
+                        text = tag.title,
                         color = Colors.Black
                     )
                 } ?: Texts.Button(

@@ -10,8 +10,10 @@ interface AddRecipeComponent {
     val state: StateFlow<AddRecipeStore.State>
 
     fun clickBack()
+    fun addRecipe()
+
     fun changeTitle(name: String)
-    fun changeImage(image: ImageBitmap?)
+    fun changeImage(image: ByteArray?)
     fun changeDescr(text: String)
     fun changeCookingTime(time: Int?)
     fun changeProtein(protein: Int?)
@@ -22,5 +24,6 @@ interface AddRecipeComponent {
     fun changeMeals(meals: TagEntity?)
     fun changePreparation(preparation: TagEntity?)
     fun changeDiets(diets: TagEntity?)
+    fun loadCategories()
 
 }

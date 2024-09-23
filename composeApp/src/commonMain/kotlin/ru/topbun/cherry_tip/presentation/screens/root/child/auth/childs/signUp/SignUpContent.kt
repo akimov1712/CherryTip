@@ -95,7 +95,7 @@ fun SignUpScreen(
             textAlign = TextAlign.Start
         )
         Spacer(Modifier.height(40.dp))
-        LoginFields(component, state)
+        SignUpFields(component, state)
         Spacer(Modifier.height(20.dp))
         errorText?.let { Texts.Error(it) }
         Spacer(Modifier.height(20.dp))
@@ -185,7 +185,7 @@ private fun ButtonSignUp(
 }
 
 @Composable
-fun LoginFields(
+fun SignUpFields(
     component: SignUpComponent,
     state: SignUpStore.State
 ){

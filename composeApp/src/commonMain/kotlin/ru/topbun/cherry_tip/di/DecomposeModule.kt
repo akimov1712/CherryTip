@@ -21,6 +21,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.c
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailStoreFactory
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalComponentImpl
@@ -57,6 +59,20 @@ val decomposeModule = module {
     goalModule()
     unitsModule()
     recipeModule()
+    addRecipeModule()
+}
+
+private fun Module.addRecipeModule(){
+    factory<AddRecipeStoreFactory> { AddRecipeStoreFactory(get(), get(), get(), get()) }
+    factory { (
+                  componentContext: ComponentContext,
+                  onBack: () -> Unit) ->
+        AddRecipeComponentImpl(
+            componentContext = componentContext,
+            onBack = onBack,
+            storeFactory = get(),
+        )
+    }
 }
 
 private fun Module.recipeModule(){
@@ -215,6 +231,7 @@ private fun Module.tabsModule(){
         val onClickProfile = params.get<() -> Unit>()
         val onClickGoals = params.get<() -> Unit>()
         val onClickUnits = params.get<() -> Unit>()
+        val onClickAddRecipe = params.get<() -> Unit>()
 
         TabsComponentImpl(
             componentContext = componentContext,
@@ -225,6 +242,7 @@ private fun Module.tabsModule(){
             onClickProfile = onClickProfile,
             onClickGoals = onClickGoals,
             onClickUnits = onClickUnits,
+            onClickAddRecipe = onClickAddRecipe
         )
     }
 }

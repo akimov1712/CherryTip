@@ -41,6 +41,10 @@ class RecipeRepositoryImpl(
         recipeApi.getCategories().body<CategoriesDto>().toEntity()
     }
 
+    override suspend fun uploadImage(image: ByteArray): String = exceptionWrapper {
+        recipeApi.uploadImage(image = image, token = dataStore.getToken()).codeResultWrapper().body<String>()
+    }
+
     override suspend fun getRecipes(
         q: String?,
         isMyRecipe: Boolean,
@@ -60,8 +64,6 @@ class RecipeRepositoryImpl(
             diet = diet,
             preparation = preparation
         ).codeResultWrapper().body<List<RecipeDto>>()
-        Napier.d(tag = "Recipe", message = recipes.toString())
-        Napier.d(tag = "Recipe", message = recipes.toRecipeEntityList().toString())
         recipes.toRecipeEntityList()
     }
 }

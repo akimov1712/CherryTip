@@ -10,9 +10,13 @@ pluginManagement {
                 includeGroupAndSubgroups("com.google")
             }
         }
-        maven ( "https://oss.sonatype.org/content/repositories/snapshots/" )
         mavenCentral()
         gradlePluginPortal()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+        maven( "https://androidx.dev/storage/compose-compiler/repository")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+        maven ( "https://oss.sonatype.org/content/repositories/snapshots/" )
     }
 }
 
@@ -26,6 +30,11 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+        maven( "https://androidx.dev/storage/compose-compiler/repository")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
     }
 }
 

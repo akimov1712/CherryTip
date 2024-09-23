@@ -3,6 +3,7 @@ package ru.topbun.cherry_tip.data.source.network
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -13,14 +14,15 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import ru.topbun.cherry_tip.utills.Const.BASE_URL
 
 class ApiFactory {
 
-    private companion object{
-         const val BASE_URL = "https://cherrytip.ru/"
-    }
-
     val client = HttpClient {
+        install(HttpTimeout) {
+            requestTimeoutMillis = 30000
+            socketTimeoutMillis = 30000
+        }
         install(ContentNegotiation) {
             json()
         }

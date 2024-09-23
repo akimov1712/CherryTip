@@ -17,12 +17,11 @@ fun TabsScreen(
     modifier: Modifier = Modifier.background(Colors.White).statusBarsPadding()
 ) {
     Children(component.stack){
-        AddRecipeScreen(modifier)
-//        when(val instance = it.instance){
-//            is TabsComponent.Child.Home -> HomeScreen(instance.component, modifier)
-//            is TabsComponent.Child.Settings -> ProfileScreen(instance.component, modifier)
-//            is TabsComponent.Child.Recipe -> RecipeScreen(instance.component, modifier)
-//        }
+        when(val instance = it.instance){
+            is TabsComponent.Child.Home -> HomeScreen(instance.component, modifier)
+            is TabsComponent.Child.Settings -> ProfileScreen(instance.component, modifier)
+            is TabsComponent.Child.Recipe -> RecipeScreen(instance.component, modifier)
+        }
     }
 
 }

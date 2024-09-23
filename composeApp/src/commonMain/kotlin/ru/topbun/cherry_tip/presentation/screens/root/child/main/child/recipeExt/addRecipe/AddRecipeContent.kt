@@ -21,19 +21,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
@@ -53,16 +55,21 @@ import cherrytip.composeapp.generated.resources.numerical_indicators
 import cherrytip.composeapp.generated.resources.preparation_method
 import cherrytip.composeapp.generated.resources.preparation_time
 import cherrytip.composeapp.generated.resources.protein_100
+import cherrytip.composeapp.generated.resources.recipe_add_error_carbs
+import cherrytip.composeapp.generated.resources.recipe_add_error_fat
+import cherrytip.composeapp.generated.resources.recipe_add_error_kcal
+import cherrytip.composeapp.generated.resources.recipe_add_error_name
+import cherrytip.composeapp.generated.resources.recipe_add_error_protein
 import cherrytip.composeapp.generated.resources.recipe_name
 import cherrytip.composeapp.generated.resources.short_descr
 import com.preat.peekaboo.image.picker.SelectionMode
 import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import com.preat.peekaboo.image.picker.toImageBitmap
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.Difficulty
 import ru.topbun.cherry_tip.domain.entity.recipe.CategoriesEntity
-import ru.topbun.cherry_tip.domain.entity.recipe.TagEntity
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalDropMenuContent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalTagItem
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalTextField
@@ -74,65 +81,82 @@ import ru.topbun.cherry_tip.presentation.ui.components.TextFields
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.utills.isNumber
 import ru.topbun.cherry_tip.utills.toStringOrBlank
-import kotlin.random.Random
 
 @Composable
 fun AddRecipeScreen(
     component: AddRecipeComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
+    val state by component.getState()
+    val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     var isOpenModalChoiceTags by rememberSaveable { mutableStateOf(false) }
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(20.dp)
+    val snackBarState = SnackbarHostState()
+    var isLoading = false
+    when(val screenState = state.screenState){
+        is AddRecipeStore.State.RecipeAddedState.Error -> scope.launch { snackBarState.showSnackbar(screenState.message); isLoading = false }
+        AddRecipeStore.State.RecipeAddedState.Loading -> isLoading = true
+        else -> { isLoading = false }
+    }
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackBarState)
+        }
     ) {
-        BackWithTitle(stringResource(Res.string.add_recipe)) { component.clickBack() }
-        Spacer(Modifier.height(30.dp))
-        Details(component)
-        Box(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp).height(1.dp))
-        NumericalContent(component){ isOpenModalChoiceTags = true }
-        Buttons.Purple(
-            modifier = Modifier.fillMaxWidth().height(57.dp),
-            onClick = {}
-        ){
-            Texts.Button(text = stringResource(Res.string.add))
-        }
-    }
-    if (isOpenModalChoiceTags) {
-        val tags = mutableListOf<TagEntity>().apply {
-            repeat(10) {
-                add(
-                    TagEntity(
-                        it,
-                        Random.nextInt(0, 1000000).toString(),
-                        "https://thumbs.dreamstime.com/b/иллюстрация-жареного-куриного-яйца-на-тарелке-изображения-для-240298062.jpg"
-                    )
-                )
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(20.dp)
+        ) {
+            BackWithTitle(stringResource(Res.string.add_recipe)) { component.clickBack() }
+            Spacer(Modifier.height(30.dp))
+            Details(component, isLoading)
+            Box(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp).height(1.dp))
+            NumericalContent(component, isLoading){ isOpenModalChoiceTags = true }
+            Spacer(Modifier.height(30.dp))
+            Buttons.Purple(
+                modifier = Modifier.fillMaxWidth().height(60.dp),
+                onClick = { component.addRecipe() },
+                enabled = !isLoading
+            ){
+                if (isLoading) CircularProgressIndicator(color = Colors.White, modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
+                else Texts.Button(text = stringResource(Res.string.add))
             }
         }
-        val categories = CategoriesEntity(
-            types = tags,
-            preparations = tags,
-            diets = tags
-        )
-        ChoiceTagModal(
-            categories = categories,
-            onDismiss = { isOpenModalChoiceTags = false },
-            onSave = { meal, preparation, diets ->
-                component.changeMeals(meal)
-                component.changePreparation(preparation)
-                component.changeDiets(diets)
+        if (isOpenModalChoiceTags) {
+            var categories = CategoriesEntity(emptyList(), emptyList(), emptyList())
+            var isLoadingTags = true
+            when(val choiceTagState = state.choiceTagState){
+                AddRecipeStore.State.ChoiceTagState.Error -> isLoadingTags = false
+                AddRecipeStore.State.ChoiceTagState.Loading -> isLoadingTags = true
+                is AddRecipeStore.State.ChoiceTagState.Result -> {
+                    isLoadingTags = false
+                    categories = choiceTagState.categories
+                }
+                else -> {}
             }
-        )
+
+            ChoiceTagModal(
+                categories = categories,
+                onDismiss = { isOpenModalChoiceTags = false },
+                isLoading = isLoadingTags,
+                onClickRetry = { component.loadCategories() },
+                onSave = { meal, preparation, diets ->
+                    isOpenModalChoiceTags = false
+                    component.changeMeals(meal)
+                    component.changePreparation(preparation)
+                    component.changeDiets(diets)
+                }
+            )
+        }
     }
+
 
 }
 
 @Composable
-private fun NumericalContent(component: AddRecipeComponent, onOpenModal: () -> Unit) {
+private fun NumericalContent(component: AddRecipeComponent, isLoading: Boolean, onOpenModal: () -> Unit) {
     val state by component.getState()
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -146,6 +170,7 @@ private fun NumericalContent(component: AddRecipeComponent, onOpenModal: () -> U
             title = stringResource(Res.string.preparation_time),
             placeholderText = stringResource(Res.string._0_min),
             value = state.cookingTime.toStringOrBlank(),
+            isLoading = isLoading,
             onValueChange = {
                 if ((it.isEmpty() || it.isNumber()) && it.length < 5) {
                     component.changeCookingTime(it.toIntOrNull())
@@ -156,32 +181,40 @@ private fun NumericalContent(component: AddRecipeComponent, onOpenModal: () -> U
             title = stringResource(Res.string.protein_100),
             placeholderText = stringResource(Res.string._0_g),
             value = state.protein.toStringOrBlank(),
+            supportingText = if (state.proteinIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_protein))} } else null,
             isImportant = true,
-            onValueChange = { component.changeProtein(it.toIntOrNull()) }
+            isLoading = isLoading,
+            onValueChange = { if(it.length < 5) component.changeProtein(it.toIntOrNull()) }
         )
 
         NumericalTextField(
             title = stringResource(Res.string.carbs_100),
             placeholderText = stringResource(Res.string._0_g),
             value = state.carbs.toStringOrBlank(),
+            supportingText = if (state.carbsIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_carbs))} } else null,
             isImportant = true,
-            onValueChange = { }
+            isLoading = isLoading,
+            onValueChange = { if(it.length < 5) component.changeCarbs(it.toIntOrNull()) }
         )
 
         NumericalTextField(
             title = stringResource(Res.string.fat_100),
             placeholderText = stringResource(Res.string._0_g),
             value = state.fat.toStringOrBlank(),
+            supportingText = if (state.fatIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_fat))} } else null,
             isImportant = true,
-            onValueChange = { }
+            isLoading = isLoading,
+            onValueChange = { if(it.length < 5) component.changeFat(it.toIntOrNull()) }
         )
 
         NumericalTextField(
             title = stringResource(Res.string.kcal_100),
             placeholderText = stringResource(Res.string._0_g),
-            isImportant = true,
             value = state.kcal.toStringOrBlank(),
-            onValueChange = { }
+            supportingText = if (state.kcalIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_kcal))} } else null,
+            isImportant = true,
+            isLoading = isLoading,
+            onValueChange = { if(it.length < 5) component.changeKcal(it.toIntOrNull()) }
         )
         NumericalDropMenuContent(
             title = stringResource(Res.string.difficulty),
@@ -192,23 +225,26 @@ private fun NumericalContent(component: AddRecipeComponent, onOpenModal: () -> U
         NumericalTagItem(
             title = stringResource(Res.string.meals),
             tag = state.meals,
+            isLoading = isLoading,
             onClickChangeTag = { onOpenModal() }
         )
         NumericalTagItem(
             title = stringResource(Res.string.preparation_method),
             tag = state.preparation,
+            isLoading = isLoading,
             onClickChangeTag = { onOpenModal() }
         )
         NumericalTagItem(
             title = stringResource(Res.string.diets),
             tag = state.diets,
+            isLoading = isLoading,
             onClickChangeTag = { onOpenModal() }
         )
     }
 }
 
 @Composable
-private fun Details(component: AddRecipeComponent) {
+private fun Details(component: AddRecipeComponent, isLoading: Boolean) {
     val state by component.getState()
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -222,11 +258,14 @@ private fun Details(component: AddRecipeComponent) {
         TextFields.OutlinedTextField(
             value = state.title,
             onValueChange = { if (it.length <= 40) component.changeTitle(it)},
-            placeholderText = stringResource(Res.string.recipe_name)
+            enabled = !isLoading,
+            placeholderText = stringResource(Res.string.recipe_name),
+            supportingText = if (state.titleIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_name))} } else null,
         )
         TextFields.OutlinedTextField(
             modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 100.dp),
             value = state.descr,
+            enabled = !isLoading,
             onValueChange = { if (it.length <= 500) component.changeDescr(it) },
             placeholderText = stringResource(Res.string.short_descr),
             singleLine = false
@@ -242,7 +281,7 @@ private fun ButtonChoiceImage(component: AddRecipeComponent) {
         scope = rememberCoroutineScope(),
         onResult = { byteArrays ->
             byteArrays.firstOrNull()?.let {
-                component.changeImage(it.toImageBitmap())
+                component.changeImage(it)
             }
         }
     )
@@ -261,7 +300,7 @@ private fun ButtonChoiceImage(component: AddRecipeComponent) {
         state.image?.let {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                bitmap = it,
+                bitmap = it.toImageBitmap(),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

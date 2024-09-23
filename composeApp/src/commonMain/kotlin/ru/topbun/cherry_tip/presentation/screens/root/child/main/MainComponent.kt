@@ -5,6 +5,7 @@ import com.arkivanov.decompose.value.Value
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.tipsDetail.Tips
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileComponent
@@ -24,6 +25,7 @@ interface MainComponent {
         data class Profile(val component: ProfileComponent): Child
         data class Goal(val component: GoalComponent): Child
         data class Units(val component: UnitsComponent): Child
+        data class AddRecipe(val component: AddRecipeComponent): Child
     }
 
 

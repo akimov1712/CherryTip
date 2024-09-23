@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.ic_important
+import cherrytip.composeapp.generated.resources.recipe_add_error_name
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
@@ -31,7 +33,9 @@ fun NumericalTextField(
     title: String,
     placeholderText: String,
     value: String,
+    isLoading: Boolean,
     isImportant: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null,
     onValueChange: (String) -> Unit,
 ) {
     Column {
@@ -61,7 +65,9 @@ fun NumericalTextField(
             TextFields.OutlinedTextField(
                 modifier = Modifier.weight(1f),
                 value = value,
+                supportingText = supportingText,
                 onValueChange = onValueChange,
+                enabled = !isLoading,
                 placeholderText = placeholderText,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,

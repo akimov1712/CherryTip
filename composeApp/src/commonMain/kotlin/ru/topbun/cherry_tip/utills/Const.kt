@@ -1,6 +1,7 @@
 package ru.topbun.cherry_tip.utills
 
 object Const {
+    const val BASE_URL = "https://cherrytip.ru/"
 
     const val ML_PER_KG = 50
     const val ML_GLASS = 250

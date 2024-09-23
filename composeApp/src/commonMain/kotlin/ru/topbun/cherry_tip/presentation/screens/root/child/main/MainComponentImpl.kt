@@ -12,6 +12,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.account.AccountComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal.GoalComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile.ProfileComponentImpl
@@ -41,6 +42,7 @@ class MainComponentImpl(
             val onClickProfile = { navigation.pushToFront(Config.Profile) }
             val onClickGoals = { navigation.pushToFront(Config.Goal) }
             val onClickUnits = { navigation.pushToFront(Config.Units) }
+            val onClickAddRecipe = { navigation.pushToFront(Config.AddRecipe) }
             val component: TabsComponentImpl = getKoin().get{
                 parametersOf(
                     componentContext,
@@ -51,6 +53,7 @@ class MainComponentImpl(
                     onClickProfile,
                     onClickGoals,
                     onClickUnits,
+                    onClickAddRecipe
                 )
             }
             MainComponent.Child.Tabs(component)
@@ -100,6 +103,14 @@ class MainComponentImpl(
             }
             MainComponent.Child.Units(component)
         }
+
+        Config.AddRecipe -> {
+            val onClickBack = {navigation.pop()}
+            val component: AddRecipeComponentImpl = getKoin().get {
+                parametersOf(componentContext, onClickBack)
+            }
+            MainComponent.Child.AddRecipe(component)
+        }
     }
 
     @Serializable
@@ -113,6 +124,7 @@ class MainComponentImpl(
         @Serializable data object Profile: Config
         @Serializable data object Goal: Config
         @Serializable data object Units: Config
+        @Serializable data object AddRecipe: Config
     }
 
 }

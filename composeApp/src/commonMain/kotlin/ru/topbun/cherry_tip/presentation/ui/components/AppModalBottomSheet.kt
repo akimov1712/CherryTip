@@ -1,12 +1,16 @@
 package ru.topbun.cherry_tip.presentation.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -28,10 +32,10 @@ fun AppModalBottomSheet(
     modifier: Modifier = Modifier,
     state: SheetState,
     onDismiss: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     ModalBottomSheet(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxWidth(),
         sheetState = state,
         containerColor = Colors.Transparent,
         onDismissRequest = onDismiss,
@@ -41,8 +45,9 @@ fun AppModalBottomSheet(
         dragHandle = null
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
         ) {
             Spacer(Modifier.height(8.dp))
             Box(Modifier.size(50.dp, 7.dp).background(Colors.White, CircleShape))
