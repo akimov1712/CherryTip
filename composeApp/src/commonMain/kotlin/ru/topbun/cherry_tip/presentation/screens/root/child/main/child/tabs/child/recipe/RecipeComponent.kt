@@ -8,8 +8,9 @@ interface RecipeComponent {
 
     fun changeQuery(query: String)
     fun changeTab(index: Int)
+    fun changeTags(meal: Int?, preparation: Int?, diets: Int?)
     fun clickAddRecipe()
+    fun loadCategory()
     fun loadRecipes()
-
 
 }

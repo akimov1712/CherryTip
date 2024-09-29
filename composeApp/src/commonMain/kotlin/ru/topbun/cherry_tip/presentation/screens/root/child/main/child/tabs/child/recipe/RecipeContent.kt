@@ -23,6 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -36,6 +39,9 @@ import cherrytip.composeapp.generated.resources.ic_add
 import cherrytip.composeapp.generated.resources.ic_filter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.domain.entity.recipe.CategoriesEntity
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeStore
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.choiceTag.ChoiceTagModal
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeStore.State.RecipeState
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
@@ -48,7 +54,9 @@ fun RecipeScreen(
     component: RecipeComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
+    val state by component.state.collectAsState()
     val snackbar = SnackbarHostState()
+    var isOpenModalChoiceTags by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) }
     ) {
@@ -58,7 +66,6 @@ fun RecipeScreen(
                 .padding(start = 20.dp, top = 20.dp, end = 20.dp),
         ) {
             Column {
-                val state by component.state.collectAsState()
                 TextFields.Search(
                     value = state.query,
                     onValueChange = { if (it.length <= 40) component.changeQuery(it) },
@@ -76,7 +83,36 @@ fun RecipeScreen(
                     modifier = Modifier.fillMaxWidth().weight(1f)
                 )
             }
-            RecipeButtons(component)
+            RecipeButtons(component){
+                isOpenModalChoiceTags = true
+            }
+        }
+        if (isOpenModalChoiceTags) {
+            var categories = CategoriesEntity(emptyList(), emptyList(), emptyList())
+            var isLoadingTags = true
+            when(val choiceTagState = state.choiceTagState){
+                RecipeStore.State.ChoiceTagState.Error -> isLoadingTags = false
+                RecipeStore.State.ChoiceTagState.Loading -> isLoadingTags = true
+                is RecipeStore.State.ChoiceTagState.Result -> {
+                    isLoadingTags = false
+                    categories = choiceTagState.categories
+                }
+                else -> {}
+            }
+
+            ChoiceTagModal(
+                categories = categories,
+                choiceMealId = state.meal,
+                choicePreparationId = state.preparations,
+                choiceDietsId = state.diets,
+                onDismiss = { isOpenModalChoiceTags = false },
+                isLoading = isLoadingTags,
+                onClickRetry = { component.loadCategory() },
+                onSave = { meal, preparation, diets ->
+                    isOpenModalChoiceTags = false
+                    component.changeTags(meal?.id, preparation?.id, diets?.id)
+                }
+            )
         }
 
     }
@@ -84,16 +120,20 @@ fun RecipeScreen(
 
 @Composable
 private fun BoxScope.RecipeButtons(
-    component: RecipeComponent
+    component: RecipeComponent,
+    onClickFilter: () -> Unit
 ) {
     val state by component.state.collectAsState()
     val isMyRecipe = state.tabs[state.selectedIndex] == RecipeTabs.Recipes
-    val text = stringResource(if (isMyRecipe) Res.string.add_recipe else Res.string.filter)
-    val icon = painterResource(if (isMyRecipe) Res.drawable.ic_add else Res.drawable.ic_filter)
+    val text = stringResource(if (!isMyRecipe) Res.string.add_recipe else Res.string.filter)
+    val icon = painterResource(if (!isMyRecipe) Res.drawable.ic_add else Res.drawable.ic_filter)
     Button(
         text = text,
         icon = icon
-    ) { component.clickAddRecipe() }
+    ) {
+        if (isMyRecipe) onClickFilter()
+        else component.clickAddRecipe()
+    }
 
 }
 

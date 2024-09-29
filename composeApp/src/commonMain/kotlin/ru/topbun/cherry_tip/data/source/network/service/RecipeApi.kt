@@ -61,7 +61,7 @@ class RecipeApi(
         isMyRecipe: Boolean,
         take: Int?,
         skip: Int?,
-        category: Int?,
+        meal: Int?,
         diet: Int?,
         preparation: Int?,
         token: String
@@ -71,7 +71,7 @@ class RecipeApi(
             parameter(QUERY, q)
             parameter(TAKE, take)
             parameter(SKIP, skip)
-            parameter(CATEGORY, category)
+            parameter(CATEGORY, meal)
             parameter(DIET, diet)
             parameter(PREPARATION, preparation)
             if (isMyRecipe) token(token)

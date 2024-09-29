@@ -55,7 +55,6 @@ kotlin {
             implementation(libs.datastore.preferences)
             implementation(libs.datastore.preferences.core)
             implementation(libs.atomicfu)
-            implementation(libs.napier)
             implementation(libs.peekaboo.image.picker)
 
             // Ktor

@@ -12,9 +12,9 @@ class GetRecipesUseCase(
         isMyRecipe:Boolean = false,
         take: Int? = null,
         skip: Int? = null,
-        category: Int? = null,
+        meal: Int? = null,
         diet: Int? = null,
         preparation: Int? = null
-    ) = repository.getRecipes(q, isMyRecipe, take, skip, category, diet, preparation)
+    ) = repository.getRecipes(q, isMyRecipe, take, skip, meal, diet, preparation)
 
 }

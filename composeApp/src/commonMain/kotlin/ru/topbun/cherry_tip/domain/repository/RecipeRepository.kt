@@ -11,6 +11,6 @@ interface RecipeRepository {
     suspend fun createRecipe(recipe: RecipeEntity)
     suspend fun getCategories(): CategoriesEntity
     suspend fun uploadImage(image: ByteArray): String
-    suspend fun getRecipes(q: String?, isMyRecipe:Boolean, take: Int?, skip: Int?, category: Int?, diet: Int?, preparation: Int?): List<RecipeEntity>
+    suspend fun getRecipes(q: String?, isMyRecipe:Boolean, take: Int?, skip: Int?, meal: Int?, diet: Int?, preparation: Int?): List<RecipeEntity>
 
 }

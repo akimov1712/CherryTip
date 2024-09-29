@@ -70,6 +70,9 @@ import ru.topbun.cherry_tip.presentation.ui.components.Texts
 @Composable
 fun ChoiceTagModal(
     categories: CategoriesEntity,
+    choiceMealId: Int? = null,
+    choicePreparationId: Int? = null,
+    choiceDietsId: Int? = null,
     isLoading: Boolean = false,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
@@ -87,13 +90,24 @@ fun ChoiceTagModal(
         state = sheetState,
         onDismiss = { scope.launch { sheetState.hide(); onDismiss() } }
     ){
-        ModalContent(categories, isLoading, onClickRetry, onSave)
+        ModalContent(
+            categories = categories,
+            choiceMealId = choiceMealId,
+            choicePreparationId = choicePreparationId,
+            choiceDietsId = choiceDietsId,
+            isLoading = isLoading,
+            onClickRetry = onClickRetry,
+            onSave = onSave
+        )
     }
 }
 
 @Composable
 private fun ModalContent(
     categories: CategoriesEntity,
+    choiceMealId: Int? = null,
+    choicePreparationId: Int? = null,
+    choiceDietsId: Int? = null,
     isLoading: Boolean,
     onClickRetry: () -> Unit,
     onSave: (meal: TagEntity?, preparation: TagEntity?, diets: TagEntity?) -> Unit
@@ -105,9 +119,9 @@ private fun ModalContent(
             .padding(bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        var mealsSelectedId by rememberSaveable { mutableStateOf<Int?>(null) }
-        var preparationSelectedId by rememberSaveable { mutableStateOf<Int?>(null) }
-        var dietsSelectedId by rememberSaveable { mutableStateOf<Int?>(null) }
+        var mealsSelectedId by rememberSaveable { mutableStateOf(choiceMealId) }
+        var preparationSelectedId by rememberSaveable { mutableStateOf(choicePreparationId) }
+        var dietsSelectedId by rememberSaveable { mutableStateOf(choiceDietsId) }
         CategoriesItem(
             title = stringResource(Res.string.meals),
             tags = categories.types,

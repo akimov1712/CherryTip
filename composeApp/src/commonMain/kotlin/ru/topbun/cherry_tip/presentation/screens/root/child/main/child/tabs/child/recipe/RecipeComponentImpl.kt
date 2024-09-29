@@ -31,6 +31,8 @@ class RecipeComponentImpl(
 
     override fun changeQuery(query: String) = store.accept(RecipeStore.Intent.ChangeQuery(query))
     override fun changeTab(index: Int) = store.accept(RecipeStore.Intent.ChangeTab(index))
+    override fun changeTags(meal: Int?, preparation: Int?, diets: Int?) = store.accept(RecipeStore.Intent.ChangeTags(meal, preparation, diets))
     override fun clickAddRecipe() = store.accept(RecipeStore.Intent.ClickAddRecipe)
+    override fun loadCategory() = store.accept(RecipeStore.Intent.LoadCategories)
     override fun loadRecipes() = store.accept(RecipeStore.Intent.LoadRecipes)
 }

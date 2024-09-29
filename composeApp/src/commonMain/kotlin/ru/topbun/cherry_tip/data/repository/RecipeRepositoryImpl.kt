@@ -1,7 +1,6 @@
 package ru.topbun.cherry_tip.data.repository
 
 import ru.topbun.cherry_tip.data.source.local.dataStore.Settings
-import io.github.aakira.napier.Napier
 import io.ktor.client.call.body
 import ru.topbun.cherry_tip.data.mapper.toDto
 import ru.topbun.cherry_tip.data.mapper.toEntity
@@ -50,7 +49,7 @@ class RecipeRepositoryImpl(
         isMyRecipe: Boolean,
         take: Int?,
         skip: Int?,
-        category: Int?,
+        meal: Int?,
         diet: Int?,
         preparation: Int?
     ): List<RecipeEntity> = exceptionWrapper {
@@ -60,7 +59,7 @@ class RecipeRepositoryImpl(
             isMyRecipe = isMyRecipe,
             take = take,
             skip = skip,
-            category = category,
+            meal = meal,
             diet = diet,
             preparation = preparation
         ).codeResultWrapper().body<List<RecipeDto>>()

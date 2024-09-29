@@ -1,7 +1,5 @@
 package ru.topbun.cherry_tip.data.source.network
 
-import io.github.aakira.napier.DebugAntilog
-import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -31,14 +29,9 @@ class ApiFactory {
             url(BASE_URL)
         }
         install(Logging) {
-            logger = object: Logger {
-                override fun log(message: String) {
-                    Napier.v("HTTP Client", null, message)
-                }
-            }
             level = LogLevel.ALL
         }
-    }.also { Napier.base(DebugAntilog()) }
+    }
 
 }
 
