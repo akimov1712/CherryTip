@@ -25,19 +25,19 @@ class RecipeRepositoryImpl(
     }
 
     override suspend fun editRecipe(recipe: RecipeEntity): Unit = exceptionWrapper {
-        recipeApi.editRecipe(recipe = recipe.toDto(), token = dataStore.getToken())
+        recipeApi.editRecipe(recipe = recipe.toDto(), token = dataStore.getToken()).codeResultWrapper()
     }
 
     override suspend fun getRecipeWithId(id: Int): RecipeEntity = exceptionWrapper {
-        recipeApi.getRecipeWithId(id = id).body<RecipeDto>().toEntity()
+        recipeApi.getRecipeWithId(id = id).codeResultWrapper().body<RecipeDto>().toEntity()
     }
 
     override suspend fun createRecipe(recipe: RecipeEntity): Unit = exceptionWrapper {
-        recipeApi.createRecipe(recipe = recipe.toDto(), token = dataStore.getToken())
+        recipeApi.createRecipe(recipe = recipe.toDto(), token = dataStore.getToken()).codeResultWrapper()
     }
 
     override suspend fun getCategories(): CategoriesEntity = exceptionWrapper {
-        recipeApi.getCategories().body<CategoriesDto>().toEntity()
+        recipeApi.getCategories().codeResultWrapper().body<CategoriesDto>().toEntity()
     }
 
     override suspend fun uploadImage(image: ByteArray): String = exceptionWrapper {

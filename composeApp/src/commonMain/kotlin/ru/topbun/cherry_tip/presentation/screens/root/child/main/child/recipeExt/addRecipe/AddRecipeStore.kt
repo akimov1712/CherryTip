@@ -20,6 +20,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeStore.State
 import ru.topbun.cherry_tip.utills.Const.BASE_URL
 import ru.topbun.cherry_tip.utills.handlerTokenException
+import ru.topbun.cherry_tip.utills.toStringOrBlank
 import ru.topbun.cherry_tip.utills.wrapperStoreException
 
 interface AddRecipeStore : Store<Intent, State, Label> {
@@ -260,7 +261,7 @@ class AddRecipeStoreFactory(
                                 return@wrapperStoreException
                             }
                             val fieldsError = listOf(state.title, state.protein, state.kcal, state.fat, state.carbs)
-                            if(fieldsError.contains(null)) {
+                            if(fieldsError.contains(null) || fieldsError.contains("")) {
                                 dispatch(Msg.ScreenStateError("Check fields for content"))
                                 return@wrapperStoreException
                             }
@@ -285,6 +286,11 @@ class AddRecipeStoreFactory(
                                 dietsTypeId = state.diets?.id,
                                 preparationId = state.preparation?.id
                             )
+                            println(
+                                state.meals?.id.toStringOrBlank() +
+                                state.diets?.id.toStringOrBlank() +
+                                state.preparation?.id.toStringOrBlank()
+                            )
                             createRecipeUseCase(recipe)
                             publish(Label.RecipeAdded)
                         }){
@@ -301,7 +307,7 @@ class AddRecipeStoreFactory(
             is Msg.ChangeCarbs -> copy(carbs = message.carbs)
             is Msg.ChangeCarbsError -> copy(carbsIsError = message.value)
             is Msg.ChangeCookingTime -> copy(cookingTime = message.time)
-            is Msg.ChangeDescr -> copy(descr = message.text)
+            is Msg.ChangeDescr -> copy(descr = message.text.trim())
             is Msg.ChangeDiets -> copy(diets = message.diets)
             is Msg.ChangeDifficulty -> copy(difficulty = message.difficulty)
             is Msg.ChangeFat -> copy(fat = message.fat)
@@ -311,7 +317,7 @@ class AddRecipeStoreFactory(
             is Msg.ChangeKcal -> copy(kcal = message.kcal)
             is Msg.ChangeKcalError -> copy(kcalIsError = message.value)
             is Msg.ChangeMeals -> copy(meals = message.meals)
-            is Msg.ChangeName -> copy(title = message.text)
+            is Msg.ChangeName -> copy(title = message.text.trim())
             is Msg.ChangeNameError -> copy(titleIsError = message.value)
             is Msg.ChangePreparation -> copy(preparation = message.preparation)
             is Msg.ChangeProtein -> copy(protein = message.protein)

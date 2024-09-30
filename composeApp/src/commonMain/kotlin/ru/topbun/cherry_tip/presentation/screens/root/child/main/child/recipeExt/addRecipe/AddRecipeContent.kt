@@ -27,6 +27,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -88,13 +90,12 @@ fun AddRecipeScreen(
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
     val state by component.getState()
-    val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     var isOpenModalChoiceTags by rememberSaveable { mutableStateOf(false) }
     val snackBarState = SnackbarHostState()
     var isLoading = false
     when(val screenState = state.screenState){
-        is AddRecipeStore.State.RecipeAddedState.Error -> scope.launch { snackBarState.showSnackbar(screenState.message); isLoading = false }
+        is AddRecipeStore.State.RecipeAddedState.Error -> LaunchedEffect(state) { snackBarState.showSnackbar(screenState.message); isLoading = false }
         AddRecipeStore.State.RecipeAddedState.Loading -> isLoading = true
         else -> { isLoading = false }
     }
@@ -139,6 +140,9 @@ fun AddRecipeScreen(
 
             ChoiceTagModal(
                 categories = categories,
+                choiceMealId = state.meals?.id,
+                choicePreparationId = state.preparation?.id,
+                choiceDietsId = state.diets?.id,
                 onDismiss = { isOpenModalChoiceTags = false },
                 isLoading = isLoadingTags,
                 onClickRetry = { component.loadCategories() },

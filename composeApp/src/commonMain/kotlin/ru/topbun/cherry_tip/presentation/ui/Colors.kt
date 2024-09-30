@@ -10,7 +10,7 @@ object Colors {
 
     val Gray = Color(0xFF999999)
     val GrayLight = Color(237, 241 ,247)
-    val GrayDark = Color(88, 96 ,113)
+    val DarkGray = Color(88, 96 ,113)
 
     val Purple = Color(114, 101 ,227)
     val PurpleTransparent = Color(86, 75 ,181).copy(alpha = 0.8f)

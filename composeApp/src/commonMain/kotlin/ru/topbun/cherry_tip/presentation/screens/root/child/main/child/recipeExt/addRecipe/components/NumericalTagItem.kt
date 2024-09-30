@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
@@ -76,20 +77,17 @@ fun NumericalTagItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                tag?.let {
-                    AsyncImage(
-                        modifier = Modifier.size(12.dp),
-                        model = it.icon,
-                        contentDescription = null
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    Texts.Button(
-                        text = tag.title,
-                        color = Colors.Black
-                    )
-                } ?: Texts.Button(
-                    text = stringResource(Res.string.not_selected),
-                    color = Colors.Gray
+                AsyncImage(
+                    modifier = Modifier.size(12.dp),
+                    model = tag?.icon,
+                    contentDescription = null
+                )
+                Spacer(Modifier.width(10.dp))
+                Texts.Button(
+                    text = tag?.title ?: stringResource(Res.string.not_selected),
+                    color = if (tag != null) Colors.Black else Colors.Gray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

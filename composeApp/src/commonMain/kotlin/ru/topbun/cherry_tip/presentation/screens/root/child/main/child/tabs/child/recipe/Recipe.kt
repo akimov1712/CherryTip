@@ -2,6 +2,7 @@ package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.chi
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.recipe.RecipeEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
+import ru.topbun.cherry_tip.presentation.ui.components.Nutrients
 import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.utills.formatMinutesToTime
@@ -52,10 +54,11 @@ import ru.topbun.cherry_tip.utills.formatMinutesToTime
 @Composable
 fun RecipeItem(
     recipe: RecipeEntity,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickRecipe: (RecipeEntity) -> Unit
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).clickable { onClickRecipe(recipe) },
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(1.dp, Colors.PurpleBackground),
         colors = CardDefaults.cardColors(Colors.White)
@@ -69,63 +72,6 @@ fun RecipeItem(
             Spacer(Modifier.height(16.dp))
             Nutrients(recipe)
         }
-    }
-}
-
-@Composable
-private fun Nutrients(recipe: RecipeEntity) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        NutrientsItem(
-            text = stringResource(Res.string.protein),
-            value = recipe.protein,
-            progress = recipe.proteinPercent,
-            progressColor = Colors.GreenLight
-        )
-        NutrientsItem(
-            text = stringResource(Res.string.carbs),
-            value = recipe.carbs,
-            progress = recipe.carbsPercent,
-            progressColor = Colors.Blue
-        )
-        NutrientsItem(
-            text = stringResource(Res.string.fat),
-            value = recipe.fat,
-            progress = recipe.fatPercent,
-            progressColor = Colors.Yellow
-        )
-    }
-}
-
-@Composable
-private fun NutrientsItem(
-    text: String,
-    value: Int,
-    progress: Float,
-    progressColor: Color
-) {
-    Column(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        ProgressBars.Default(
-            modifier = Modifier
-                .size(66.dp, 10.dp)
-                .clip(CircleShape),
-            progress = progress,
-            progressColor = progressColor,
-            shapeProgress = CircleShape
-        )
-        Spacer(Modifier.height(10.dp))
-        Texts.Option(
-            text = "$value g",
-            fontSize = 16.sp,
-            color = Colors.Black
-        )
-        Spacer(Modifier.height(3.dp))
-        Texts.Light(text)
     }
 }
 
@@ -169,14 +115,14 @@ private fun IconWithText(
         Icon(
             painter = painterResource(iconRes),
             contentDescription = contentDescription,
-            tint = Colors.GrayDark
+            tint = Colors.DarkGray
         )
         Spacer(Modifier.width(7.dp))
         Texts.Option(
             text = text,
             textAlign = TextAlign.Start,
             fontSize = 14.sp,
-            color = Colors.GrayDark
+            color = Colors.DarkGray
         )
     }
 }

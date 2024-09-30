@@ -179,7 +179,7 @@ object SurveyComponents{
         enabled: Boolean = true,
         readOnly: Boolean = false,
         textStyle: TextStyle = TextStyle(
-            color = Colors.GrayDark,
+            color = Colors.DarkGray,
             fontSize = 40.sp,
             fontFamily = Fonts.hovesMedium,
             textAlign = TextAlign.Center
@@ -192,7 +192,7 @@ object SurveyComponents{
         visualTransformation: VisualTransformation = VisualTransformation.None,
         onTextLayout: (TextLayoutResult) -> Unit = {},
         interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-        cursorBrush: Brush = SolidColor(Colors.GrayDark),
+        cursorBrush: Brush = SolidColor(Colors.DarkGray),
     ) {
         Box (
             modifier = modifier.fillMaxWidth(),
@@ -329,12 +329,12 @@ object SurveyComponents{
             Icon(
                 painter = painterResource(Res.drawable.ic_info),
                 contentDescription = null,
-                tint = Colors.GrayDark
+                tint = Colors.DarkGray
             )
             Spacer(Modifier.width(10.dp))
             Texts.Option(
                 text = stringResource(Res.string.warning_about_changing_values),
-                color = Colors.GrayDark,
+                color = Colors.DarkGray,
                 textAlign = TextAlign.Start
             )
         }

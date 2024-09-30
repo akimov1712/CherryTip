@@ -188,9 +188,9 @@ private fun IconWithText(
     text: String,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(painter = painter, contentDescription = null, tint = Colors.GrayDark)
+        Icon(painter = painter, contentDescription = null, tint = Colors.DarkGray)
         Spacer(Modifier.width(7.dp))
-        Texts.General(text, fontSize = 14.sp, color = Colors.GrayDark)
+        Texts.General(text, fontSize = 14.sp, color = Colors.DarkGray)
     }
 }
 

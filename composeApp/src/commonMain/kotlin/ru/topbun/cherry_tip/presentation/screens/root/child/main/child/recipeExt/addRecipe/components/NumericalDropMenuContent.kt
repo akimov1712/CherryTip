@@ -121,7 +121,8 @@ private fun <T> DropMenuDifficulty(
                 text = {
                     Texts.Option(
                         text = it?.toString()
-                            ?: stringResource(Res.string.not_selected)
+                            ?: stringResource(Res.string.not_selected),
+                        color = Colors.DarkGray
                     )
                 },
                 onClick = { onValueChange(it); onDismissRequest() }
