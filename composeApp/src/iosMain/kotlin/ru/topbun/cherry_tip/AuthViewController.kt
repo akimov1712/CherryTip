@@ -6,8 +6,7 @@ import ru.topbun.cherry_tip.di.initKoin
 import ru.topbun.cherry_tip.presentation.screens.AppScreen
 import ru.topbun.cherry_tip.presentation.screens.root.RootComponent
 
-fun rootViewController(root: RootComponent): UIViewController =
-    ComposeUIViewController {
-        initKoin()
-        AppScreen(root)
-    }
+//fun rootViewController(root: RootComponent): UIViewController = ComposeUIViewController {
+//    initKoin()
+//    AppScreen(root)
+//}

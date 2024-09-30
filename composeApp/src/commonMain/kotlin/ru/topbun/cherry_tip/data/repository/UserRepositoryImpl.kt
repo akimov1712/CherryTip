@@ -58,7 +58,7 @@ class UserRepositoryImpl(
 
     override suspend fun checkAccountInfoComplete() {
         getAccountInfo().apply {
-            if (goal == null || units == null || profile == null) throw AccountInfoNotCompleteException()
+            if (listOf(goal,units, profile).contains(null)) throw AccountInfoNotCompleteException()
         }
     }
 

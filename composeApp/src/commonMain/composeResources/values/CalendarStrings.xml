@@ -1,0 +1,11 @@
+<resources>
+    <string name="calendar">Calendar</string>
+    <string name="eaten">Eaten</string>
+    <string name="remaining">Remaining</string>
+    <string name="breakfast">Breakfast</string>
+    <string name="lunch">Lunch</string>
+    <string name="dinner">Dinner</string>
+    <string name="snack">Snack</string>
+    <string name="add_meal">Add meal</string>
+    <string name="recently">Recently</string>
+</resources>
