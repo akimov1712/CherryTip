@@ -203,7 +203,7 @@ class AddRecipeStoreFactory(
                 }
 
                 is Intent.ChangeName -> {
-                    val text = intent.text.trim()
+                    val text = intent.text
                     dispatch(Msg.ChangeName(text))
                     dispatch(Msg.ChangeNameError(text.length !in (1..40)))
                 }
@@ -269,8 +269,8 @@ class AddRecipeStoreFactory(
                             val link = uploadImageUseCase(state.image)
                             val recipe = RecipeEntity(
                                 id = -1,
-                                title = state.title,
-                                descr = state.descr,
+                                title = state.title.trim(),
+                                descr = state.descr.trim(),
                                 image = BASE_URL + link.drop(1),
                                 video = null,
                                 cookingTime = state.cookingTime,
@@ -307,7 +307,7 @@ class AddRecipeStoreFactory(
             is Msg.ChangeCarbs -> copy(carbs = message.carbs)
             is Msg.ChangeCarbsError -> copy(carbsIsError = message.value)
             is Msg.ChangeCookingTime -> copy(cookingTime = message.time)
-            is Msg.ChangeDescr -> copy(descr = message.text.trim())
+            is Msg.ChangeDescr -> copy(descr = message.text)
             is Msg.ChangeDiets -> copy(diets = message.diets)
             is Msg.ChangeDifficulty -> copy(difficulty = message.difficulty)
             is Msg.ChangeFat -> copy(fat = message.fat)
@@ -317,7 +317,7 @@ class AddRecipeStoreFactory(
             is Msg.ChangeKcal -> copy(kcal = message.kcal)
             is Msg.ChangeKcalError -> copy(kcalIsError = message.value)
             is Msg.ChangeMeals -> copy(meals = message.meals)
-            is Msg.ChangeName -> copy(title = message.text.trim())
+            is Msg.ChangeName -> copy(title = message.text)
             is Msg.ChangeNameError -> copy(titleIsError = message.value)
             is Msg.ChangePreparation -> copy(preparation = message.preparation)
             is Msg.ChangeProtein -> copy(protein = message.protein)

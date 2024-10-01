@@ -10,24 +10,29 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonPrimitive
 
 @Serializable
 data class ErrorDto(
-    @SerialName("message") @Serializable(with = StringOrStringArraySerializer::class) val message: List<String>,
+    @SerialName("message") val message: JsonElement,
     @SerialName("error") val error: String,
     @SerialName("statusCode") val statusCode: Int
 )
 
 object StringOrStringArraySerializer : KSerializer<List<String>> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("StringOrStringArray", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("StringOrStringArray", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: List<String>) {
         if (value.size == 1) {
             encoder.encodeString(value[0])
         } else {
-            encoder.encodeSerializableValue(JsonArray.serializer(), JsonArray(value.map { JsonPrimitive(it) }))
+            encoder.encodeSerializableValue(
+                JsonArray.serializer(),
+                JsonArray(value.map { JsonPrimitive(it) })
+            )
         }
     }
 

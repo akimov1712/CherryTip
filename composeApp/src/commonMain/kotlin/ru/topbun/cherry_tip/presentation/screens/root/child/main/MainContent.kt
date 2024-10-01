@@ -38,7 +38,6 @@ fun MainScreen(
                 TabsScreen(instance.component, modifier)
             }
 
-            is MainComponent.Child.TipsDetail -> {}
             is MainComponent.Child.Account -> {
                 AccountScreen(instance.component, modifier)
             }

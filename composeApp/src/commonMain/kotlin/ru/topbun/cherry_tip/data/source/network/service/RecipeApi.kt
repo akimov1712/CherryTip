@@ -14,6 +14,7 @@ import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.writeFully
+import ru.topbun.cherry_tip.data.mapper.toAddRecipeDto
 import ru.topbun.cherry_tip.data.source.network.ApiFactory
 import ru.topbun.cherry_tip.data.source.network.dto.recipe.RecipeDto
 import ru.topbun.cherry_tip.data.source.network.token
@@ -50,7 +51,7 @@ class RecipeApi(
     suspend fun getRecipeWithId(id: Int) = api.client.get("/v1/recipe/$id")
 
     suspend fun createRecipe(recipe: RecipeDto, token: String) = api.client.post("/v1/recipe/") {
-        setBody(recipe)
+        setBody(recipe.toAddRecipeDto())
         token(token)
     }
 

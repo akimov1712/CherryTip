@@ -20,7 +20,6 @@ interface MainComponent {
         data class Tabs(val component: TabsComponent): Child
         data class Challenge(val component: ChallengeComponent): Child
         data class ChallengeDetail(val component: ChallengeDetailComponent): Child
-        data class TipsDetail(val tip: Tips): Child
         data class Account(val component: AccountComponent): Child
         data class Profile(val component: ProfileComponent): Child
         data class Goal(val component: GoalComponent): Child

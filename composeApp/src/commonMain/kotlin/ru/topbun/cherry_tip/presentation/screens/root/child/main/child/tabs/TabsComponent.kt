@@ -12,6 +12,7 @@ interface TabsComponent {
 
     sealed interface Child {
         data class Home(val component: HomeComponent) : Child
+        data object Calendar : Child
         data class Recipe(val component: RecipeComponent) : Child
         data class Settings(val component: SettingsComponent) : Child
     }

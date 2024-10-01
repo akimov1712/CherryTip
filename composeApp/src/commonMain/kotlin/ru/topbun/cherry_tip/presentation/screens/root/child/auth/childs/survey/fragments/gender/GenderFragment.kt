@@ -32,7 +32,7 @@ fun GenderFragmentContent(
         modifier = modifier,
         title = stringResource(Res.string.what_your_gender)
     ){
-        val genders = listOf(GenderObjects.Female, GenderObjects.Male)
+        val genders = listOf( GenderObjects.Male, GenderObjects.Female)
         var selectedItem = remember { mutableStateOf(gender) }
         GenderList(genders, selectedItem)
         Spacer(Modifier.weight(1f))

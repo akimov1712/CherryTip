@@ -71,7 +71,6 @@ class MainComponentImpl(
             }
             MainComponent.Child.ChallengeDetail(component)
         }
-        Config.TipsDetail -> TODO()
         Config.Account -> {
             val onClickBack = {navigation.pop()}
             val component: AccountComponentImpl = getKoin().get {
@@ -119,7 +118,6 @@ class MainComponentImpl(
         @Serializable data object Tabs: Config
         @Serializable data object Challenge: Config
         @Serializable data class ChallengeDetail(val id: Int): Config
-        @Serializable data object TipsDetail: Config
         @Serializable data object Account: Config
         @Serializable data object Profile: Config
         @Serializable data object Goal: Config

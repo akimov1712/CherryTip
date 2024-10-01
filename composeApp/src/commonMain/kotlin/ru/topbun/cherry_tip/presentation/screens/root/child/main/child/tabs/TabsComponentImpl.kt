@@ -29,7 +29,7 @@ class TabsComponentImpl(
     override val stack: Value<ChildStack<*, TabsComponent.Child>> = childStack(
         source = navigation,
         serializer = Config.serializer(),
-        initialConfiguration = Config.Recipe,
+        initialConfiguration = Config.Calendar,
         handleBackButton = true,
         childFactory = ::createChild
     )
@@ -64,12 +64,17 @@ class TabsComponentImpl(
             }
             TabsComponent.Child.Recipe(component)
         }
+
+        Config.Calendar -> {
+            TabsComponent.Child.Calendar
+        }
     }
 
     @Serializable
     sealed interface Config {
 
         @Serializable data object Home : Config
+        @Serializable data object Calendar : Config
         @Serializable data object Recipe : Config
         @Serializable data object Settings : Config
 

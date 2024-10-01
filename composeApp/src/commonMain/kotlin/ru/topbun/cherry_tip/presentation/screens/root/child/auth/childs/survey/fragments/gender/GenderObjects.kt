@@ -14,7 +14,7 @@ sealed class GenderObjects(
     val iconRes: DrawableResource,
 ) {
 
-    data object Female: GenderObjects(Gender.Female, Res.string.female, Res.drawable.ic_female)
     data object Male: GenderObjects(Gender.Male, Res.string.male, Res.drawable.ic_male)
+    data object Female: GenderObjects(Gender.Female, Res.string.female, Res.drawable.ic_female)
 
 }

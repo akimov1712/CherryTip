@@ -264,6 +264,7 @@ private fun Details(component: AddRecipeComponent, isLoading: Boolean) {
             onValueChange = { if (it.length <= 40) component.changeTitle(it)},
             enabled = !isLoading,
             placeholderText = stringResource(Res.string.recipe_name),
+
             supportingText = if (state.titleIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_name))} } else null,
         )
         TextFields.OutlinedTextField(

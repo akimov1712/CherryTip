@@ -1,5 +1,6 @@
 package ru.topbun.cherry_tip.data.mapper
 
+import ru.topbun.cherry_tip.data.source.network.dto.recipe.AddRecipeDto
 import ru.topbun.cherry_tip.data.source.network.dto.recipe.CategoriesDto
 import ru.topbun.cherry_tip.data.source.network.dto.recipe.RecipeDto
 import ru.topbun.cherry_tip.data.source.network.dto.recipe.TagDto
@@ -77,4 +78,22 @@ fun TagDto.toEntity() = TagEntity(
     id = id,
     title = title,
     icon = icon
+)
+
+fun RecipeDto.toAddRecipeDto() = AddRecipeDto(
+    createdAt = this.createdAt,
+    updatedAt = this.updatedAt,
+    title = this.title,
+    descr = this.descr,
+    image = this.image,
+    video = this.video,
+    calories = this.calories,
+    cookingTime = this.cookingTime,
+    difficulty = this.difficulty,
+    protein = this.protein,
+    fat = this.fat,
+    carbs = this.carbs,
+    categoryId = this.categoryId,
+    dietsTypeId = this.dietsTypeId,
+    preparationId = this.preparationId,
 )
