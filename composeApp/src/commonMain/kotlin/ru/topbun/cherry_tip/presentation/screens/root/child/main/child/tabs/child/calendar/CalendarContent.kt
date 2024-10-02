@@ -43,11 +43,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.calendar
+import cherrytip.composeapp.generated.resources.carbs
 import cherrytip.composeapp.generated.resources.eaten
+import cherrytip.composeapp.generated.resources.fat
 import cherrytip.composeapp.generated.resources.goal_goal
+import cherrytip.composeapp.generated.resources.ic_add
+import cherrytip.composeapp.generated.resources.ic_append
 import cherrytip.composeapp.generated.resources.ic_calendar
 import cherrytip.composeapp.generated.resources.ic_cutlery
 import cherrytip.composeapp.generated.resources.ic_scale
+import cherrytip.composeapp.generated.resources.protein
 import cherrytip.composeapp.generated.resources.remaining
 import dev.darkokoa.datetimewheelpicker.core.isAfter
 import io.ktor.http.HttpHeaders.Date
@@ -64,7 +69,9 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.domain.entity.recipe.RecipeEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
+import ru.topbun.cherry_tip.presentation.ui.components.NutrientsItem
 import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.utills.getPeriodDate
@@ -84,6 +91,74 @@ fun CalendarScreen(
         CalendarSlider(getPeriodDate(GMTDate(0,0,0,2,Month.AUGUST, 2024)))
         Spacer(Modifier.height(16.dp))
         Information()
+        Spacer(Modifier.height(16.dp))
+        Ingestion()
+    }
+}
+
+@Composable
+private fun Ingestion() {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth()
+            .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(20.dp))
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        val calendaries =  CalendarEnum.entries
+        calendaries.forEachIndexed { index, calendar ->
+            IngestionItem(calendar = calendar, value = "508 / 889 kcal")
+            if (index != calendaries.lastIndex) Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Colors.PurpleBackground))
+        }
+    }
+}
+
+@Composable
+fun IngestionItem(calendar: CalendarEnum, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Box(contentAlignment = Alignment.Center){
+            CircularProgressIndicator(
+                modifier = Modifier.size(50.dp),
+                progress = { 0.7f },
+                color = Colors.Purple,
+                trackColor = Colors.PurpleBackground,
+                strokeCap = StrokeCap.Round,
+                strokeWidth = 5.dp
+            )
+            Image(
+                modifier = Modifier.size(25.dp),
+                painter = painterResource(calendar.icon),
+                contentDescription = null
+            )
+        }
+        Spacer(Modifier.width(10.dp))
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Texts.Option(
+                text = stringResource(calendar.title),
+                fontSize = 16.sp,
+                color = Colors.Black
+            )
+            Texts.Light(
+                text = value,
+                fontSize = 14.sp
+            )
+        }
+        IconButton(
+            onClick = {}
+        ){
+            Icon(
+                painter = painterResource(Res.drawable.ic_append),
+                contentDescription = null,
+                tint = Colors.Purple
+            )
+        }
     }
 }
 
@@ -93,49 +168,84 @@ private fun Information() {
         modifier = Modifier
             .padding(horizontal = 20.dp)
             .fillMaxWidth()
-            .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(16.dp))
-            .padding(vertical = 16.dp)
+            .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(20.dp))
+            .padding(vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            IconWithValue(
-                icon = painterResource(Res.drawable.ic_cutlery),
-                title = stringResource(Res.string.eaten),
-                value = "1408"
-            )
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                ProgressBars.CropProgressIndicator(
-                    value = 1f,
-                    percentFillRound = 0.7f,
-                    strokeWidth = 12.dp
-                )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Texts.Title(
-                        text = "1 556",
-                        maxLines = 1,
-                        overflow = TextOverflow.Clip,
-                        fontSize = 20.sp
-                    )
-                    Texts.Light(modifier = Modifier.offset(y = -6.dp), text = stringResource(Res.string.remaining))
-                }
-            }
-            IconWithValue(
-                icon = painterResource(Res.drawable.ic_scale),
-                title = stringResource(Res.string.goal_goal),
-                value = "LW"
-            )
-        }
+        MainInformation()
+        Nutrients()
     }
 }
 
+@Composable
+private fun MainInformation() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        IconWithValue(
+            icon = painterResource(Res.drawable.ic_cutlery),
+            title = stringResource(Res.string.eaten),
+            value = "1408"
+        )
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            ProgressBars.CropProgressIndicator(
+                modifier = Modifier.size(140.dp),
+                value = 0.5f,
+                percentFillRound = 0.7f,
+                strokeWidth = 12.dp
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Texts.Title(
+                    text = "1 556",
+                    maxLines = 1,
+                    overflow = TextOverflow.Clip,
+                    fontSize = 20.sp
+                )
+                Texts.Light(
+                    modifier = Modifier.offset(y = -6.dp),
+                    text = stringResource(Res.string.remaining)
+                )
+            }
+        }
+        IconWithValue(
+            icon = painterResource(Res.drawable.ic_scale),
+            title = stringResource(Res.string.goal_goal),
+            value = "LW"
+        )
+    }
+}
 
+@Composable
+fun Nutrients() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        NutrientsItem(
+            text = stringResource(Res.string.protein),
+            value = "40 / 145 g",
+            progress = 0.1f,
+            progressColor = Colors.GreenLight
+        )
+        NutrientsItem(
+            text = stringResource(Res.string.carbs),
+            value = "200 / 361 g",
+            progress = 0.55f,
+            progressColor = Colors.Blue
+        )
+        NutrientsItem(
+            text = stringResource(Res.string.fat),
+            value = "54 / 96 g",
+            progress = 0.25f,
+            progressColor = Colors.Yellow
+        )
+    }
+}
 
 @Composable
 private fun IconWithValue(

@@ -55,6 +55,36 @@ fun Nutrients(recipe: RecipeEntity) {
 @Composable
 fun RowScope.NutrientsItem(
     text: String,
+    value: String,
+    progress: Float,
+    progressColor: Color
+) {
+    Column(
+        modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        ProgressBars.Default(
+            modifier = Modifier
+                .size(66.dp, 10.dp)
+                .clip(CircleShape),
+            progress = progress,
+            progressColor = progressColor,
+            shapeProgress = CircleShape
+        )
+        Spacer(Modifier.height(10.dp))
+        Texts.Option(
+            text = value,
+            fontSize = 16.sp,
+            color = Colors.Black
+        )
+        Spacer(Modifier.height(3.dp))
+        Texts.Light(text)
+    }
+}
+
+@Composable
+fun RowScope.NutrientsItem(
+    text: String,
     value: Int,
     progress: Float,
     progressColor: Color

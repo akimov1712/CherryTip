@@ -85,7 +85,7 @@ class SurveyStoreFactory(
         initialState = State(
             name = "",
             goalType = GoalType.Lose,
-            gender = Gender.Female,
+            gender = Gender.Male,
             age = GMTDate(getTimeMillis()),
             height = 100,
             weight = 20,

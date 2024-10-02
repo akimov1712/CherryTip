@@ -46,6 +46,7 @@ object ProgressBars{
 
     @Composable
     fun CropProgressIndicator(
+        modifier: Modifier = Modifier,
         @FloatRange(0.0, 1.0) value: Float,
         @FloatRange(0.0, 1.0) percentFillRound: Float,
         strokeWidth: Dp,
@@ -54,17 +55,20 @@ object ProgressBars{
         strokeCap: StrokeCap = StrokeCap.Round
     ) {
         val progressValue = value * percentFillRound
-        val rotateDegrees = 180f + (360 * (1 - percentFillRound))/2
-        val animProgress by animateFloatAsState(progressValue, tween(150, easing = LinearOutSlowInEasing))
+        val rotateDegrees = 180f + (360 * (1 - percentFillRound)) / 2
+        val animProgress by animateFloatAsState(
+            targetValue = progressValue,
+            animationSpec = tween(15000, easing = LinearOutSlowInEasing)
+        )
         CircularProgressIndicator(
-            modifier = Modifier.size(120.dp).rotate(rotateDegrees),
+            modifier = modifier.rotate(rotateDegrees),
             progress = { percentFillRound },
             color = trackColor,
             strokeWidth = strokeWidth,
             strokeCap = strokeCap
         )
         CircularProgressIndicator(
-            modifier = Modifier.size(120.dp).rotate(rotateDegrees),
+            modifier = modifier.rotate(rotateDegrees),
             progress = { animProgress },
             color = color,
             strokeWidth = strokeWidth,
