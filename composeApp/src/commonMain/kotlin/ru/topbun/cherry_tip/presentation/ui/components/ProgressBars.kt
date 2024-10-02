@@ -8,11 +8,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import ru.topbun.cherry_tip.presentation.ui.Colors
 
 object ProgressBars{
@@ -36,6 +42,32 @@ object ProgressBars{
                     .background(progressColor, shapeProgress)
             )
         }
+    }
+
+    @Composable
+    fun CropProgressIndicator(
+        @FloatRange(0.0, 1.0) value: Float,
+        @FloatRange(0.0, 1.0) percentFillRound: Float,
+        strokeWidth: Dp,
+        color: Color = Colors.Purple,
+        trackColor: Color = Colors.PurpleBackground,
+        strokeCap: StrokeCap = StrokeCap.Round
+    ) {
+        val rotateDegrees = 180f + (360 * (1 - percentFillRound))/2
+        CircularProgressIndicator(
+            modifier = Modifier.size(120.dp).rotate(rotateDegrees),
+            progress = { percentFillRound },
+            color = trackColor,
+            strokeWidth = strokeWidth,
+            strokeCap = strokeCap
+        )
+        CircularProgressIndicator(
+            modifier = Modifier.size(120.dp).rotate(rotateDegrees),
+            progress = { value * percentFillRound},
+            color = color,
+            strokeWidth = strokeWidth,
+            strokeCap = strokeCap
+        )
     }
 
 }
