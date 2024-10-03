@@ -53,6 +53,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.chil
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.CustomTabRow
+import ru.topbun.cherry_tip.presentation.ui.components.RecipeItem
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 

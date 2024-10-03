@@ -5,7 +5,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.appendMeal.AppendMealScreen
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngestion.DetailIngestionScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.calendar.CalendarScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeScreen

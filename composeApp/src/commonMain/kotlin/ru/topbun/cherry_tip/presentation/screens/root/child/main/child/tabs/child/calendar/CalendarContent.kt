@@ -2,6 +2,7 @@ package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.chi
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -102,6 +104,7 @@ private fun Ingestion() {
         modifier = Modifier
             .padding(horizontal = 20.dp)
             .fillMaxWidth()
+            .verticalScroll(ScrollState(0))
             .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(20.dp))
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)

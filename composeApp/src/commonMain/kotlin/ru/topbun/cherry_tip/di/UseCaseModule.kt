@@ -4,6 +4,8 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import ru.topbun.cherry_tip.domain.useCases.auth.LoginUseCase
 import ru.topbun.cherry_tip.domain.useCases.auth.SignUpUseCase
+import ru.topbun.cherry_tip.domain.useCases.calendar.GetInfoDayUseCase
+import ru.topbun.cherry_tip.domain.useCases.calendar.SetRecipeToDayUseCase
 import ru.topbun.cherry_tip.domain.useCases.challenge.CancelChallengeUseCase
 import ru.topbun.cherry_tip.domain.useCases.challenge.GetChallengeUseCase
 import ru.topbun.cherry_tip.domain.useCases.challenge.GetUserChallengeByIdUseCase
@@ -34,6 +36,12 @@ val useCaseModule = module {
     glassModule()
     challengeModule()
     recipeModule()
+    calendarModule()
+}
+
+private fun Module.calendarModule(){
+    single { GetInfoDayUseCase(get()) }
+    single { SetRecipeToDayUseCase(get()) }
 }
 
 private fun Module.recipeModule(){
