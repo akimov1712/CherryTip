@@ -8,4 +8,7 @@
     <string name="snack">Snack</string>
     <string name="add_meal">Add meal</string>
     <string name="recently">Recently</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_date">Select date</string>
 </resources>

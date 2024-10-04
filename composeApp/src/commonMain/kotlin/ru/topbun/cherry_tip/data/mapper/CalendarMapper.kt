@@ -6,10 +6,11 @@ import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarTypeRecipeD
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarRecipeEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarTypeRecipeEntity
+import ru.topbun.cherry_tip.utills.parseToGMTDate
 
 fun CalendarDto.toEntity() = CalendarEntity(
     id = this.id,
-    date = this.date,
+    date = this.date.parseToGMTDate(),
     goal = this.goal,
     needCalories = this.needCalories,
     protein = this.protein,

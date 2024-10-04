@@ -4,10 +4,14 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
+import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.calendar.CalendarComponent
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.calendar.CalendarComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.settings.SettingsComponentImpl
@@ -66,7 +70,21 @@ class TabsComponentImpl(
         }
 
         Config.Calendar -> {
-            TabsComponent.Child.Calendar
+//            componentContext: ComponentContext,
+//            onClickAppendMeal: (CalendarType) -> Unit,
+//            onClickBack: () -> Unit,
+//            onOpenAuth: () -> Unit,
+            val onClickAppendMeal: (CalendarType) -> Unit = {}
+            val onClickBack = { navigation.pop() }
+            val component: CalendarComponentImpl = getKoin().get{
+                parametersOf(
+                    componentContext,
+                    onClickAppendMeal,
+                    onClickBack,
+                    onOpenAuth
+                )
+            }
+            TabsComponent.Child.Calendar(component)
         }
     }
 

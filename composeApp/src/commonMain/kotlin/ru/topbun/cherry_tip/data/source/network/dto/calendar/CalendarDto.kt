@@ -2,12 +2,14 @@ package ru.topbun.cherry_tip.data.source.network.dto.calendar
 
 import io.ktor.util.date.GMTDate
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarTypeRecipeDto
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType
 
+@Serializable
 data class CalendarDto(
     @SerialName("id") val id: Int,
-    @SerialName("date") val date: GMTDate,
+    @SerialName("date") val date: String,
     @SerialName("goal") val goal: GoalType,
     @SerialName("needCalories") val needCalories: Int,
     @SerialName("protein") val protein: Int,

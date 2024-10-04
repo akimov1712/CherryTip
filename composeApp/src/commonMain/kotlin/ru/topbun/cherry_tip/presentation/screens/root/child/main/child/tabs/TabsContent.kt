@@ -21,7 +21,7 @@ fun TabsScreen(
     Children(component.stack){
         when(val instance = it.instance){
             is TabsComponent.Child.Home -> HomeScreen(instance.component, modifier)
-            TabsComponent.Child.Calendar -> CalendarScreen(modifier)
+            is TabsComponent.Child.Calendar -> CalendarScreen(instance.component, modifier)
             is TabsComponent.Child.Settings -> ProfileScreen(instance.component, modifier)
             is TabsComponent.Child.Recipe -> RecipeScreen(instance.component, modifier)
         }

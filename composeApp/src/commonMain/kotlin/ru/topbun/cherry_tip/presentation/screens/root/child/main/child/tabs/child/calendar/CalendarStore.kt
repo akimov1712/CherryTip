@@ -6,19 +6,31 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.ktor.util.date.GMTDate
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarEntity
+import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
+import ru.topbun.cherry_tip.domain.useCases.calendar.GetInfoDayUseCase
+import ru.topbun.cherry_tip.domain.useCases.user.GetAccountInfoUseCase
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.calendar.CalendarStore.Intent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.calendar.CalendarStore.Label
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.calendar.CalendarStore.State
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore
+import ru.topbun.cherry_tip.utills.getPeriodDate
+import ru.topbun.cherry_tip.utills.handlerTokenException
 import ru.topbun.cherry_tip.utills.now
+import ru.topbun.cherry_tip.utills.toGMTDate
+import ru.topbun.cherry_tip.utills.wrapperStoreException
 
-internal interface CalendarStore : Store<Intent, State, Label> {
+interface CalendarStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class ChangeDay(val day: LocalDate): Intent
-        data object ClickAppendMeal: Intent
+        data class ClickAppendMeal(val type: CalendarType): Intent
+        data object LoadCalendar: Intent
+        data object ClickBack: Intent
     }
 
     data class State(
@@ -36,13 +48,16 @@ internal interface CalendarStore : Store<Intent, State, Label> {
     }
 
     sealed interface Label {
-        data object ClickAppendMeal: Label
+        data class ClickAppendMeal(val type: CalendarType): Label
         data object OpenAuthScreen: Label
+        data object ClickBack: Label
     }
 }
 
-internal class CalendarStoreFactory(
-    private val storeFactory: StoreFactory
+class CalendarStoreFactory(
+    private val storeFactory: StoreFactory,
+    private val getAccountInfoUseCase: GetAccountInfoUseCase,
+    private val getInfoDayUseCase: GetInfoDayUseCase
 ) {
 
     fun create(): CalendarStore =
@@ -60,25 +75,107 @@ internal class CalendarStoreFactory(
         ) {}
 
     private sealed interface Action {
+        data object OpenAuthScreen: Action
+
+        data class SetListDays(val list: List<LocalDate>): Action
+
+        data class CalendarError(val msg: String): Action
+        data object CalendarLoading: Action
+        data class CalendarResult(val calendar: CalendarEntity): Action
     }
 
     private sealed interface Msg {
+        data class SetListDays(val list: List<LocalDate>): Msg
+        data class ChangeDay(val day: LocalDate): Msg
+
+        data class CalendarError(val msg: String): Msg
+        data object CalendarLoading: Msg
+        data class CalendarResult(val calendar: CalendarEntity): Msg
     }
 
-    private class BootstrapperImpl : CoroutineBootstrapper<Action>() {
-        override fun invoke() {
+    private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
 
+        var job: Job? = null
+
+        override fun invoke() {
+            job?.cancel()
+            job = scope.launch(handlerTokenException { dispatch(Action.OpenAuthScreen)} ) {
+                wrapperStoreException({
+                    dispatch(Action.CalendarLoading)
+                    val info = getAccountInfoUseCase()
+                    val datePeriod = getPeriodDate(info.createdAt)
+                    val calendar = getInfoDayUseCase(datePeriod.last().toGMTDate())
+                    dispatch(Action.SetListDays(datePeriod))
+                    dispatch(Action.CalendarResult(calendar))
+                }){
+                   dispatch(Action.CalendarError(it))
+                }
+            }
         }
     }
 
-    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
 
+        private var jobCalendar: Job? = null
+        private var jobDay: Job? = null
+
+        override fun executeAction(action: Action) {
+            super.executeAction(action)
+            when(action){
+                is Action.CalendarError -> dispatch(Msg.CalendarError(action.msg))
+                Action.CalendarLoading -> dispatch(Msg.CalendarLoading)
+                is Action.CalendarResult -> dispatch(Msg.CalendarResult(action.calendar))
+                Action.OpenAuthScreen -> publish(Label.OpenAuthScreen)
+                is Action.SetListDays -> dispatch(Msg.SetListDays(action.list))
+            }
+        }
+
+        override fun executeIntent(intent: Intent) {
+            super.executeIntent(intent)
+            val state = state()
+            when(intent){
+                Intent.LoadCalendar -> {
+                    jobCalendar?.cancel()
+                    jobCalendar = scope.launch(handlerTokenException { publish(Label.OpenAuthScreen)} ) {
+                        wrapperStoreException({
+                            dispatch(Msg.CalendarLoading)
+                            val info = getAccountInfoUseCase()
+                            val datePeriod = getPeriodDate(info.createdAt)
+                            val calendar = getInfoDayUseCase(state.selectedDay.toGMTDate())
+                            dispatch(Msg.SetListDays(datePeriod))
+                            dispatch(Msg.CalendarResult(calendar))
+                        }){
+                            dispatch(Msg.CalendarError(it))
+                        }
+                    }
+                }
+                is Intent.ChangeDay -> {
+                    jobDay?.cancel()
+                    jobDay = scope.launch(handlerTokenException { publish(Label.OpenAuthScreen)} ) {
+                        wrapperStoreException({
+                            dispatch(Msg.CalendarLoading)
+                            dispatch(Msg.ChangeDay(intent.day))
+                            val calendar = getInfoDayUseCase(intent.day.toGMTDate())
+                            dispatch(Msg.CalendarResult(calendar))
+                        }){
+                            println("8")
+                            dispatch(Msg.CalendarError(it))
+                        }
+                    }
+                }
+                is Intent.ClickAppendMeal -> publish(Label.ClickAppendMeal(intent.type))
+                Intent.ClickBack -> publish(Label.ClickBack)
+            }
+        }
     }
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State = when (message) {
-
-            else -> { TODO() }
+            is Msg.CalendarError -> copy(calendarState = State.CalendarState.Error(message.msg))
+            Msg.CalendarLoading -> copy(calendarState = State.CalendarState.Loading)
+            is Msg.CalendarResult -> copy(calendarState = State.CalendarState.Result, calendar = message.calendar)
+            is Msg.ChangeDay -> copy(selectedDay = message.day)
+            is Msg.SetListDays -> copy(listDays = message.list)
         }
     }
 }

@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.login.LoginStoreFactory
@@ -32,6 +33,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsE
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.calendar.CalendarComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.calendar.CalendarStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeComponentImpl
@@ -60,6 +63,25 @@ val decomposeModule = module {
     unitsModule()
     recipeModule()
     addRecipeModule()
+    calendarModule()
+}
+
+private fun Module.calendarModule(){
+    factory<CalendarStoreFactory> { CalendarStoreFactory(get(), get(), get()) }
+    factory { (
+                  componentContext: ComponentContext,
+                  onClickAppendMeal: (CalendarType) -> Unit,
+                  onClickBack: () -> Unit,
+                  onOpenAuth: () -> Unit,
+    ) ->
+        CalendarComponentImpl(
+            componentContext = componentContext,
+            onClickAppendMeal = onClickAppendMeal,
+            onClickBack = onClickBack,
+            onOpenAuth = onOpenAuth,
+            storeFactory = get(),
+        )
+    }
 }
 
 private fun Module.addRecipeModule(){
