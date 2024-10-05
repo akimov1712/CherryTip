@@ -1,7 +1,6 @@
 package ru.topbun.cherry_tip.domain.entity.calendar
 
 import io.ktor.util.date.GMTDate
-import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarTypeRecipeDto
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType
 
 data class CalendarEntity(
@@ -17,5 +16,5 @@ data class CalendarEntity(
     val dinner: Int,
     val snack: Int,
     val userId: String,
-    val recipes: List<CalendarTypeRecipeEntity>
+    val recipes: List<CalendarRecipeByTypeEntity>
 )

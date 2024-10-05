@@ -3,6 +3,7 @@ package ru.topbun.cherry_tip.di
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import kotlinx.datetime.LocalDate
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
@@ -18,6 +19,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.S
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngest.DetailIngestComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngest.DetailIngestStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponentImpl
@@ -64,19 +67,44 @@ val decomposeModule = module {
     recipeModule()
     addRecipeModule()
     calendarModule()
+    detailIngestModule()
+}
+
+private fun Module.detailIngestModule(){
+    factory<DetailIngestStoreFactory> { DetailIngestStoreFactory(get(), get(), get(), get()) }
+    factory { params ->
+        val componentContext = params.get<ComponentContext>()
+        val date = params.get<LocalDate>()
+        val calendarType = params.get<CalendarType>()
+        val onClickBack = params.get<() -> Unit>()
+        val onClickAddMeal = params.get<() -> Unit>()
+        val onOpenAuth = params.get<() -> Unit>()
+
+        DetailIngestComponentImpl(
+            componentContext = componentContext,
+            date = date,
+            calendarType = calendarType,
+            onClickBack = onClickBack,
+            onClickAddMeal = onClickAddMeal,
+            onOpenAuth = onOpenAuth,
+            storeFactory = get(),
+        )
+    }
 }
 
 private fun Module.calendarModule(){
     factory<CalendarStoreFactory> { CalendarStoreFactory(get(), get(), get()) }
     factory { (
-                  componentContext: ComponentContext,
-                  onClickAppendMeal: (CalendarType) -> Unit,
-                  onClickBack: () -> Unit,
-                  onOpenAuth: () -> Unit,
+        componentContext: ComponentContext,
+        onClickAppendMeal: (LocalDate, CalendarType) -> Unit,
+        onClickDetailIngest: (LocalDate, CalendarType) -> Unit,
+        onClickBack: () -> Unit,
+        onOpenAuth: () -> Unit,
     ) ->
         CalendarComponentImpl(
             componentContext = componentContext,
             onClickAppendMeal = onClickAppendMeal,
+            onClickDetailIngest = onClickDetailIngest,
             onClickBack = onClickBack,
             onOpenAuth = onOpenAuth,
             storeFactory = get(),
@@ -254,6 +282,8 @@ private fun Module.tabsModule(){
         val onClickGoals = params.get<() -> Unit>()
         val onClickUnits = params.get<() -> Unit>()
         val onClickAddRecipe = params.get<() -> Unit>()
+        val onClickAppendMeal = params.get<(LocalDate, CalendarType) -> Unit>()
+        val onClickDetailIngest = params.get<(LocalDate, CalendarType) -> Unit>()
 
         TabsComponentImpl(
             componentContext = componentContext,
@@ -264,7 +294,9 @@ private fun Module.tabsModule(){
             onClickProfile = onClickProfile,
             onClickGoals = onClickGoals,
             onClickUnits = onClickUnits,
-            onClickAddRecipe = onClickAddRecipe
+            onClickAddRecipe = onClickAddRecipe,
+            onClickAppendMeal = onClickAppendMeal,
+            onClickDetailIngest = onClickDetailIngest,
         )
     }
 }

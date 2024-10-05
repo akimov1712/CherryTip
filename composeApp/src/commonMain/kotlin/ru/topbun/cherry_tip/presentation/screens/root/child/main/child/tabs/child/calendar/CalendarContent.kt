@@ -38,6 +38,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -93,7 +94,6 @@ import ru.topbun.cherry_tip.utills.now
 import ru.topbun.cherry_tip.utills.toLocalDate
 import ru.topbun.cherry_tip.utills.toStringOrBlank
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarScreen(
     component: CalendarComponent,
@@ -173,9 +173,7 @@ private fun Ingestion(component: CalendarComponent) {
             .padding(horizontal = 20.dp)
             .fillMaxWidth()
             .verticalScroll(ScrollState(0))
-            .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(20.dp))
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(20.dp)),
     ) {
         val calendaries =  CalendarObjects.entries
         calendaries.forEachIndexed { index, calendar ->
@@ -191,7 +189,14 @@ private fun Ingestion(component: CalendarComponent) {
                 CalendarType.Dinner -> getProgressIngestion(calendarState, CalendarType.Dinner, calendarState.dinner)
                 CalendarType.Snack -> getProgressIngestion(calendarState, CalendarType.Snack, calendarState.snack)
             }
-            IngestionItem(calendar = calendar, value = value, progress = progress){ component.openAppendMeal(it) }
+            IngestionItem(
+                calendar = calendar,
+                value = value,
+                progress = progress,
+                onClickIngest = { component.openDetailIngest(date = state.selectedDay, type = it) }
+            ){
+                component.openAppendMeal(date = state.selectedDay, type = it)
+            }
             if (index != calendaries.lastIndex) Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Colors.PurpleBackground))
         }
     }
@@ -208,9 +213,14 @@ private fun getProgressIngestion(calendar: CalendarEntity, type: CalendarType, k
 }
 
 @Composable
-fun IngestionItem(calendar: CalendarObjects, value: String, progress: Float, onClickButton: (CalendarType) -> Unit) {
+fun IngestionItem(calendar: CalendarObjects, value: String, progress: Float, onClickIngest:(CalendarType) -> Unit, onClickButton: (CalendarType) -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { onClickIngest(calendar.type) }
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
         Box(contentAlignment = Alignment.Center){

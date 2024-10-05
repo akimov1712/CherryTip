@@ -12,7 +12,8 @@ import ru.topbun.cherry_tip.utills.componentScope
 
 class CalendarComponentImpl(
     componentContext: ComponentContext,
-    onClickAppendMeal: (CalendarType) -> Unit,
+    onClickAppendMeal: (LocalDate, CalendarType) -> Unit,
+    onClickDetailIngest: (LocalDate, CalendarType) -> Unit,
     onOpenAuth: () -> Unit,
     onClickBack: () -> Unit,
     private val storeFactory: CalendarStoreFactory
@@ -25,9 +26,10 @@ class CalendarComponentImpl(
         componentScope.launch {
             store.labels.collect{
                 when(it){
-                    is CalendarStore.Label.ClickAppendMeal -> onClickAppendMeal(it.type)
+                    is CalendarStore.Label.ClickAppendMeal -> onClickAppendMeal(it.date, it.type)
                     CalendarStore.Label.OpenAuthScreen -> onOpenAuth()
                     CalendarStore.Label.ClickBack -> onClickBack()
+                    is CalendarStore.Label.ClickOpenDetailIngest -> onClickDetailIngest(it.date, it.type)
                 }
             }
         }
@@ -35,5 +37,6 @@ class CalendarComponentImpl(
     override fun clickBack() = store.accept(CalendarStore.Intent.ClickBack)
     override fun loadCalendar() = store.accept(CalendarStore.Intent.LoadCalendar)
     override fun changeDay(day: LocalDate) = store.accept(CalendarStore.Intent.ChangeDay(day))
-    override fun openAppendMeal(type: CalendarType) = store.accept(CalendarStore.Intent.ClickAppendMeal(type))
+    override fun openAppendMeal(date: LocalDate, type: CalendarType) = store.accept(CalendarStore.Intent.ClickAppendMeal(date, type))
+    override fun openDetailIngest(date: LocalDate, type: CalendarType) = store.accept(CalendarStore.Intent.ClickOpenDetailIngest(date, type))
 }

@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngest.DetailIngestionScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeScreen
@@ -55,6 +56,10 @@ fun MainScreen(
 
             is MainComponent.Child.AddRecipe -> {
                 AddRecipeScreen(instance.component, modifier)
+            }
+
+            is MainComponent.Child.DetailIngest -> {
+                DetailIngestionScreen(instance.component, modifier)
             }
         }
     }

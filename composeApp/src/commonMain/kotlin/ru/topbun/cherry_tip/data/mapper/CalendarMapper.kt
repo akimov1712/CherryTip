@@ -5,7 +5,7 @@ import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarRecipeDto
 import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarTypeRecipeDto
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarRecipeEntity
-import ru.topbun.cherry_tip.domain.entity.calendar.CalendarTypeRecipeEntity
+import ru.topbun.cherry_tip.domain.entity.calendar.CalendarRecipeByTypeEntity
 import ru.topbun.cherry_tip.utills.parseToGMTDate
 
 fun CalendarDto.toEntity() = CalendarEntity(
@@ -24,7 +24,7 @@ fun CalendarDto.toEntity() = CalendarEntity(
     recipes = recipes.map { it.toEntity() },
 )
 
-fun CalendarTypeRecipeDto.toEntity() = CalendarTypeRecipeEntity(
+fun CalendarTypeRecipeDto.toEntity() = CalendarRecipeByTypeEntity(
     id = id,
     category = category,
     dayId = dayId,

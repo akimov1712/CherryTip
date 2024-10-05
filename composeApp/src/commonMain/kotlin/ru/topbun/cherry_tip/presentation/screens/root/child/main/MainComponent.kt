@@ -2,6 +2,7 @@ package ru.topbun.cherry_tip.presentation.screens.root.child.main
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngest.DetailIngestComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.tipsDetail.Tips
@@ -25,6 +26,7 @@ interface MainComponent {
         data class Goal(val component: GoalComponent): Child
         data class Units(val component: UnitsComponent): Child
         data class AddRecipe(val component: AddRecipeComponent): Child
+        data class DetailIngest(val component: DetailIngestComponent): Child
     }
 
 

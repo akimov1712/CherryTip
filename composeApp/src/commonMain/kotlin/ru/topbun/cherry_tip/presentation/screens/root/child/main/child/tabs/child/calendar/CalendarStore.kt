@@ -28,7 +28,8 @@ interface CalendarStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class ChangeDay(val day: LocalDate): Intent
-        data class ClickAppendMeal(val type: CalendarType): Intent
+        data class ClickAppendMeal(val date: LocalDate, val type: CalendarType): Intent
+        data class ClickOpenDetailIngest(val date: LocalDate, val type: CalendarType): Intent
         data object LoadCalendar: Intent
         data object ClickBack: Intent
     }
@@ -48,7 +49,8 @@ interface CalendarStore : Store<Intent, State, Label> {
     }
 
     sealed interface Label {
-        data class ClickAppendMeal(val type: CalendarType): Label
+        data class ClickAppendMeal(val date: LocalDate, val type: CalendarType): Label
+        data class ClickOpenDetailIngest(val date: LocalDate, val type: CalendarType): Label
         data object OpenAuthScreen: Label
         data object ClickBack: Label
     }
@@ -158,12 +160,12 @@ class CalendarStoreFactory(
                             val calendar = getInfoDayUseCase(intent.day.toGMTDate())
                             dispatch(Msg.CalendarResult(calendar))
                         }){
-                            println("8")
                             dispatch(Msg.CalendarError(it))
                         }
                     }
                 }
-                is Intent.ClickAppendMeal -> publish(Label.ClickAppendMeal(intent.type))
+                is Intent.ClickAppendMeal -> publish(Label.ClickAppendMeal(intent.date, intent.type))
+                is Intent.ClickOpenDetailIngest -> publish(Label.ClickOpenDetailIngest(intent.date, intent.type))
                 Intent.ClickBack -> publish(Label.ClickBack)
             }
         }

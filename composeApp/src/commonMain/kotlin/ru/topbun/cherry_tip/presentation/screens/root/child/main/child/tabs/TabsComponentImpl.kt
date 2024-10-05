@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
@@ -26,6 +27,8 @@ class TabsComponentImpl(
     private val onClickGoals: () -> Unit,
     private val onClickUnits: () -> Unit,
     private val onClickAddRecipe: () -> Unit,
+    private val onClickAppendMeal: (LocalDate, CalendarType) -> Unit,
+    private val onClickDetailIngest: (LocalDate, CalendarType) -> Unit,
 ) : TabsComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -70,16 +73,12 @@ class TabsComponentImpl(
         }
 
         Config.Calendar -> {
-//            componentContext: ComponentContext,
-//            onClickAppendMeal: (CalendarType) -> Unit,
-//            onClickBack: () -> Unit,
-//            onOpenAuth: () -> Unit,
-            val onClickAppendMeal: (CalendarType) -> Unit = {}
             val onClickBack = { navigation.pop() }
             val component: CalendarComponentImpl = getKoin().get{
                 parametersOf(
                     componentContext,
                     onClickAppendMeal,
+                    onClickDetailIngest,
                     onClickBack,
                     onOpenAuth
                 )

@@ -11,6 +11,7 @@ interface CalendarComponent {
     fun clickBack()
     fun loadCalendar()
     fun changeDay(day: LocalDate)
-    fun openAppendMeal(type: CalendarType)
+    fun openAppendMeal(date: LocalDate, type: CalendarType)
+    fun openDetailIngest(date: LocalDate, type: CalendarType)
 
 }
