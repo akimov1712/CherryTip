@@ -2,6 +2,7 @@ package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendar
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -28,7 +29,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,6 +53,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
 import ru.topbun.cherry_tip.domain.entity.recipe.RecipeEntity
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.detailRecipe.DetailRecipeModal
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
@@ -63,6 +68,7 @@ fun DetailIngestionScreen(
     val state by component.state.collectAsState()
     val snackbarState = SnackbarHostState()
     val coroutineScope = rememberCoroutineScope()
+    var openDetailRecipeModal by remember { mutableStateOf<RecipeEntity?>(null) }
     Column(
         modifier = modifier.fillMaxSize().padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -93,8 +99,8 @@ fun DetailIngestionScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                RecipeList(component)
-                                ButtonAddMeal{  }
+                                RecipeList(component){ openDetailRecipeModal = it }
+                                ButtonAddMeal{ component.clickAddMeal() }
                             }
                         }
                     }
@@ -103,7 +109,9 @@ fun DetailIngestionScreen(
 
             }
         }
-
+    }
+    openDetailRecipeModal?.let {
+        DetailRecipeModal(it){ openDetailRecipeModal = null }
     }
 }
 
@@ -127,7 +135,7 @@ private fun BoxScope.ButtonAddMeal(onClick: () -> Unit) {
 }
 
 @Composable
-private fun RecipeList(component: DetailIngestComponent) {
+private fun RecipeList(component: DetailIngestComponent, onClickRecipe: (RecipeEntity) -> Unit) {
     val state by component.state.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val snackbackState = SnackbarHostState()
@@ -147,7 +155,10 @@ private fun RecipeList(component: DetailIngestComponent) {
             ) {
                 if (state.recipeList.isEmpty()) item { Texts.Option(text = stringResource(Res.string.empty), color = Colors.Black) }
                 items(items = state.recipeList, key = { it.id }) {
-                    RecipeItem(it) {  }
+                    RecipeItem(
+                        recipe = it,
+                        onClickItem = onClickRecipe
+                    ) { component.cancelRecipe(it) }
                 }
             }
         }
@@ -158,10 +169,11 @@ private fun RecipeList(component: DetailIngestComponent) {
 @Composable
 private fun RecipeItem(
     recipe: RecipeEntity,
+    onClickItem: (RecipeEntity) -> Unit,
     onClickCancel: (Int) -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)),
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).clickable { onClickItem(recipe) },
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(1.dp, Colors.PurpleBackground),
         colors = CardDefaults.cardColors(Colors.White)
