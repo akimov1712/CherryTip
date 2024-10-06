@@ -6,6 +6,7 @@ interface AccountComponent {
 
     val state: StateFlow<AccountStore.State>
 
+    fun load()
     fun logOut()
     fun clickBack()
 

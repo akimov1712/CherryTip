@@ -15,6 +15,8 @@ import ru.topbun.cherry_tip.utills.AccountInfoNotCompleteException
 import ru.topbun.cherry_tip.utills.ConnectException
 import ru.topbun.cherry_tip.utills.FailedExtractTokenException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
+import ru.topbun.cherry_tip.utills.handlerTokenException
+import ru.topbun.cherry_tip.utills.wrapperStoreException
 
 interface SplashStore : Store<Intent, State, Label> {
 
@@ -29,6 +31,7 @@ interface SplashStore : Store<Intent, State, Label> {
     ){
         sealed interface SplashState{
             data object Initial: SplashState
+            data object Loading: SplashState
             data class Error(val message: String): SplashState
             data object NotAuth: SplashState
         }
@@ -65,6 +68,7 @@ class SplashStoreFactory(
     private sealed interface Msg {
         data object NotAuth : Msg
         data class SplashError(val message: String) : Msg
+        data object SplashLoading : Msg
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
@@ -74,21 +78,18 @@ class SplashStoreFactory(
                 Intent.OnLogin -> publish(Label.OnLogin)
                 Intent.OnSignUpEmail -> publish(Label.OnSignUpEmail)
                 Intent.RunChecks -> {
-                    scope.launch {
-                        try {
-                            tokenIsValidUseCase()
-                            checkAccountInfoCompleteUseCase()
-                            publish(Label.OnAuth)
-                        } catch (e: FailedExtractTokenException){
-                            dispatch(Msg.NotAuth)
-                        } catch (e: AccountInfoNotCompleteException){
-                            publish(Label.AccountInfoNotComplete)
-                        } catch (e: ConnectTimeoutException){
-                            dispatch(Msg.SplashError("Check your internet connection"))
-                        } catch (e: ConnectException){
-                            dispatch(Msg.SplashError("Server side error"))
-                        } catch (e: RequestTimeoutException){
-                            dispatch(Msg.SplashError("Check your internet connection"))
+                    scope.launch(handlerTokenException { dispatch(Msg.NotAuth) }) {
+                        wrapperStoreException({
+                            try {
+                                dispatch(Msg.SplashLoading)
+                                tokenIsValidUseCase()
+                                checkAccountInfoCompleteUseCase()
+                                publish(Label.OnAuth)
+                            } catch (e: AccountInfoNotCompleteException){
+                                publish(Label.AccountInfoNotComplete)
+                            }
+                        }){
+                            dispatch(Msg.SplashError(it))
                         }
                     }
                 }
@@ -100,6 +101,7 @@ class SplashStoreFactory(
         override fun State.reduce(message: Msg) = when (message) {
             Msg.NotAuth -> copy(splashState = State.SplashState.NotAuth)
             is Msg.SplashError -> copy(splashState = State.SplashState.Error(message.message))
+            Msg.SplashLoading -> copy(splashState = State.SplashState.Loading)
         }
     }
 }

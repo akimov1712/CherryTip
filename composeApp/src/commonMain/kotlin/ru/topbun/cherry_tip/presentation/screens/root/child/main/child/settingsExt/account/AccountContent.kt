@@ -32,6 +32,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
+import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
@@ -47,12 +48,9 @@ fun AccountScreen(
         Spacer(Modifier.height(30.dp))
         when(val screenState = state.profileState){
             is AccountStore.State.AccountState.Error -> {
-                Texts.Error(
-                    modifier = Modifier.fillMaxSize(),
-                    text = screenState.text,
-                    color = Colors.Black,
-                    textAlign = TextAlign.Center
-                )
+                ErrorContent(modifier = Modifier.weight(1f),text = screenState.text){
+                    component.load()
+                }
             }
             AccountStore.State.AccountState.Loading -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){

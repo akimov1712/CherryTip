@@ -98,14 +98,12 @@ private fun Module.calendarModule(){
         componentContext: ComponentContext,
         onClickAppendMeal: (LocalDate, CalendarType) -> Unit,
         onClickDetailIngest: (LocalDate, CalendarType) -> Unit,
-        onClickBack: () -> Unit,
         onOpenAuth: () -> Unit,
     ) ->
         CalendarComponentImpl(
             componentContext = componentContext,
             onClickAppendMeal = onClickAppendMeal,
             onClickDetailIngest = onClickDetailIngest,
-            onClickBack = onClickBack,
             onOpenAuth = onOpenAuth,
             storeFactory = get(),
         )

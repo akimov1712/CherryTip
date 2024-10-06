@@ -18,6 +18,7 @@ interface AccountStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object LogOut: Intent
+        data object Load: Intent
         data object ClickBack: Intent
     }
 
@@ -98,6 +99,17 @@ class AccountStoreFactory(
                 }
 
                 Intent.ClickBack -> publish(Label.ClickBack)
+                Intent.Load -> {
+                    scope.launch(handlerTokenException { publish(Label.LogOut) }) {
+                        wrapperStoreException({
+                            dispatch(Msg.AccountStateLoading)
+                            val userId = getAccountInfoUseCase().id
+                            dispatch(Msg.AccountStateResult(userId))
+                        }){
+                            dispatch(Msg.AccountStateError(it))
+                        }
+                    }
+                }
             }
         }
 

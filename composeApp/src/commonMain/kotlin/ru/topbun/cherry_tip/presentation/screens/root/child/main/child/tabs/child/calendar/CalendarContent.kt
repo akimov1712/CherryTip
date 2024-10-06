@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CalendarLocale
@@ -86,6 +88,7 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.Tabs
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.DialogDatePicker
+import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.NutrientsItem
 import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
@@ -101,48 +104,40 @@ fun CalendarScreen(
 ) {
     val state by component.state.collectAsState()
     var openChoiceDateModal by remember { mutableStateOf(false) }
-    Column(
-        modifier = modifier.fillMaxSize().padding(vertical = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Header{ openChoiceDateModal = true }
-        Spacer(Modifier.height(10.dp))
-        CalendarSlider(component)
-        Spacer(Modifier.height(16.dp))
-        Box(
-            modifier = Modifier.fillMaxWidth().weight(1f),
-            contentAlignment = Alignment.Center
+    Box(modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(vertical = 20.dp)){
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ){
-            when(val screenState = state.calendarState){
-                is CalendarStore.State.CalendarState.Error -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Texts.Error(text = screenState.msg, modifier = Modifier.width(240.dp), textAlign = TextAlign.Center)
-                        Spacer(Modifier.height(12.dp))
-                        Buttons.Purple(
-                            onClick = { component.loadCalendar() }
-                        ){
-                            Texts.Button(stringResource(Res.string.retry))
+            Header{ openChoiceDateModal = true }
+            Spacer(Modifier.height(10.dp))
+            CalendarSlider(component)
+            Spacer(Modifier.height(16.dp))
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ){
+                when(val screenState = state.calendarState){
+                    is CalendarStore.State.CalendarState.Error -> {
+                        ErrorContent(modifier = Modifier.padding(horizontal = 20.dp), text = screenState.msg){
+                            component.loadCalendar()
                         }
                     }
-                }
-                CalendarStore.State.CalendarState.Loading -> CircularProgressIndicator(color = Colors.Purple)
-                CalendarStore.State.CalendarState.Result -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Information(component)
-                        Spacer(Modifier.height(16.dp))
-                        Ingestion(component)
+                    CalendarStore.State.CalendarState.Loading -> CircularProgressIndicator(color = Colors.Purple)
+                    CalendarStore.State.CalendarState.Result -> {
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Information(component)
+                            Spacer(Modifier.height(16.dp))
+                            Ingestion(component)
+                        }
                     }
+                    else -> {}
                 }
-                else -> {}
             }
         }
     }
+
     if (state.listDays.isNotEmpty() && openChoiceDateModal) {
         DatePicker(component){ openChoiceDateModal = false }
     }
@@ -172,7 +167,6 @@ private fun Ingestion(component: CalendarComponent) {
         modifier = Modifier
             .padding(horizontal = 20.dp)
             .fillMaxWidth()
-            .verticalScroll(ScrollState(0))
             .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(20.dp)),
     ) {
         val calendaries =  CalendarObjects.entries

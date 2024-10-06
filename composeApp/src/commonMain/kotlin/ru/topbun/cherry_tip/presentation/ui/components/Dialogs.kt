@@ -56,7 +56,7 @@ fun DialogWrapper(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
                 .background(color = Colors.White, RoundedCornerShape(24.dp))
-                .padding(horizontal = 12.dp, vertical = 24.dp),
+                .padding(horizontal = 20.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
             content = content

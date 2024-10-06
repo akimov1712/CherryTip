@@ -32,6 +32,7 @@ class ProfileComponentImpl(
     }
 
     override fun saveData() = store.accept(ProfileStore.Intent.SaveData)
+    override fun load() = store.accept(ProfileStore.Intent.Load)
     override fun clickBack() = store.accept(ProfileStore.Intent.ClickBack)
     override fun changeName(name: String) = store.accept(ProfileStore.Intent.ChangeName(name))
     override fun changeSurname(surname: String) = store.accept(ProfileStore.Intent.ChangeSurname(surname))

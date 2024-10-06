@@ -29,6 +29,7 @@ class UnitsComponentImpl(
     }
 
     override fun saveData() = store.accept(UnitsStore.Intent.SaveData)
+    override fun load() = store.accept(UnitsStore.Intent.Load)
     override fun clickBack() = store.accept(UnitsStore.Intent.ClickBack)
     override fun changeWeight(weight: Int) = store.accept(UnitsStore.Intent.ChangeWeight(weight))
     override fun changeTargetWeight(targetWeight: Int) = store.accept(UnitsStore.Intent.ChangeTargetWeight(targetWeight))

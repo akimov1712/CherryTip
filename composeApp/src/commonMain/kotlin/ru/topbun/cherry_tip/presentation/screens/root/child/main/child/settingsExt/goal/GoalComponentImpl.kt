@@ -32,6 +32,7 @@ class GoalComponentImpl(
         }
     }
     override fun saveData() = store.accept(GoalStore.Intent.SaveData)
+    override fun load() = store.accept(GoalStore.Intent.Load)
     override fun clickBack() = store.accept(GoalStore.Intent.ClickBack)
     override fun changeGoal(goal: GoalType) = store.accept(GoalStore.Intent.ChangeGoal(goal))
     override fun changeActive(active: ActiveType) = store.accept(GoalStore.Intent.ChangeActive(active))

@@ -12,15 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +31,6 @@ import cherrytip.composeapp.generated.resources.profile_last_name
 import cherrytip.composeapp.generated.resources.profile_sex
 import cherrytip.composeapp.generated.resources.save
 import io.ktor.util.date.GMTDate
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -50,6 +45,7 @@ import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
 import ru.topbun.cherry_tip.presentation.ui.components.DialogWrapper
+import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.SettingsItem
 import ru.topbun.cherry_tip.presentation.ui.components.SurveyComponents
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
@@ -62,13 +58,8 @@ fun ProfileScreen(
     component: ProfileComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
-    val snackbar = SnackbarHostState()
     var dialogItem by remember{ mutableStateOf<ProfileButtons?>(null) }
     val state by component.state.collectAsState()
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(snackbar) }
-    ){
         Column(
             modifier = modifier.fillMaxSize().padding(20.dp)
         ) {
@@ -77,48 +68,49 @@ fun ProfileScreen(
             val screenState = state.profileState
             when (screenState) {
                 is ProfileStore.State.ProfileState.Error -> {
-                    rememberCoroutineScope().launch {
-                        snackbar.showSnackbar(screenState.text)
+                    ErrorContent(modifier = Modifier.weight(1f), text = screenState.text) {
+                        component.load()
                     }
                 }
+
                 ProfileStore.State.ProfileState.Loading -> {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = Colors.Purple)
                     }
                 }
-                else -> {}
-            }
-            if (screenState != ProfileStore.State.ProfileState.Loading){
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    ProfileButtons.entries.forEach { item ->
-                        SettingsItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            title = stringResource(item.title),
-                            value = when(item){
-                                FirstName -> state.name
-                                LastName -> state.surname
-                                City -> state.city
-                                Sex -> state.gender.name
-                                DateBirth -> state.birth.formatToString()
-                            },
-                            onClick = {
-                                dialogItem = item
-                            }
-                        )
-                    }
-                    Spacer(Modifier.weight(1f))
-                    Buttons.Gray(
-                        onClick = {component.saveData()},
-                        modifier = Modifier.fillMaxWidth().height(57.dp)
-                    ){
-                        Texts.Button(
-                            text = stringResource(Res.string.save),
-                            color = Colors.Purple
-                        )
+                ProfileStore.State.ProfileState.Result -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        ProfileButtons.entries.forEach { item ->
+                            SettingsItem(
+                                modifier = Modifier.fillMaxWidth(),
+                                title = stringResource(item.title),
+                                value = when(item){
+                                    FirstName -> state.name
+                                    LastName -> state.surname
+                                    City -> state.city
+                                    Sex -> state.gender.name
+                                    DateBirth -> state.birth.formatToString()
+                                },
+                                onClick = {
+                                    dialogItem = item
+                                }
+                            )
+                        }
+                        Spacer(Modifier.weight(1f))
+                        Buttons.Gray(
+                            onClick = {component.saveData()},
+                            modifier = Modifier.fillMaxWidth().height(57.dp)
+                        ){
+                            Texts.Button(
+                                text = stringResource(Res.string.save),
+                                color = Colors.Purple
+                            )
+                        }
                     }
                 }
+                else -> {}
             }
 
         }
@@ -149,8 +141,6 @@ fun ProfileScreen(
             }
         }
     }
-
-}
 
 @Composable
 private fun DialogChangeBirth(

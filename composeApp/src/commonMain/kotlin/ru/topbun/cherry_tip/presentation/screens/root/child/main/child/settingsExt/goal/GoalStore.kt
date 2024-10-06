@@ -26,6 +26,7 @@ interface GoalStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data object SaveData: Intent
         data object ClickBack: Intent
+        data object Load: Intent
 
         data class ChangeGoal(val goal: GoalType): Intent
         data class ChangeActive(val active: ActiveType): Intent
@@ -154,6 +155,21 @@ class GoalStoreFactory(
 
                 is Intent.ChangeActive -> dispatch(Msg.ChangeActive(intent.active))
                 is Intent.ChangeGoal -> dispatch(Msg.ChangeGoal(intent.goal))
+                Intent.Load -> {
+                    scope.launch(handlerTokenException { publish(Label.LogOut) }) {
+                        wrapperStoreException({
+                            dispatch(Msg.GoalStateLoading)
+                            val accountInfo = getAccountInfoUseCase()
+                            dispatch(Msg.GoalStateResult(
+                                goal = accountInfo.goal?.goalType ?: GoalType.Lose,
+                                active = accountInfo.goal?.active ?: ActiveType.Low,
+                                calorie = accountInfo.goal?.calorieGoal ?: 0
+                            ))
+                        }){
+                            dispatch(Msg.GoalStateError(it))
+                        }
+                    }
+                }
             }
         }
     }

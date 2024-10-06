@@ -30,4 +30,5 @@ class AccountComponentImpl(
 
     override fun logOut() = store.accept(AccountStore.Intent.LogOut)
     override fun clickBack() = store.accept(AccountStore.Intent.ClickBack)
+    override fun load() = store.accept(AccountStore.Intent.Load)
 }

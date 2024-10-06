@@ -26,6 +26,7 @@ interface ProfileStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data object SaveData: Intent
         data object ClickBack: Intent
+        data object Load: Intent
 
         data class ChangeName(val name: String): Intent
         data class ChangeSurname(val surname: String): Intent
@@ -173,6 +174,24 @@ class ProfileStoreFactory(
                             )
                             publish(Label.ClickBack)}
                         ){
+                            dispatch(Msg.ProfileStateError(it))
+                        }
+                    }
+                }
+
+                Intent.Load -> {
+                    scope.launch(handlerTokenException { publish(Label.LogOut) }) {
+                        wrapperStoreException({
+                            dispatch(Msg.ProfileStateLoading)
+                            val accountInfo = getAccountInfoUseCase()
+                            dispatch(Msg.ProfileStateResult(
+                                name = accountInfo.profile?.firstName ?: "",
+                                surname = accountInfo.profile?.lastName ?: "",
+                                city = accountInfo.profile?.city ?: "",
+                                gender = accountInfo.profile?.gender ?: Gender.Male,
+                                birth = accountInfo.profile?.birth ?: GMTDate.START
+                            ))
+                        }){
                             dispatch(Msg.ProfileStateError(it))
                         }
                     }

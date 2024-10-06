@@ -11,6 +11,11 @@ interface TabsComponent {
 
     val stack: Value<ChildStack<*, Child>>
 
+    fun openHome()
+    fun openCalendar()
+    fun openRecipe()
+    fun openSettings()
+
     sealed interface Child {
         data class Home(val component: HomeComponent) : Child
         data class Calendar(val component: CalendarComponent) : Child

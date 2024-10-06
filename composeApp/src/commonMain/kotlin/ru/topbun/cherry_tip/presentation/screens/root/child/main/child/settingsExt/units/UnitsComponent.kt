@@ -10,6 +10,7 @@ interface UnitsComponent {
 
     fun saveData()
     fun clickBack()
+    fun load()
 
     fun changeWeight(weight: Int)
     fun changeTargetWeight(targetWeight: Int)

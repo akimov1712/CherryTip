@@ -31,7 +31,6 @@ interface CalendarStore : Store<Intent, State, Label> {
         data class ClickAppendMeal(val date: LocalDate, val type: CalendarType): Intent
         data class ClickOpenDetailIngest(val date: LocalDate, val type: CalendarType): Intent
         data object LoadCalendar: Intent
-        data object ClickBack: Intent
     }
 
     data class State(
@@ -52,7 +51,6 @@ interface CalendarStore : Store<Intent, State, Label> {
         data class ClickAppendMeal(val date: LocalDate, val type: CalendarType): Label
         data class ClickOpenDetailIngest(val date: LocalDate, val type: CalendarType): Label
         data object OpenAuthScreen: Label
-        data object ClickBack: Label
     }
 }
 
@@ -166,7 +164,6 @@ class CalendarStoreFactory(
                 }
                 is Intent.ClickAppendMeal -> publish(Label.ClickAppendMeal(intent.date, intent.type))
                 is Intent.ClickOpenDetailIngest -> publish(Label.ClickOpenDetailIngest(intent.date, intent.type))
-                Intent.ClickBack -> publish(Label.ClickBack)
             }
         }
     }

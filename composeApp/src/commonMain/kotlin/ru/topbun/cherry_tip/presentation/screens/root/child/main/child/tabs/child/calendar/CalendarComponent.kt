@@ -8,7 +8,6 @@ interface CalendarComponent {
 
     val state: StateFlow<CalendarStore.State>
 
-    fun clickBack()
     fun loadCalendar()
     fun changeDay(day: LocalDate)
     fun openAppendMeal(date: LocalDate, type: CalendarType)

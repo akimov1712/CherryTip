@@ -15,7 +15,6 @@ class CalendarComponentImpl(
     onClickAppendMeal: (LocalDate, CalendarType) -> Unit,
     onClickDetailIngest: (LocalDate, CalendarType) -> Unit,
     onOpenAuth: () -> Unit,
-    onClickBack: () -> Unit,
     private val storeFactory: CalendarStoreFactory
 ): CalendarComponent, ComponentContext by componentContext {
 
@@ -28,13 +27,12 @@ class CalendarComponentImpl(
                 when(it){
                     is CalendarStore.Label.ClickAppendMeal -> onClickAppendMeal(it.date, it.type)
                     CalendarStore.Label.OpenAuthScreen -> onOpenAuth()
-                    CalendarStore.Label.ClickBack -> onClickBack()
                     is CalendarStore.Label.ClickOpenDetailIngest -> onClickDetailIngest(it.date, it.type)
                 }
             }
         }
     }
-    override fun clickBack() = store.accept(CalendarStore.Intent.ClickBack)
+
     override fun loadCalendar() = store.accept(CalendarStore.Intent.LoadCalendar)
     override fun changeDay(day: LocalDate) = store.accept(CalendarStore.Intent.ChangeDay(day))
     override fun openAppendMeal(date: LocalDate, type: CalendarType) = store.accept(CalendarStore.Intent.ClickAppendMeal(date, type))

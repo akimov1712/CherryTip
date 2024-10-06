@@ -41,6 +41,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
+import ru.topbun.cherry_tip.presentation.ui.components.ErrorModal
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.presentation.ui.utills.getFileFromResource
 
@@ -55,6 +56,14 @@ fun SplashScreen(
         modifier = modifier.fillMaxSize().background(Colors.Purple)
     ) {
         Column {
+            when(val screenState = state.splashState){
+                is SplashStore.State.SplashState.Error -> {
+                    ErrorModal(text = screenState.message){
+                        component.runChecks()
+                    }
+                }
+                else -> {}
+            }
             Logo(component)
             AnimatedModal(showModal, component)
         }

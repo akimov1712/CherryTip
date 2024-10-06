@@ -24,6 +24,7 @@ interface UnitsStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data object SaveData: Intent
         data object ClickBack: Intent
+        data object Load: Intent
 
         data class ChangeWeight(val weight: Int): Intent
         data class ChangeTargetWeight(val targetWeight: Int): Intent
@@ -162,6 +163,23 @@ class UnitsStoreFactory(
                             )
                             publish(Label.ClickBack)}
                         ){
+                            dispatch(Msg.UnitsStateError(it))
+                        }
+                    }
+                }
+
+                Intent.Load -> {
+                    scope.launch(handlerTokenException { publish(Label.LogOut) }) {
+                        wrapperStoreException({
+                            dispatch(Msg.UnitsStateLoading)
+                            val accountInfo = getAccountInfoUseCase()
+                            dispatch(Msg.UnitsStateResult(
+                                weight = accountInfo.units?.weight ?: 0,
+                                targetWeight = accountInfo.units?.targetWeight ?: 0,
+                                height = accountInfo.units?.height ?: 0,
+                                bloodGlucose = accountInfo.units?.bloodGlucose ?: 0,
+                            ))
+                        }){
                             dispatch(Msg.UnitsStateError(it))
                         }
                     }

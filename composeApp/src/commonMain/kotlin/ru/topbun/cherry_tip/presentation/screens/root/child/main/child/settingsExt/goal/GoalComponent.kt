@@ -10,6 +10,7 @@ interface GoalComponent {
 
     fun saveData()
     fun clickBack()
+    fun load()
 
     fun changeGoal(goal: GoalType)
     fun changeActive(active: ActiveType)

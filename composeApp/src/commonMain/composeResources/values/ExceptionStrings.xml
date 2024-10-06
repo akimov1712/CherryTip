@@ -1,5 +1,7 @@
 <resources>
     <string name="account_info_not_complete">Account info not complete</string>
     <string name="check_internet_connection">Check internet connection</string>
+    <string name="oops_error">Oops, Something went wrong</string>
+    <string name="try_again">Try again</string>
 
 </resources>

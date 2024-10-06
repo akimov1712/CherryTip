@@ -1,9 +1,7 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,17 +9,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,29 +23,24 @@ import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.account
 import cherrytip.composeapp.generated.resources.apply
-import cherrytip.composeapp.generated.resources.gain_weight
-import cherrytip.composeapp.generated.resources.goal_active
-import cherrytip.composeapp.generated.resources.goal_calorie
-import cherrytip.composeapp.generated.resources.goal_goal
-import cherrytip.composeapp.generated.resources.lose_weight
 import cherrytip.composeapp.generated.resources.save
-import cherrytip.composeapp.generated.resources.stay_healthy
 import cherrytip.composeapp.generated.resources.units_blood_glucose
 import cherrytip.composeapp.generated.resources.units_height
 import cherrytip.composeapp.generated.resources.units_target_weight
 import cherrytip.composeapp.generated.resources.units_weight
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsButtons.*
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsButtons.BloodGlucose
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsButtons.Height
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsButtons.TargetWeight
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsButtons.Weight
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
 import ru.topbun.cherry_tip.presentation.ui.components.DialogWrapper
+import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.SettingsItem
 import ru.topbun.cherry_tip.presentation.ui.components.SurveyComponents
-import ru.topbun.cherry_tip.presentation.ui.components.SurveyComponents.ActiveItem
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
@@ -60,13 +48,8 @@ fun UnitsScreen(
     component: UnitsComponent,
     modifier: Modifier = Modifier.statusBarsPadding()
 ) {
-    val snackbar = SnackbarHostState()
     var dialogItem by remember{ mutableStateOf<UnitsButtons?>(null) }
     val state by component.state.collectAsState()
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(snackbar) }
-    ){
         Column(
             modifier = modifier.fillMaxSize().padding(20.dp)
         ) {
@@ -75,8 +58,8 @@ fun UnitsScreen(
             val screenState = state.unitsState
             when (screenState) {
                 is UnitsStore.State.UnitsState.Error -> {
-                    rememberCoroutineScope().launch {
-                        snackbar.showSnackbar(screenState.text)
+                    ErrorContent(modifier = Modifier.weight(1f),text = screenState.text){
+                        component.load()
                     }
                 }
                 UnitsStore.State.UnitsState.Loading -> {
@@ -84,12 +67,10 @@ fun UnitsScreen(
                         CircularProgressIndicator(color = Colors.Purple)
                     }
                 }
-                else -> {}
-            }
-            if (screenState != UnitsStore.State.UnitsState.Loading){
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
+                UnitsStore.State.UnitsState.Result ->{
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
                     UnitsButtons.entries.forEach { item ->
                         SettingsItem(
                             modifier = Modifier.fillMaxWidth(),
@@ -116,6 +97,8 @@ fun UnitsScreen(
                         )
                     }
                 }
+                }
+                else -> {}
             }
 
         }
@@ -146,7 +129,6 @@ fun UnitsScreen(
             }
         }
     }
-}
 
 @Composable
 private fun DialogChangeNumber(

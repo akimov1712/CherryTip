@@ -5,6 +5,9 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.pushToFront
+import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
@@ -41,6 +44,11 @@ class TabsComponentImpl(
         childFactory = ::createChild
     )
 
+    override fun openHome() = navigation.pushToFront(Config.Home)
+    override fun openCalendar() = navigation.pushToFront(Config.Calendar)
+    override fun openRecipe() = navigation.pushToFront(Config.Recipe)
+    override fun openSettings() = navigation.pushToFront(Config.Settings)
+
     private fun createChild(
         config: Config,
         componentContext: ComponentContext
@@ -73,13 +81,11 @@ class TabsComponentImpl(
         }
 
         Config.Calendar -> {
-            val onClickBack = { navigation.pop() }
             val component: CalendarComponentImpl = getKoin().get{
                 parametersOf(
                     componentContext,
                     onClickAppendMeal,
                     onClickDetailIngest,
-                    onClickBack,
                     onOpenAuth
                 )
             }

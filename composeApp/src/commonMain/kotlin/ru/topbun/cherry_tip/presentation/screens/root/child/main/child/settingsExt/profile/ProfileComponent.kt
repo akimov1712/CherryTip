@@ -10,6 +10,7 @@ interface ProfileComponent {
 
     fun saveData()
     fun clickBack()
+    fun load()
 
     fun changeName(name: String)
     fun changeSurname(surname: String)
