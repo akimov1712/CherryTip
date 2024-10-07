@@ -149,12 +149,14 @@ object SurveyComponents{
     @Composable
     fun WheelDatePicker(
         startDate: LocalDate,
+        minDate: LocalDate = LocalDate(1900, 1, 1),
+        maxDate: LocalDate = LocalDate(LocalDate.now().year, 12, 31),
         onSnappedDate: (snappedDate: LocalDate) -> Unit = {}
     ) {
         WheelDatePicker(
             modifier = Modifier.fillMaxWidth(),
-            minDate = LocalDate(1900, 1, 1),
-            maxDate = LocalDate(LocalDate.now().year, 12, 31),
+            minDate = minDate,
+            maxDate = maxDate,
             textStyle = TextStyle(
                 fontSize = 18.sp,
                 fontFamily = Fonts.sfRegular

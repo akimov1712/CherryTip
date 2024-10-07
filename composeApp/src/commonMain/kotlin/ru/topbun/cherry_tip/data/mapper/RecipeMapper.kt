@@ -31,7 +31,7 @@ fun RecipeEntity.toDto() = RecipeDto(
 fun List<RecipeDto>.toRecipeEntityList() = map{ it.toEntity() }
 
 fun RecipeDto.toEntity(): RecipeEntity{
-    val nutrients = protein + fat + carbs.toFloat()
+    val nutrients = protein + fat + carbs
     return RecipeEntity(
         id = id,
         title = title,
@@ -50,6 +50,7 @@ fun RecipeDto.toEntity(): RecipeEntity{
         categoryId = categoryId,
         dietsTypeId = dietsTypeId,
         preparationId = preparationId,
+        userId = userId
     )
 }
 

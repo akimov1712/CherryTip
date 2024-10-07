@@ -44,7 +44,7 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     var tipsSelected by remember{ mutableStateOf<Tips?>(null) }
     Column(
-        modifier = modifier.fillMaxWidth().verticalScroll(rememberScrollState())
+        modifier = modifier.verticalScroll(rememberScrollState()).fillMaxWidth()
             .padding(vertical = 24.dp),
     ) {
         Tips{

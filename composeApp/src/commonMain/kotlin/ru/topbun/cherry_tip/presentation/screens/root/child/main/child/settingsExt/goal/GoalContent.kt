@@ -1,5 +1,6 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.goal
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import cherrytip.composeapp.generated.resources.goal_calorie
 import cherrytip.composeapp.generated.resources.goal_goal
 import cherrytip.composeapp.generated.resources.lose_weight
 import cherrytip.composeapp.generated.resources.save
+import cherrytip.composeapp.generated.resources.settings_goals
 import cherrytip.composeapp.generated.resources.stay_healthy
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -65,7 +67,7 @@ fun GoalScreen(
         Column(
             modifier = modifier.fillMaxSize().padding(20.dp)
         ) {
-            BackWithTitle(stringResource(Res.string.account)) { component.clickBack() }
+            BackWithTitle(stringResource(Res.string.settings_goals)) { component.clickBack() }
             Spacer(Modifier.height(30.dp))
             val screenState = state.goalState
             when (screenState) {
@@ -101,6 +103,7 @@ fun GoalScreen(
                                     dialogItem = item
                                 }
                             )
+                            Spacer(Modifier.fillMaxWidth().height(1.dp).background(Colors.GrayLight))
                         }
                         Spacer(Modifier.weight(1f))
                         Buttons.Gray(

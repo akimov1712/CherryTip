@@ -237,7 +237,7 @@ fun RowScope.NutrientsItem(
 @Composable
 fun RowScope.NutrientsItem(
     text: String,
-    value: Int,
+    value: Float,
     progress: Float,
     progressColor: Color
 ) {

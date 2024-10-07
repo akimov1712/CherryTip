@@ -1,5 +1,6 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import cherrytip.composeapp.generated.resources.profile_first_name
 import cherrytip.composeapp.generated.resources.profile_last_name
 import cherrytip.composeapp.generated.resources.profile_sex
 import cherrytip.composeapp.generated.resources.save
+import cherrytip.composeapp.generated.resources.settings_profile
 import io.ktor.util.date.GMTDate
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -63,7 +65,7 @@ fun ProfileScreen(
         Column(
             modifier = modifier.fillMaxSize().padding(20.dp)
         ) {
-            BackWithTitle(stringResource(Res.string.account)) { component.clickBack() }
+            BackWithTitle(stringResource(Res.string.settings_profile)) { component.clickBack() }
             Spacer(Modifier.height(30.dp))
             val screenState = state.profileState
             when (screenState) {
@@ -97,6 +99,7 @@ fun ProfileScreen(
                                     dialogItem = item
                                 }
                             )
+                            Spacer(Modifier.fillMaxWidth().height(1.dp).background(Colors.GrayLight))
                         }
                         Spacer(Modifier.weight(1f))
                         Buttons.Gray(

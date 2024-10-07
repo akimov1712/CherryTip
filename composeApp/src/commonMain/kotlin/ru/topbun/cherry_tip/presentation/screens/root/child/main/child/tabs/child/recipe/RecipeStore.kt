@@ -9,8 +9,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.topbun.cherry_tip.domain.entity.recipe.CategoriesEntity
 import ru.topbun.cherry_tip.domain.entity.recipe.RecipeEntity
+import ru.topbun.cherry_tip.domain.useCases.recipe.DeleteRecipeUseCase
 import ru.topbun.cherry_tip.domain.useCases.recipe.GetCategoriesUseCase
 import ru.topbun.cherry_tip.domain.useCases.recipe.GetRecipesUseCase
+import ru.topbun.cherry_tip.domain.useCases.user.GetAccountInfoUseCase
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeStore
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.AddRecipeStore.State.ChoiceTagState
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.recipe.RecipeStore.Intent
@@ -27,10 +29,12 @@ interface RecipeStore : Store<Intent, State, Label> {
         data class ChangeQuery(val q: String) : Intent
         data class ChangeTags(val meal: Int?, val preparations: Int?, val diets: Int?) : Intent
         data object LoadRecipes : Intent
+        data class DeleteRecipe(val id: Int) : Intent
         data object ClickAddRecipe : Intent
     }
 
     data class State(
+        val userId: String,
         val tabs: List<RecipeTabs>,
         val meal: Int?,
         val preparations: Int?,
@@ -40,13 +44,21 @@ interface RecipeStore : Store<Intent, State, Label> {
         val recipes: List<RecipeEntity>,
         val isEndList: Boolean,
         val recipeState: RecipeState,
-        val choiceTagState: ChoiceTagState
+        val choiceTagState: ChoiceTagState,
+        val deleteRecipeState: DeleteRecipeState
     ) {
         sealed interface RecipeState {
             data object Initial : RecipeState
             data object Loading : RecipeState
             data class Error(val text: String) : RecipeState
             data object Result : RecipeState
+        }
+
+        sealed interface DeleteRecipeState {
+            data object Initial : DeleteRecipeState
+            data object Error : DeleteRecipeState
+            data object Loading : DeleteRecipeState
+            data object Result : DeleteRecipeState
         }
 
         sealed interface ChoiceTagState {
@@ -67,12 +79,15 @@ class RecipeStoreFactory(
     private val storeFactory: StoreFactory,
     private val getRecipesUseCase: GetRecipesUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val getAccountInfoUseCase: GetAccountInfoUseCase,
+    private val deleteRecipeUseCase: DeleteRecipeUseCase
 ) {
 
     fun create(): RecipeStore =
         object : RecipeStore, Store<Intent, State, Label> by storeFactory.create(
             name = "RecipeStore",
             initialState = State(
+                userId = "",
                 tabs = RecipeTabs.entries,
                 meal = null,
                 preparations = null,
@@ -82,7 +97,8 @@ class RecipeStoreFactory(
                 recipes = emptyList(),
                 isEndList = false,
                 recipeState = State.RecipeState.Initial,
-                choiceTagState = State.ChoiceTagState.Initial
+                choiceTagState = State.ChoiceTagState.Initial,
+                deleteRecipeState = State.DeleteRecipeState.Initial
             ),
             bootstrapper = BootstrapperImpl(),
             executorFactory = ::ExecutorImpl,
@@ -98,12 +114,22 @@ class RecipeStoreFactory(
         data class ChoiceTagResult(val categories: CategoriesEntity) : Action
         data object ChoiceTagError : Action
 
+        data class SetUserId(val userId: String) : Action
+
         data object LogOut : Action
     }
 
     private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
         override fun invoke() {
-            scope.launch {
+            scope.launch(handlerTokenException { dispatch(Action.LogOut) }) {
+                wrapperStoreException({
+                    val userId = getAccountInfoUseCase().id
+                    dispatch(Action.SetUserId(userId))
+                }) {
+
+                }
+            }
+            scope.launch(handlerTokenException { dispatch(Action.LogOut) }) {
                 wrapperStoreException({
                     dispatch(Action.ChoiceTagLoading)
                     val categories = getCategoriesUseCase()
@@ -117,6 +143,8 @@ class RecipeStoreFactory(
     }
 
     private sealed interface Msg {
+        data class SetRecipeList(val list: List<RecipeEntity>) : Msg
+
         data object RecipeStateLoading : Msg
         data class RecipeStateError(val text: String) : Msg
         data class RecipeStateResult(val recipes: List<RecipeEntity>) : Msg
@@ -129,6 +157,12 @@ class RecipeStoreFactory(
         data object ChoiceTagLoading : Msg
         data class ChoiceTagResult(val categories: CategoriesEntity) : Msg
         data object ChoiceTagError : Msg
+
+        data object DeleteRecipeLoading : Msg
+        data object DeleteRecipeResult : Msg
+        data object DeleteRecipeError : Msg
+
+        data class SetUserId(val userId: String) : Msg
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
@@ -142,16 +176,18 @@ class RecipeStoreFactory(
                 Action.ChoiceTagError -> dispatch(Msg.ChoiceTagError)
                 Action.ChoiceTagLoading -> dispatch(Msg.ChoiceTagLoading)
                 is Action.ChoiceTagResult -> dispatch(Msg.ChoiceTagResult(action.categories))
+                is Action.SetUserId -> dispatch(Msg.SetUserId(action.userId))
             }
         }
 
         override fun executeIntent(intent: Intent) {
             super.executeIntent(intent)
             var searchJob: Job? = null
+            var deleteJob: Job? = null
             val state = state()
             when (intent) {
                 Intent.LoadCategories -> {
-                scope.launch {
+                scope.launch(handlerTokenException { publish(Label.LogOut) }) {
                     wrapperStoreException({
                         dispatch(Msg.ChoiceTagLoading)
                         val categories = getCategoriesUseCase()
@@ -197,6 +233,18 @@ class RecipeStoreFactory(
                     dispatch(Msg.ClearRecipes)
                     dispatch(Msg.ChangeTags(intent.meal, intent.preparations, intent.diets))
                 }
+                is Intent.DeleteRecipe -> {
+                    deleteJob?.cancel()
+                    deleteJob = scope.launch(handlerTokenException { publish(Label.LogOut) }) {
+                        wrapperStoreException({
+                            dispatch(Msg.DeleteRecipeLoading)
+                            deleteRecipeUseCase(intent.id)
+                            val newRecipes = state.recipes.filter { it.id != intent.id }
+                            dispatch(Msg.SetRecipeList(newRecipes))
+                            dispatch(Msg.DeleteRecipeResult)
+                        }) { dispatch(Msg.DeleteRecipeError) }
+                    }
+                }
             }
         }
 
@@ -222,6 +270,11 @@ class RecipeStoreFactory(
                 preparations = message.preparations,
                 diets = message.diets
             )
+            is Msg.SetUserId -> copy(userId = message.userId)
+            Msg.DeleteRecipeError -> copy(deleteRecipeState = State.DeleteRecipeState.Error)
+            Msg.DeleteRecipeLoading -> copy(deleteRecipeState = State.DeleteRecipeState.Loading)
+            Msg.DeleteRecipeResult -> copy(deleteRecipeState = State.DeleteRecipeState.Result)
+            is Msg.SetRecipeList -> copy(recipes = message.list)
         }
     }
 }

@@ -57,7 +57,9 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
+import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.InfoRecipeAction
+import ru.topbun.cherry_tip.presentation.ui.components.NotFoundContent
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
@@ -66,8 +68,6 @@ fun DetailIngestionScreen(
     modifier: Modifier = Modifier.background(Colors.White).statusBarsPadding()
 ) {
     val state by component.state.collectAsState()
-    val snackbarState = SnackbarHostState()
-    val coroutineScope = rememberCoroutineScope()
     var openDetailRecipeModal by remember { mutableStateOf<RecipeEntity?>(null) }
     Column(
         modifier = modifier.fillMaxSize().padding(20.dp),
@@ -80,14 +80,13 @@ fun DetailIngestionScreen(
             CalendarType.Snack -> Res.string.snack
         }
         BackWithTitle(stringResource(titleRes)) { component.clickBack() }
-        Scaffold(
-            modifier = Modifier.fillMaxWidth().weight(1f),
-            containerColor = Colors.White,
-            snackbarHost = { SnackbarHost(snackbarState) }
-        ) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
                 when(val screenState = state.calendarState){
-                    is DetailIngestStore.State.CalendarTypeState.Error -> { coroutineScope.launch { snackbarState.showSnackbar(screenState.msg) } }
+                    is DetailIngestStore.State.CalendarTypeState.Error -> {
+                        ErrorContent(modifier = Modifier.padding(horizontal = 20.dp), text = screenState.msg){
+                            component.load()
+                        }
+                    }
                     DetailIngestStore.State.CalendarTypeState.Loading -> CircularProgressIndicator(color = Colors.Purple)
                     DetailIngestStore.State.CalendarTypeState.Result -> {
                         Column(
@@ -109,7 +108,7 @@ fun DetailIngestionScreen(
 
             }
         }
-    }
+
     openDetailRecipeModal?.let {
         DetailRecipeModal(it){ openDetailRecipeModal = null }
     }
@@ -137,33 +136,30 @@ private fun BoxScope.ButtonAddMeal(onClick: () -> Unit) {
 @Composable
 private fun RecipeList(component: DetailIngestComponent, onClickRecipe: (RecipeEntity) -> Unit) {
     val state by component.state.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
-    val snackbackState = SnackbarHostState()
-    Scaffold(
-        containerColor = Colors.White,
-        snackbarHost = { SnackbarHost(snackbackState) }
-    ) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-            when(val screenState = state.recipesState){
-                is DetailIngestStore.State.RecipesState.Error -> { coroutineScope.launch { snackbackState.showSnackbar(screenState.msg) } }
-                DetailIngestStore.State.RecipesState.Loading -> CircularProgressIndicator(color = Colors.Purple)
-                else -> {}
-            }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (state.recipeList.isEmpty()) item { Texts.Option(text = stringResource(Res.string.empty), color = Colors.Black) }
-                items(items = state.recipeList, key = { it.id }) {
-                    RecipeItem(
-                        recipe = it,
-                        onClickItem = onClickRecipe
-                    ) { component.cancelRecipe(it) }
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+        when(val screenState = state.recipesState){
+            is DetailIngestStore.State.RecipesState.Error -> {
+                ErrorContent(modifier = Modifier.padding(horizontal = 20.dp), text = screenState.msg){
+                    component.load()
                 }
             }
+            DetailIngestStore.State.RecipesState.Loading -> CircularProgressIndicator(color = Colors.Purple)
+            else -> {}
         }
-
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (state.recipeList.isEmpty()) item { NotFoundContent(modifier = Modifier.align(Alignment.Center).padding(horizontal = 20.dp)) }
+            items(items = state.recipeList, key = { it.id }) {
+                RecipeItem(
+                    recipe = it,
+                    onClickItem = onClickRecipe
+                ) { component.cancelRecipe(it) }
+            }
+        }
     }
+
 }
 
 @Composable

@@ -104,36 +104,37 @@ fun CalendarScreen(
 ) {
     val state by component.state.collectAsState()
     var openChoiceDateModal by remember { mutableStateOf(false) }
-    Box(modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(vertical = 20.dp)){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+    Column(
+        modifier.fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(vertical = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Header{ openChoiceDateModal = true }
+        Spacer(Modifier.height(10.dp))
+        CalendarSlider(component)
+        Spacer(Modifier.height(16.dp))
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
         ){
-            Header{ openChoiceDateModal = true }
-            Spacer(Modifier.height(10.dp))
-            CalendarSlider(component)
-            Spacer(Modifier.height(16.dp))
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ){
-                when(val screenState = state.calendarState){
-                    is CalendarStore.State.CalendarState.Error -> {
-                        ErrorContent(modifier = Modifier.padding(horizontal = 20.dp), text = screenState.msg){
-                            component.loadCalendar()
-                        }
+            when(val screenState = state.calendarState){
+                is CalendarStore.State.CalendarState.Error -> {
+                    ErrorContent(modifier = Modifier.padding(horizontal = 20.dp), text = screenState.msg){
+                        component.loadCalendar()
                     }
-                    CalendarStore.State.CalendarState.Loading -> CircularProgressIndicator(color = Colors.Purple)
-                    CalendarStore.State.CalendarState.Result -> {
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Information(component)
-                            Spacer(Modifier.height(16.dp))
-                            Ingestion(component)
-                        }
-                    }
-                    else -> {}
                 }
+                CalendarStore.State.CalendarState.Loading -> CircularProgressIndicator(color = Colors.Purple)
+                CalendarStore.State.CalendarState.Result -> {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Information(component)
+                        Spacer(Modifier.height(16.dp))
+                        Ingestion(component)
+                    }
+                }
+                else -> {}
             }
         }
     }

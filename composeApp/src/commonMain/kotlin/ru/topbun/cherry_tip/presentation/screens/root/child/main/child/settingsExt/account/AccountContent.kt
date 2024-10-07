@@ -28,6 +28,7 @@ import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.account
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.logout
+import cherrytip.composeapp.generated.resources.settings_account
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -44,7 +45,7 @@ fun AccountScreen(
         modifier = modifier.fillMaxSize().padding(20.dp)
     ) {
         val state by component.state.collectAsState()
-        BackWithTitle(stringResource(Res.string.account)){ component.clickBack() }
+        BackWithTitle(stringResource(Res.string.settings_account)){ component.clickBack() }
         Spacer(Modifier.height(30.dp))
         when(val screenState = state.profileState){
             is AccountStore.State.AccountState.Error -> {

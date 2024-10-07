@@ -39,7 +39,7 @@ class TabsComponentImpl(
     override val stack: Value<ChildStack<*, TabsComponent.Child>> = childStack(
         source = navigation,
         serializer = Config.serializer(),
-        initialConfiguration = Config.Calendar,
+        initialConfiguration = Config.Home,
         handleBackButton = true,
         childFactory = ::createChild
     )

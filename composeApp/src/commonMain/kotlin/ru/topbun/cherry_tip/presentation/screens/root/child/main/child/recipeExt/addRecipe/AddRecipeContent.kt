@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources._0_g
@@ -74,6 +75,7 @@ import ru.topbun.cherry_tip.domain.entity.Difficulty
 import ru.topbun.cherry_tip.domain.entity.recipe.CategoriesEntity
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalDropMenuContent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalTagItem
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalText
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.addRecipe.components.NumericalTextField
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.choiceTag.ChoiceTagModal
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -95,7 +97,7 @@ fun AddRecipeScreen(
     val snackBarState = SnackbarHostState()
     var isLoading = false
     when(val screenState = state.screenState){
-        is AddRecipeStore.State.RecipeAddedState.Error -> LaunchedEffect(state) { snackBarState.showSnackbar(screenState.message); isLoading = false }
+        is AddRecipeStore.State.RecipeAddedState.Error -> LaunchedEffect(screenState) { snackBarState.showSnackbar(screenState.message); isLoading = false }
         AddRecipeStore.State.RecipeAddedState.Loading -> isLoading = true
         else -> { isLoading = false }
     }
@@ -187,8 +189,9 @@ private fun NumericalContent(component: AddRecipeComponent, isLoading: Boolean, 
             value = state.protein.toStringOrBlank(),
             supportingText = if (state.proteinIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_protein))} } else null,
             isImportant = true,
+            keyboardType = KeyboardType.Decimal,
             isLoading = isLoading,
-            onValueChange = { if(it.length < 5) component.changeProtein(it.toIntOrNull()) }
+            onValueChange = { if(it.length < 6) component.changeProtein(it) }
         )
 
         NumericalTextField(
@@ -197,8 +200,9 @@ private fun NumericalContent(component: AddRecipeComponent, isLoading: Boolean, 
             value = state.carbs.toStringOrBlank(),
             supportingText = if (state.carbsIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_carbs))} } else null,
             isImportant = true,
+            keyboardType = KeyboardType.Decimal,
             isLoading = isLoading,
-            onValueChange = { if(it.length < 5) component.changeCarbs(it.toIntOrNull()) }
+            onValueChange = { if(it.length < 6) component.changeCarbs(it) }
         )
 
         NumericalTextField(
@@ -207,18 +211,14 @@ private fun NumericalContent(component: AddRecipeComponent, isLoading: Boolean, 
             value = state.fat.toStringOrBlank(),
             supportingText = if (state.fatIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_fat))} } else null,
             isImportant = true,
+            keyboardType = KeyboardType.Decimal,
             isLoading = isLoading,
-            onValueChange = { if(it.length < 5) component.changeFat(it.toIntOrNull()) }
+            onValueChange = { if(it.length < 6) component.changeFat(it) }
         )
 
-        NumericalTextField(
+        NumericalText(
             title = stringResource(Res.string.kcal_100),
-            placeholderText = stringResource(Res.string._0_g),
-            value = state.kcal.toStringOrBlank(),
-            supportingText = if (state.kcalIsError) { { Texts.Error(stringResource(Res.string.recipe_add_error_kcal))} } else null,
-            isImportant = true,
-            isLoading = isLoading,
-            onValueChange = { if(it.length < 5) component.changeKcal(it.toIntOrNull()) }
+            value = state.kcal?.toString() ?: "0.0",
         )
         NumericalDropMenuContent(
             title = stringResource(Res.string.difficulty),

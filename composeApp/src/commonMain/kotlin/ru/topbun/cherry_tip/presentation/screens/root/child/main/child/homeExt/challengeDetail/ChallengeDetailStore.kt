@@ -23,6 +23,7 @@ interface ChallengeDetailStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object ClickBack: Intent
+        data object Load: Intent
         data object ChangeStatusChallenge: Intent
     }
 
@@ -65,7 +66,7 @@ class ChallengeDetailStoreFactory(
                 changeStatusState = State.ChangeStatusState.Calmly
             ),
             bootstrapper = BootstrapperImpl(id),
-            executorFactory = ::ExecutorImpl,
+            executorFactory = { ExecutorImpl(id) },
             reducer = ReducerImpl
         ) {}
 
@@ -102,7 +103,7 @@ class ChallengeDetailStoreFactory(
         }
     }
 
-    private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
+    private inner class ExecutorImpl(private val id: Int) : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
         override fun executeIntent(intent: Intent) {
             super.executeIntent(intent)
             when(intent){
@@ -110,6 +111,18 @@ class ChallengeDetailStoreFactory(
                 is Intent.ChangeStatusChallenge -> {
                     scope.launch(handlerTokenException{publish(Label.OpenAuthScreen)}) {
                         sendChangeStatus()
+                    }
+                }
+
+                Intent.Load -> {
+                    scope.launch(handlerTokenException{publish(Label.OpenAuthScreen)}) {
+                        wrapperStoreException({
+                            dispatch(Msg.ChallengeLoading)
+                            val result = getUserChallengeByIdUseCase(id)
+                            dispatch(Msg.ChallengeSuccess(result))
+                        }){
+                            dispatch(Msg.ChallengeError(it))
+                        }
                     }
                 }
             }

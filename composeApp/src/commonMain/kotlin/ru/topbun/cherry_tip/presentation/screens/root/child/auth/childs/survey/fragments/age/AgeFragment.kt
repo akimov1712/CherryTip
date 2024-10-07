@@ -40,7 +40,10 @@ fun AgeFragmentContent(
         title = stringResource(Res.string.how_old_are_you)
     ){
         var date by remember { mutableStateOf(age) }
-        SurveyComponents.WheelDatePicker(startDate = age.toLocalDate()){ date = it.toGMTDate() }
+        SurveyComponents.WheelDatePicker(
+            startDate = age.toLocalDate(),
+            maxDate = LocalDate(LocalDate.now().year - 14, 12, 31)
+        ){ date = it.toGMTDate() }
         Spacer(Modifier.weight(1f))
         SurveyComponents.ButtonsNavigation(
             onClickBack = onClickBack,

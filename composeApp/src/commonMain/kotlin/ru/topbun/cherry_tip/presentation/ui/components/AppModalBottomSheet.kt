@@ -21,6 +21,7 @@ import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -32,7 +33,7 @@ fun AppModalBottomSheet(
     modifier: Modifier = Modifier,
     state: SheetState,
     onDismiss: () -> Unit,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable () -> Unit
 ) {
     ModalBottomSheet(
         modifier = modifier.fillMaxWidth(),
@@ -45,15 +46,17 @@ fun AppModalBottomSheet(
         dragHandle = null
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
             Spacer(Modifier.height(8.dp))
             Box(Modifier.size(50.dp, 7.dp).background(Colors.White, CircleShape))
             Spacer(Modifier.height(8.dp))
-            content()
-            
+            Box(modifier = Modifier.clip( RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))){
+                content()
+            }
         }
     }
 }

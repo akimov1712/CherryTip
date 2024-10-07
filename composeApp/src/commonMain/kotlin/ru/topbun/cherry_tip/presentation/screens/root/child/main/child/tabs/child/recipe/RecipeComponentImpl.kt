@@ -29,6 +29,7 @@ class RecipeComponentImpl(
         }
     }
 
+    override fun deleteRecipe(id: Int) = store.accept(RecipeStore.Intent.DeleteRecipe(id))
     override fun changeQuery(query: String) = store.accept(RecipeStore.Intent.ChangeQuery(query))
     override fun changeTab(index: Int) = store.accept(RecipeStore.Intent.ChangeTab(index))
     override fun changeTags(meal: Int?, preparation: Int?, diets: Int?) = store.accept(RecipeStore.Intent.ChangeTags(meal, preparation, diets))

@@ -28,6 +28,7 @@ interface DetailIngestStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object ClickBack : Intent
+        data object Load : Intent
         data object ClickAddMeal : Intent
         data class CancelRecipe(val id: Int) : Intent
     }
@@ -88,6 +89,8 @@ class DetailIngestStoreFactory(
         ) {}
 
     private sealed interface Action {
+        data object OpenAuth : Action
+
         data object CalendarLoading : Action
         data class CalendarError(val msg: String) : Action
         data class CalendarResult(val calendarRecipes: CalendarRecipeByTypeEntity) : Action
@@ -115,7 +118,7 @@ class DetailIngestStoreFactory(
     ) : CoroutineBootstrapper<Action>() {
 
         override fun invoke() {
-            scope.launch {
+            scope.launch(handlerTokenException { dispatch(Action.OpenAuth) }) {
                 wrapperStoreException({
                     dispatch(Action.CalendarLoading)
                     val calendar = getInfoDayUseCase(date.toGMTDate())
@@ -161,7 +164,22 @@ class DetailIngestStoreFactory(
                 Action.RecipesLoading -> dispatch(Msg.RecipesLoading)
                 is Action.RecipesResult -> dispatch(Msg.RecipesResult(action.recipes))
                 is Action.SetNeedCalories -> dispatch(Msg.SetNeedCalories(action.calories))
+                Action.OpenAuth -> publish(Label.OpenAuth)
             }
+        }
+
+        private suspend fun CoroutineScope.loadRecipes(calendar: CalendarRecipeByTypeEntity) {
+            dispatch(Msg.RecipesLoading)
+            val recipes = calendar.recipes.map {
+                async {
+                    try {
+                        getRecipeWithIdUseCase(it.id)
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
+            }.awaitAll().filterNotNull()
+            dispatch(Msg.RecipesResult(recipes))
         }
 
         override fun executeIntent(intent: Intent) {
@@ -170,6 +188,26 @@ class DetailIngestStoreFactory(
             when (intent) {
                 Intent.ClickBack -> publish(Label.ClickBack)
                 Intent.ClickAddMeal -> publish(Label.ClickAddMeal)
+                Intent.Load -> {
+                    scope.launch(handlerTokenException { publish(Label.OpenAuth) }) {
+                        wrapperStoreException({
+                            dispatch(Msg.CalendarLoading)
+                            val calendar = getInfoDayUseCase(date.toGMTDate())
+                            val calories = when(calendarType){
+                                CalendarType.Breakfast -> calendar.breakfast
+                                CalendarType.Lunch -> calendar.lunch
+                                CalendarType.Dinner -> calendar.dinner
+                                CalendarType.Snack -> calendar.snack
+                            }
+                            dispatch(Msg.SetNeedCalories(calories))
+                            val calendarRecipes = calendar.recipes.find { it.category == calendarType } ?: throw ConnectException("Not found recipes")
+                            dispatch(Msg.CalendarResult(calendarRecipes))
+                            loadRecipes(calendarRecipes)
+                        }) {
+                            dispatch(Msg.CalendarError(it))
+                        }
+                    }
+                }
                 is Intent.CancelRecipe -> {
                     scope.launch(handlerTokenException { publish(Label.OpenAuth) }) {
                         wrapperStoreException({

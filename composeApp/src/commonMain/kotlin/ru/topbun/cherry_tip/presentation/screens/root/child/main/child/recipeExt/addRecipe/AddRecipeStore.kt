@@ -35,10 +35,9 @@ interface AddRecipeStore : Store<Intent, State, Label> {
         data class ChangeName(val text: String) : Intent
         data class ChangeDescr(val text: String) : Intent
         data class ChangeCookingTime(val time: Int?) : Intent
-        data class ChangeProtein(val protein: Int?) : Intent
-        data class ChangeCarbs(val carbs: Int?) : Intent
-        data class ChangeFat(val fat: Int?) : Intent
-        data class ChangeKcal(val kcal: Int?) : Intent
+        data class ChangeProtein(val protein: String?) : Intent
+        data class ChangeCarbs(val carbs: String?) : Intent
+        data class ChangeFat(val fat: String?) : Intent
         data class ChangeDifficulty(val difficulty: Difficulty?) : Intent
         data class ChangeMeals(val meals: TagEntity?) : Intent
         data class ChangePreparation(val preparation: TagEntity?) : Intent
@@ -52,11 +51,11 @@ interface AddRecipeStore : Store<Intent, State, Label> {
         val titleIsError: Boolean = false,
         val descr: String,
         val cookingTime: Int?,
-        val protein: Int?,
+        val protein: String?,
         val proteinIsError: Boolean = false,
-        val carbs: Int?,
+        val carbs: String?,
         val carbsIsError: Boolean = false,
-        val fat: Int?,
+        val fat: String?,
         val fatIsError: Boolean = false,
         val kcal: Int?,
         val kcalIsError: Boolean = false,
@@ -152,16 +151,15 @@ class AddRecipeStoreFactory(
 
         data class ChangeCookingTime(val time: Int?) : Msg
 
-        data class ChangeProtein(val protein: Int?) : Msg
+        data class ChangeProtein(val protein: String?) : Msg
         data class ChangeProteinError(val value: Boolean) : Msg
 
-        data class ChangeCarbs(val carbs: Int?) : Msg
+        data class ChangeCarbs(val carbs: String?) : Msg
         data class ChangeCarbsError(val value: Boolean) : Msg
 
-        data class ChangeFat(val fat: Int?) : Msg
+        data class ChangeFat(val fat: String?) : Msg
         data class ChangeFatError(val value: Boolean) : Msg
 
-        data class ChangeKcal(val kcal: Int?) : Msg
         data class ChangeKcalError(val value: Boolean) : Msg
 
         data class ChangeDifficulty(val difficulty: Difficulty?) : Msg
@@ -211,27 +209,21 @@ class AddRecipeStoreFactory(
                 is Intent.ChangeDescr -> dispatch(Msg.ChangeDescr(intent.text))
                 is Intent.ChangeCookingTime -> dispatch(Msg.ChangeCookingTime(intent.time))
                 is Intent.ChangeProtein -> {
-                    val protein = intent.protein
+                    val protein = if (intent.protein?.isBlank() == true) null else intent.protein
                     dispatch(Msg.ChangeProtein(protein))
                     dispatch(Msg.ChangeProteinError(protein == null))
                 }
 
                 is Intent.ChangeCarbs -> {
-                    val carbs = intent.carbs
+                    val carbs = if (intent.carbs?.isBlank() == true) null else intent.carbs
                     dispatch(Msg.ChangeCarbs(carbs))
                     dispatch(Msg.ChangeCarbsError(carbs == null))
                 }
 
                 is Intent.ChangeFat -> {
-                    val fat = intent.fat
+                    val fat = if (intent.fat?.isBlank() == true) null else intent.fat
                     dispatch(Msg.ChangeFat(fat))
                     dispatch(Msg.ChangeFatError(fat == null))
-                }
-
-                is Intent.ChangeKcal -> {
-                    val kcal = intent.kcal
-                    dispatch(Msg.ChangeKcal(kcal))
-                    dispatch(Msg.ChangeKcalError(kcal == null))
                 }
 
                 Intent.LoadCategories -> {
@@ -276,15 +268,16 @@ class AddRecipeStoreFactory(
                                 cookingTime = state.cookingTime,
                                 difficulty = state.difficulty,
                                 calories = state.kcal,
-                                protein = state.protein ?: 0,
+                                protein = state.protein?.toFloat() ?: 0f,
                                 proteinPercent = 0f,
-                                fat = state.fat ?: 0,
+                                fat = state.fat?.toFloat() ?: 0f,
                                 fatPercent = 0f,
-                                carbs = state.carbs ?: 0,
+                                carbs = state.carbs?.toFloat() ?: 0f,
                                 carbsPercent = 0f,
                                 categoryId = state.meals?.id,
                                 dietsTypeId = state.diets?.id,
-                                preparationId = state.preparation?.id
+                                preparationId = state.preparation?.id,
+                                userId = null
                             )
                             println(
                                 state.meals?.id.toStringOrBlank() +
@@ -303,24 +296,29 @@ class AddRecipeStoreFactory(
     }
 
     private object ReducerImpl : Reducer<State, Msg> {
+
+        private fun calculateKcal(protein: Float?, carbs: Float?, fat: Float?): Int?{
+            return if (listOf(protein,carbs, fat).contains(null)) null
+                else  (4 * protein!! + 4 * carbs!! + 9 * fat!!).toInt()
+        }
+
         override fun State.reduce(message: Msg): State = when (message) {
-            is Msg.ChangeCarbs -> copy(carbs = message.carbs)
+            is Msg.ChangeCarbs -> copy(carbs = message.carbs, kcal = calculateKcal(protein?.toFloatOrNull(), carbs?.toFloatOrNull(), fat?.toFloatOrNull()))
             is Msg.ChangeCarbsError -> copy(carbsIsError = message.value)
             is Msg.ChangeCookingTime -> copy(cookingTime = message.time)
             is Msg.ChangeDescr -> copy(descr = message.text)
             is Msg.ChangeDiets -> copy(diets = message.diets)
             is Msg.ChangeDifficulty -> copy(difficulty = message.difficulty)
-            is Msg.ChangeFat -> copy(fat = message.fat)
+            is Msg.ChangeFat -> copy(fat = message.fat, kcal = calculateKcal(protein?.toFloatOrNull(), carbs?.toFloatOrNull(), fat?.toFloatOrNull()))
             is Msg.ChangeFatError -> copy(fatIsError = message.value)
             is Msg.ChangeImage -> copy(image = message.image)
             is Msg.ChangeImageError -> copy(imageIsError = message.value)
-            is Msg.ChangeKcal -> copy(kcal = message.kcal)
             is Msg.ChangeKcalError -> copy(kcalIsError = message.value)
             is Msg.ChangeMeals -> copy(meals = message.meals)
             is Msg.ChangeName -> copy(title = message.text)
             is Msg.ChangeNameError -> copy(titleIsError = message.value)
             is Msg.ChangePreparation -> copy(preparation = message.preparation)
-            is Msg.ChangeProtein -> copy(protein = message.protein)
+            is Msg.ChangeProtein -> copy(protein = message.protein, kcal = calculateKcal(protein?.toFloatOrNull(), carbs?.toFloatOrNull(), fat?.toFloatOrNull()))
             is Msg.ChangeProteinError -> copy(proteinIsError = message.value)
             is Msg.ScreenStateError -> copy(screenState = State.RecipeAddedState.Error(message.msg))
             Msg.ScreenStateLoading -> copy(screenState = State.RecipeAddedState.Loading)
@@ -329,4 +327,6 @@ class AddRecipeStoreFactory(
             is Msg.ChoiceTagResult -> copy(choiceTagState = State.ChoiceTagState.Result(message.categories))
         }
     }
+
+
 }

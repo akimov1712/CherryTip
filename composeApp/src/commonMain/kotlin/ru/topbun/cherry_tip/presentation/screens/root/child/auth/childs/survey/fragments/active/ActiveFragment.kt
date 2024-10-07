@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +28,7 @@ fun ActiveFragmentContent(
     onClickStart: (ActiveType) -> Unit
 ) {
     SurveyComponents.FragmentWrapper(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(rememberScrollState()),
         title = stringResource(Res.string.how_active_you)
     ){
         var selectedType = remember { mutableStateOf(active) }
@@ -34,7 +36,7 @@ fun ActiveFragmentContent(
             modifier = Modifier.fillMaxWidth(),
             selectedType = selectedType,
         )
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.height(20.dp))
         SurveyComponents.ButtonsNavigation(
             onClickBack = onClickBack,
             onClickNext = { onClickStart(selectedType.value) },

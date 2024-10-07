@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -114,6 +115,7 @@ private fun ModalContent(
 ) {
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .background(Colors.White, RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
             .padding(horizontal = 20.dp, vertical = 24.dp)
             .padding(bottom = 24.dp),

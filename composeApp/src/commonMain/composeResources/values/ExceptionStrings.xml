@@ -4,4 +4,7 @@
     <string name="oops_error">Oops, Something went wrong</string>
     <string name="try_again">Try again</string>
 
+    <string name="no_result_found">No Result Found</string>
+    <string name="we_cant_find">We cant find any item matching your search</string>
+
 </resources>

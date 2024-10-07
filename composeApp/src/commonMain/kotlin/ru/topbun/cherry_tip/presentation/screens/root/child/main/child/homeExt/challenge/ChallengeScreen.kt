@@ -53,6 +53,8 @@ import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
 import ru.topbun.cherry_tip.presentation.ui.components.CustomTabRow
+import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
+import ru.topbun.cherry_tip.presentation.ui.components.NotFoundContent
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 
 @Composable
@@ -76,7 +78,10 @@ fun ChallengeScreen(
         Box(modifier = Modifier.fillMaxSize()) {
             when (val screenState = state.challengeStateStatus) {
                 is ChallengeStore.State.ChallengeState.Error -> {
-                    Texts.Error(text = screenState.text)
+                    ErrorContent(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = screenState.text
+                    ){ component.loadChallenge(state.items[state.selectedIndex]) }
                 }
 
                 ChallengeStore.State.ChallengeState.Loading -> {
@@ -85,14 +90,7 @@ fun ChallengeScreen(
 
                 is ChallengeStore.State.ChallengeState.Result -> {
                     if (screenState.challenges.isEmpty()) {
-                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                            Texts.Option(
-                                modifier = Modifier.fillMaxSize(),
-                                text = stringResource(Res.string.challenges_is_empty),
-                                color = Colors.Black,
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                        NotFoundContent(Modifier.padding(horizontal = 20.dp).align(Alignment.Center))
                     } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxWidth(),

@@ -28,7 +28,7 @@ class GlassRepositoryImpl(
 
     override val countGlassFlow = flow {
         val weight = userRepository.getAccountInfo().units?.weight ?: throw AccountInfoNotCompleteException()
-        val countNeededGlass = weight * Const.ML_PER_KG / Const.ML_GLASS
+        val countNeededGlass = (weight * Const.ML_PER_KG).coerceIn(2500,4000) / Const.ML_GLASS
         checkReset(countNeededGlass)
         glass.collect{ jsonGlass ->
             jsonGlass?.let {

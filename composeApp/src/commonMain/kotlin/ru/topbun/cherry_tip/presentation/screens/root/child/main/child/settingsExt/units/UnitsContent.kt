@@ -1,5 +1,6 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,7 @@ import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.account
 import cherrytip.composeapp.generated.resources.apply
 import cherrytip.composeapp.generated.resources.save
+import cherrytip.composeapp.generated.resources.settings_units
 import cherrytip.composeapp.generated.resources.units_blood_glucose
 import cherrytip.composeapp.generated.resources.units_height
 import cherrytip.composeapp.generated.resources.units_target_weight
@@ -53,7 +55,7 @@ fun UnitsScreen(
         Column(
             modifier = modifier.fillMaxSize().padding(20.dp)
         ) {
-            BackWithTitle(stringResource(Res.string.account)) { component.clickBack() }
+            BackWithTitle(stringResource(Res.string.settings_units)) { component.clickBack() }
             Spacer(Modifier.height(30.dp))
             val screenState = state.unitsState
             when (screenState) {
@@ -85,6 +87,7 @@ fun UnitsScreen(
                                 dialogItem = item
                             }
                         )
+                        Spacer(Modifier.fillMaxWidth().height(1.dp).background(Colors.GrayLight))
                     }
                     Spacer(Modifier.weight(1f))
                     Buttons.Gray(

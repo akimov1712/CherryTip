@@ -7,6 +7,7 @@ interface DetailIngestComponent {
     val state: StateFlow<DetailIngestStore.State>
 
     fun clickBack()
+    fun load()
     fun clickAddMeal()
     fun cancelRecipe(id: Int)
 

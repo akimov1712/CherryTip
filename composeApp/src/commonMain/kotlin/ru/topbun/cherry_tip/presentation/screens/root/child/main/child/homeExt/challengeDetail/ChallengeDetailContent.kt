@@ -47,6 +47,7 @@ import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
+import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.utills.Const
 
@@ -66,12 +67,10 @@ fun ChallengeDetailScreen(
         Spacer(Modifier.height(30.dp))
         when (val screenState = state.challengeState) {
             is ChallengeDetailStore.State.ChallengeState.Error -> {
-                Texts.Error(
-                    modifier = Modifier.fillMaxSize(),
-                    text = screenState.text,
-                    color = Colors.Black,
-                    textAlign = TextAlign.Center
-                )
+                ErrorContent(
+                    modifier = Modifier.weight(1f),
+                    text = screenState.text
+                ){ component.load() }
             }
 
             ChallengeDetailStore.State.ChallengeState.Loading -> {

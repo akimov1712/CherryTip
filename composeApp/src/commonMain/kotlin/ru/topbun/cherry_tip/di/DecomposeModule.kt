@@ -124,7 +124,7 @@ private fun Module.addRecipeModule(){
 }
 
 private fun Module.recipeModule(){
-    factory<RecipeStoreFactory> { RecipeStoreFactory(get(), get(), get()) }
+    factory<RecipeStoreFactory> { RecipeStoreFactory(get(), get(), get(), get(),get()) }
     factory { (
         componentContext: ComponentContext,
         onLogOut: () -> Unit,

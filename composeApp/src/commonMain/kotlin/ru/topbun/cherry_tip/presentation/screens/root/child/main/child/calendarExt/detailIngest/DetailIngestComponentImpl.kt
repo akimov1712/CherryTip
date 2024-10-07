@@ -34,6 +34,7 @@ class DetailIngestComponentImpl(
         }
     }
 
+    override fun load() = store.accept(DetailIngestStore.Intent.Load)
     override fun clickBack() = store.accept(DetailIngestStore.Intent.ClickBack)
     override fun clickAddMeal() = store.accept(DetailIngestStore.Intent.ClickAddMeal)
     override fun cancelRecipe(id: Int) = store.accept(DetailIngestStore.Intent.CancelRecipe(id))
