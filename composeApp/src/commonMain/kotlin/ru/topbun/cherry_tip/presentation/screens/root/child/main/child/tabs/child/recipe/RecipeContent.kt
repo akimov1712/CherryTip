@@ -90,7 +90,7 @@ fun RecipeScreen(
                 Spacer(Modifier.height(16.dp))
                 Recipes(
                     component = component,
-                    modifier = Modifier.fillMaxWidth().weight(1f)
+                    modifier = Modifier.fillMaxWidth()
                 ){
                     openDetailRecipeModal = it
                 }

@@ -7,6 +7,8 @@ import ru.topbun.cherry_tip.domain.entity.Difficulty
 @Serializable
 data class ChallengeDto(
     @SerialName("id") val id: Int,
+    @SerialName("createdAt") val createdAt: String,
+    @SerialName("updatedAt") val updatedAt: String,
     @SerialName("title") val title: String,
     @SerialName("description") val description: String,
     @SerialName("image") val image: String,
