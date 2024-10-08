@@ -303,13 +303,13 @@ class AddRecipeStoreFactory(
         }
 
         override fun State.reduce(message: Msg): State = when (message) {
-            is Msg.ChangeCarbs -> copy(carbs = message.carbs, kcal = calculateKcal(protein?.toFloatOrNull(), carbs?.toFloatOrNull(), fat?.toFloatOrNull()))
+            is Msg.ChangeCarbs -> copy(carbs = message.carbs, kcal = calculateKcal(protein?.toFloatOrNull(), message.carbs?.toFloatOrNull(), fat?.toFloatOrNull()))
             is Msg.ChangeCarbsError -> copy(carbsIsError = message.value)
             is Msg.ChangeCookingTime -> copy(cookingTime = message.time)
             is Msg.ChangeDescr -> copy(descr = message.text)
             is Msg.ChangeDiets -> copy(diets = message.diets)
             is Msg.ChangeDifficulty -> copy(difficulty = message.difficulty)
-            is Msg.ChangeFat -> copy(fat = message.fat, kcal = calculateKcal(protein?.toFloatOrNull(), carbs?.toFloatOrNull(), fat?.toFloatOrNull()))
+            is Msg.ChangeFat -> copy(fat = message.fat, kcal = calculateKcal(protein?.toFloatOrNull(), carbs?.toFloatOrNull(), message.fat?.toFloatOrNull()))
             is Msg.ChangeFatError -> copy(fatIsError = message.value)
             is Msg.ChangeImage -> copy(image = message.image)
             is Msg.ChangeImageError -> copy(imageIsError = message.value)
@@ -318,7 +318,7 @@ class AddRecipeStoreFactory(
             is Msg.ChangeName -> copy(title = message.text)
             is Msg.ChangeNameError -> copy(titleIsError = message.value)
             is Msg.ChangePreparation -> copy(preparation = message.preparation)
-            is Msg.ChangeProtein -> copy(protein = message.protein, kcal = calculateKcal(protein?.toFloatOrNull(), carbs?.toFloatOrNull(), fat?.toFloatOrNull()))
+            is Msg.ChangeProtein -> copy(protein = message.protein, kcal = calculateKcal(message.protein?.toFloatOrNull(), carbs?.toFloatOrNull(), fat?.toFloatOrNull()))
             is Msg.ChangeProteinError -> copy(proteinIsError = message.value)
             is Msg.ScreenStateError -> copy(screenState = State.RecipeAddedState.Error(message.msg))
             Msg.ScreenStateLoading -> copy(screenState = State.RecipeAddedState.Loading)

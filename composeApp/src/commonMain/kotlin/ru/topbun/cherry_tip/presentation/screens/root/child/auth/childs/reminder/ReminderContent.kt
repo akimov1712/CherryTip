@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -34,6 +32,7 @@ import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.presentation.ui.utills.getScreenSizeInfo
+import ru.topbun.cherry_tip.presentation.ui.utills.setColorStatusBar
 
 
 @Composable
@@ -41,6 +40,7 @@ fun ReminderScreen(
     component: ReminderComponent,
     modifier: Modifier = Modifier.background(Colors.White)
 ) {
+    setColorStatusBar(Colors.White, true)
     val state by component.state.collectAsState()
     Box(modifier) {
         ReminderImage(state.screens[state.indexSelected])
@@ -59,11 +59,9 @@ private fun ReminderCard(component: ReminderComponent, state: ReminderStore.Stat
             shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
             colors = CardDefaults.cardColors(containerColor = Colors.White),
 
-        ) {
+            ) {
             Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp, vertical = 24.dp),
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val isLastScreen = state.screens.last() == state.screens[state.indexSelected]

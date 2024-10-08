@@ -56,6 +56,7 @@ import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.TextFields
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
+import ru.topbun.cherry_tip.presentation.ui.utills.setColorStatusBar
 
 
 @Composable
@@ -63,6 +64,7 @@ fun LoginScreen(
     component: LoginComponent,
     modifier: Modifier = Modifier.background(Colors.White).statusBarsPadding()
 ) {
+    setColorStatusBar(Colors.White, true)
     val state by component.state.collectAsState()
     var errorText by rememberSaveable{ mutableStateOf<String?>(null) }
     LaunchedEffect(state.loginState){

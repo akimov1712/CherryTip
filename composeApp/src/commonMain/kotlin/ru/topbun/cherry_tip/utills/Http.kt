@@ -42,6 +42,9 @@ suspend fun <T>exceptionWrapper(block: suspend () -> T): T {
     } catch (e: DoubleReceiveException){
         e.printStackTrace()
         throw ParseBackendResponseException()
+    } catch (e: FailedExtractTokenException){
+        e.printStackTrace()
+        throw FailedExtractTokenException()
     } catch (e: SocketTimeoutException){
         e.printStackTrace()
         throw RequestTimeoutException()

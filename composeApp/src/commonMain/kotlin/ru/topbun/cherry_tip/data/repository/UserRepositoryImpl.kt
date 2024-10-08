@@ -3,6 +3,7 @@ package ru.topbun.cherry_tip.data.repository
 import ru.topbun.cherry_tip.data.source.local.dataStore.Settings
 import androidx.datastore.preferences.core.edit
 import io.ktor.client.call.body
+import io.ktor.http.HttpStatusCode
 import ru.topbun.cherry_tip.data.mapper.toDto
 import ru.topbun.cherry_tip.data.mapper.toEntity
 import ru.topbun.cherry_tip.data.source.local.dataStore.AppSettings
@@ -49,7 +50,9 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getAccountInfo(): AccountInfoEntity = exceptionWrapper {
-        api.getAccountInfo(dataStore.getToken()).codeResultWrapper().body<AccountInfoDto>().toEntity()
+        val response = api.getAccountInfo(dataStore.getToken())
+        if (response.status == HttpStatusCode.NotFound) throw FailedExtractTokenException()
+        response.codeResultWrapper().body<AccountInfoDto>().toEntity()
     }
 
     override suspend fun tokenIsValid() {

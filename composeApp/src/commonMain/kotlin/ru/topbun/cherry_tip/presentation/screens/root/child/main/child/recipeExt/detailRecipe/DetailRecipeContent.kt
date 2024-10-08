@@ -1,6 +1,5 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.recipeExt.detailRecipe
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -24,8 +22,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
@@ -46,6 +47,7 @@ import cherrytip.composeapp.generated.resources.unknown
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -134,7 +136,47 @@ private fun ModalContent(
 @Composable
 private fun Description(recipe: RecipeEntity) {
     Box(Modifier.fillMaxWidth().heightIn(min = 80.dp)) {
-        Texts.General(recipe.descr.toStringOrBlank())
+        var resultDescr by remember { mutableStateOf<List<StepRecipe>>(emptyList()) }
+        recipe.descr?.let { descr ->
+            LaunchedEffect(true) {
+                kotlin.runCatching {
+                    resultDescr = Json.decodeFromString<List<StepRecipe>>(descr)
+                }.onFailure {
+                    it.printStackTrace()
+                    resultDescr = listOf(StepRecipe(descr.toStringOrBlank(),null))
+                }
+
+            }
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            resultDescr.forEachIndexed{ index, item ->
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Row {
+                        if (resultDescr.size > 1) {
+                            Texts.Title((index + 1).toString(), color = Colors.DarkGray)
+                            Spacer(Modifier.width(12.dp))
+                        }
+                        Texts.General(
+                            text = item.text,
+                            textAlign = TextAlign.Justify
+                        )
+                    }
+                    item.image?.let {
+                        Spacer(Modifier.height(8.dp))
+                        AsyncImage(
+                            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)),
+                            model = it,
+                            contentDescription = null,
+                            contentScale = ContentScale.FillWidth
+                        )
+                    }
+                }
+
+            }
+        }
+
     }
 }
 

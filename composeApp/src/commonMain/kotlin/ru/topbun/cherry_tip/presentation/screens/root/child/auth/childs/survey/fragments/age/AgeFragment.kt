@@ -41,7 +41,7 @@ fun AgeFragmentContent(
     ){
         var date by remember { mutableStateOf(age) }
         SurveyComponents.WheelDatePicker(
-            startDate = age.toLocalDate(),
+            startDate = date.toLocalDate(),
             maxDate = LocalDate(LocalDate.now().year - 14, 12, 31)
         ){ date = it.toGMTDate() }
         Spacer(Modifier.weight(1f))

@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -44,12 +46,14 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.ErrorModal
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.presentation.ui.utills.getFileFromResource
+import ru.topbun.cherry_tip.presentation.ui.utills.setColorStatusBar
 
 @Composable
 fun SplashScreen(
     component: SplashComponent,
     modifier: Modifier = Modifier.background(Colors.White)
 ) {
+    setColorStatusBar(Colors.Purple, false)
     val state by component.state.collectAsState()
     val showModal = state.splashState is SplashStore.State.SplashState.NotAuth
     Box(

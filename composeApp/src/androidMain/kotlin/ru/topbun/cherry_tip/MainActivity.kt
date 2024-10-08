@@ -30,7 +30,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         val rootComponent = RootComponentImpl(defaultComponentContext())
         setContent {
-            MaterialTheme() {
+            val view = LocalView.current
+            if (!view.isInEditMode) {
+                SideEffect {
+                    val window = (view.context as Activity).window
+                    window.statusBarColor = Colors.White.toArgb()
+                    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
+                }
+            }
+            MaterialTheme {
                 AppScreen(rootComponent)
             }
         }

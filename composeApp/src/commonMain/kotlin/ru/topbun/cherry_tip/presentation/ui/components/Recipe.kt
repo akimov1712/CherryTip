@@ -74,10 +74,38 @@ fun RecipeItem(
 }
 
 @Composable
+fun RecipeShortWithButtonItem(
+    recipe: RecipeEntity,
+    icon: Painter,
+    onClickItem: (RecipeEntity) -> Unit,
+    onClickButton: (Int) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).clickable { onClickItem(recipe) },
+        shape = RoundedCornerShape(20.dp),
+        border = BorderStroke(1.dp, Colors.PurpleBackground),
+        colors = CardDefaults.cardColors(Colors.White)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            InfoRecipeAction(
+                recipe = recipe,
+                icon = icon
+            ) {
+                onClickButton(recipe.id)
+            }
+        }
+    }
+}
+
+@Composable
 fun InfoRecipeAction(recipe: RecipeEntity, icon: Painter, onClick: () -> Unit) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         RecipeImage(recipe)
-        Column {
+        Column(
+            modifier = Modifier.weight(1f),
+        ) {
             Texts.Option(
                 text = recipe.title,
                 textAlign = TextAlign.Start,
@@ -101,6 +129,7 @@ fun InfoRecipeAction(recipe: RecipeEntity, icon: Painter, onClick: () -> Unit) {
             onClick = onClick
         ){
             Icon(
+                modifier = Modifier.size(24.dp),
                 painter = icon,
                 contentDescription = null,
                 tint = Colors.Purple

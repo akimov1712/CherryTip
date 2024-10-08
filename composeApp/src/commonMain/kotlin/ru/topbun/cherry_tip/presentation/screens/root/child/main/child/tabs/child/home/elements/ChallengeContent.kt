@@ -78,7 +78,7 @@ fun Challenge(component: HomeComponent) {
         contentAlignment = Alignment.Center
     ) {
         when (val screenState = state.challengeStateStatus) {
-            is HomeStore.State.ChallengeStateStatus.Error -> Texts.Error(text = screenState.text)
+            is HomeStore.State.ChallengeStateStatus.Error -> Texts.Error(text = screenState.text, textAlign = TextAlign.Center, modifier = Modifier.padding(horizontal = 20.dp))
             HomeStore.State.ChallengeStateStatus.Loading -> CircularProgressIndicator(color = Colors.Purple)
             is HomeStore.State.ChallengeStateStatus.Result -> {
                 if (screenState.result.challengeStatus.isEmpty()) {

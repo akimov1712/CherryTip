@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.appendMeal.AppendMealScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngest.DetailIngestionScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challengeDetail.ChallengeDetailScreen
@@ -17,12 +18,14 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsE
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.settingsExt.units.UnitsScreen
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsScreen
 import ru.topbun.cherry_tip.presentation.ui.Colors
+import ru.topbun.cherry_tip.presentation.ui.utills.setColorStatusBar
 
 @Composable
 fun MainScreen(
     component: MainComponent,
     modifier: Modifier = Modifier.background(Colors.White).statusBarsPadding()
 ) {
+    setColorStatusBar(Colors.White, true)
     Children(
         stack = component.stack,
         animation = stackAnimation { child -> defaultAnimationScreen }
@@ -60,6 +63,10 @@ fun MainScreen(
 
             is MainComponent.Child.DetailIngest -> {
                 DetailIngestionScreen(instance.component, modifier)
+            }
+
+            is MainComponent.Child.AppendMeal -> {
+                AppendMealScreen(instance.component, modifier)
             }
         }
     }

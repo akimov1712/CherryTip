@@ -96,6 +96,7 @@ import ru.topbun.cherry_tip.utills.getPeriodDate
 import ru.topbun.cherry_tip.utills.now
 import ru.topbun.cherry_tip.utills.toLocalDate
 import ru.topbun.cherry_tip.utills.toStringOrBlank
+import kotlin.math.roundToInt
 
 @Composable
 fun CalendarScreen(
@@ -208,7 +209,8 @@ private fun getProgressIngestion(calendar: CalendarEntity, type: CalendarType, k
 }
 
 @Composable
-fun IngestionItem(calendar: CalendarObjects, value: String, progress: Float, onClickIngest:(CalendarType) -> Unit, onClickButton: (CalendarType) -> Unit) {
+fun IngestionItem(calendar: CalendarObjects, value: String, progress: Float,
+                  onClickIngest:(CalendarType) -> Unit, onClickButton: (CalendarType) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -326,9 +328,9 @@ private fun MainInformation(component: CalendarComponent) {
 fun Nutrients(component: CalendarComponent) {
     val state by component.state.collectAsState()
     val calendar by state.getCalendar()
-    val eatenProtein = calendar.recipes.map { it.recipes.map { it.protein.toInt() } }.flatten().sum()
-    val eatenCarbs = calendar.recipes.map { it.recipes.map { it.carbs.toInt() } }.flatten().sum()
-    val eatenFat = calendar.recipes.map { it.recipes.map { it.fat.toInt() } }.flatten().sum()
+    val eatenProtein = calendar.recipes.map { it.recipes.map { it.protein.toFloat().roundToInt() } }.flatten().sum()
+    val eatenCarbs = calendar.recipes.map { it.recipes.map { it.carbs.toFloat().roundToInt() } }.flatten().sum()
+    val eatenFat = calendar.recipes.map { it.recipes.map { it.fat.toFloat().roundToInt() } }.flatten().sum()
     Row(
         modifier = Modifier.fillMaxWidth(),
     ) {

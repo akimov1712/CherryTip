@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
@@ -49,6 +50,7 @@ import cherrytip.composeapp.generated.resources.lunch
 import cherrytip.composeapp.generated.resources.snack
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
@@ -60,7 +62,10 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
 import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.InfoRecipeAction
 import ru.topbun.cherry_tip.presentation.ui.components.NotFoundContent
+import ru.topbun.cherry_tip.presentation.ui.components.RecipeItem
+import ru.topbun.cherry_tip.presentation.ui.components.RecipeShortWithButtonItem
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
+import kotlin.math.roundToInt
 
 @Composable
 fun DetailIngestionScreen(
@@ -152,39 +157,15 @@ private fun RecipeList(component: DetailIngestComponent, onClickRecipe: (RecipeE
         ) {
             if (state.recipeList.isEmpty()) item { NotFoundContent(modifier = Modifier.align(Alignment.Center).padding(horizontal = 20.dp)) }
             items(items = state.recipeList, key = { it.id }) {
-                RecipeItem(
+                RecipeShortWithButtonItem(
                     recipe = it,
+                    icon = painterResource(Res.drawable.ic_cancel),
                     onClickItem = onClickRecipe
                 ) { component.cancelRecipe(it) }
             }
         }
     }
 
-}
-
-@Composable
-private fun RecipeItem(
-    recipe: RecipeEntity,
-    onClickItem: (RecipeEntity) -> Unit,
-    onClickCancel: (Int) -> Unit
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).clickable { onClickItem(recipe) },
-        shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, Colors.PurpleBackground),
-        colors = CardDefaults.cardColors(Colors.White)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            InfoRecipeAction(
-                recipe = recipe,
-                icon = painterResource(Res.drawable.ic_cancel)
-            ) {
-                onClickCancel(recipe.id)
-            }
-        }
-    }
 }
 
 @Composable
@@ -207,9 +188,9 @@ private fun Information(component: DetailIngestComponent) {
             )
         }
         Row {
-            val protein = calendar.recipes.sumOf { it.protein.toInt() }
-            val carbs = calendar.recipes.sumOf { it.carbs.toInt() }
-            val fat = calendar.recipes.sumOf { it.fat.toInt() }
+            val protein = calendar.recipes.sumOf { it.protein.toFloat().roundToInt() }
+            val carbs = calendar.recipes.sumOf { it.carbs.toFloat().roundToInt() }
+            val fat = calendar.recipes.sumOf { it.fat.toFloat().roundToInt() }
             ValueWithProperty(
                 value = protein.toString(),
                 property = "Protein"

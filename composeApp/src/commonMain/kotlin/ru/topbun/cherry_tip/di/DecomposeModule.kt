@@ -19,6 +19,8 @@ import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.splash.S
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.SurveyStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.MainComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.appendMeal.AppendMealComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.appendMeal.AppendMealStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngest.DetailIngestComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngest.DetailIngestStoreFactory
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponentImpl
@@ -53,7 +55,6 @@ val decomposeModule = module {
     signUpModule()
     reminderModule()
     surveyModule()
-
     mainModule()
     tabsModule()
     homeModule()
@@ -68,6 +69,29 @@ val decomposeModule = module {
     addRecipeModule()
     calendarModule()
     detailIngestModule()
+    appendMealModule()
+}
+
+private fun Module.appendMealModule(){
+    factory<AppendMealStoreFactory> { AppendMealStoreFactory(get(), get(), get(), get(),get(),get(),get(),get()) }
+    factory { params ->
+        val componentContext = params.get<ComponentContext>()
+        val date = params.get<LocalDate>()
+        val calendarType = params.get<CalendarType>()
+        val onClickAddRecipe = params.get<() -> Unit>()
+        val onClickBack = params.get<() -> Unit>()
+        val onLogOut = params.get<() -> Unit>()
+
+        AppendMealComponentImpl(
+            componentContext = componentContext,
+            date = date,
+            calendarType = calendarType,
+            onClickAddRecipe = onClickAddRecipe,
+            onClickBack = onClickBack,
+            onLogOut = onLogOut,
+            storeFactory = get(),
+        )
+    }
 }
 
 private fun Module.detailIngestModule(){

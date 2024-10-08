@@ -13,6 +13,7 @@ import kotlinx.serialization.Serializable
 import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
+import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.appendMeal.AppendMealComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngest.DetailIngestComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendarExt.detailIngest.DetailIngestComponentImpl
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.homeExt.challenge.ChallengeComponentImpl
@@ -48,7 +49,7 @@ class MainComponentImpl(
             val onClickGoals = { navigation.pushToFront(Config.Goal) }
             val onClickUnits = { navigation.pushToFront(Config.Units) }
             val onClickAddRecipe = { navigation.pushToFront(Config.AddRecipe) }
-            val onClickAppendMeal: (LocalDate, CalendarType) -> Unit = { date, type -> }
+            val onClickAppendMeal: (LocalDate, CalendarType) -> Unit = { date, type -> navigation.pushToFront(Config.AppendMeal(date, type)) }
             val onClickDetailIngest: (LocalDate, CalendarType) -> Unit = { date, type -> navigation.pushToFront(Config.DetailIngest(date, type)) }
             val component: TabsComponentImpl = getKoin().get{
                 parametersOf(
@@ -122,7 +123,7 @@ class MainComponentImpl(
 
         is Config.DetailIngest -> {
             val onClickBack = { navigation.pop() }
-            val onClickAddMeal = {  }
+            val onClickAddMeal = { navigation.pushToFront(Config.AppendMeal(config.date,config.calendarType)) }
             val component: DetailIngestComponentImpl = getKoin().get{
                 parametersOf(
                     componentContext,
@@ -134,6 +135,22 @@ class MainComponentImpl(
                 )
             }
             MainComponent.Child.DetailIngest(component)
+        }
+
+        is Config.AppendMeal -> {
+            val onClickAddRecipe = { navigation.pushToFront(Config.AddRecipe) }
+            val onClickBack = { navigation.pop() }
+            val component: AppendMealComponentImpl = getKoin().get{
+                parametersOf(
+                    componentContext,
+                    config.date,
+                    config.calendarType,
+                    onClickAddRecipe,
+                    onClickBack,
+                    onOpenAuth
+                )
+            }
+            MainComponent.Child.AppendMeal(component)
         }
     }
 
@@ -149,6 +166,8 @@ class MainComponentImpl(
         @Serializable data object Units: Config
         @Serializable data object AddRecipe: Config
         @Serializable data class DetailIngest(val date: LocalDate, val calendarType: CalendarType) : Config
+        @Serializable data class AppendMeal(val date: LocalDate, val calendarType: CalendarType) : Config
+
     }
 
 }

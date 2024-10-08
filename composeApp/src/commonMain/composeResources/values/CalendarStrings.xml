@@ -11,4 +11,5 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="select_date">Select date</string>
+    <string name="added">Added</string>
 </resources>
