@@ -2,7 +2,9 @@ package ru.topbun.cherry_tip.data.mapper
 
 import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarDto
 import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarRecipeDto
-import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarTypeRecipeDto
+import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarRecipeByTypeDto
+import ru.topbun.cherry_tip.data.source.network.dto.calendar.SetRecipeToDayResponse
+import ru.topbun.cherry_tip.data.source.network.dto.recipe.RecipeDto
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarRecipeEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarRecipeByTypeEntity
@@ -24,7 +26,8 @@ fun CalendarDto.toEntity() = CalendarEntity(
     recipes = recipes.map { it.toEntity() },
 )
 
-fun CalendarTypeRecipeDto.toEntity() = CalendarRecipeByTypeEntity(
+
+fun CalendarRecipeByTypeDto.toEntity() = CalendarRecipeByTypeEntity(
     id = id,
     category = category,
     dayId = dayId,
@@ -37,4 +40,19 @@ fun CalendarRecipeDto.toEntity() = CalendarRecipeEntity(
     protein = protein,
     fat = fat,
     carbs = carbs,
+)
+
+fun SetRecipeToDayResponse.toEntity() = CalendarRecipeByTypeEntity(
+    id = id,
+    category = category,
+    dayId = dayId,
+    recipes = recipes.map { it.toCalendarRecipeEntity() }
+)
+
+fun RecipeDto.toCalendarRecipeEntity() = CalendarRecipeEntity(
+    id = id,
+    calories = calories ?: 0,
+    protein = protein.toString(),
+    fat = fat.toString(),
+    carbs = carbs.toString()
 )

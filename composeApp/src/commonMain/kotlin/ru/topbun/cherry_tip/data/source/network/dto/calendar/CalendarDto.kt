@@ -1,9 +1,7 @@
 package ru.topbun.cherry_tip.data.source.network.dto.calendar
 
-import io.ktor.util.date.GMTDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarTypeRecipeDto
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType
 
 @Serializable
@@ -20,5 +18,5 @@ data class CalendarDto(
     @SerialName("dinner") val dinner: Int,
     @SerialName("snack") val snack: Int,
     @SerialName("userId") val userId: String,
-    @SerialName("recipes") val recipes: List<CalendarTypeRecipeDto>
+    @SerialName("recipes") val recipes: List<CalendarRecipeByTypeDto>
 )

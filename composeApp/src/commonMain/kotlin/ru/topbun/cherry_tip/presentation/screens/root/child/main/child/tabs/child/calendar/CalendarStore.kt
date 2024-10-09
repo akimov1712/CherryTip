@@ -69,7 +69,7 @@ class CalendarStoreFactory(
                 calendar = null,
                 State.CalendarState.Initial
             ),
-            bootstrapper = BootstrapperImpl(),
+            bootstrapper = null,
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {}
@@ -91,27 +91,6 @@ class CalendarStoreFactory(
         data class CalendarError(val msg: String): Msg
         data object CalendarLoading: Msg
         data class CalendarResult(val calendar: CalendarEntity): Msg
-    }
-
-    private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
-
-        var job: Job? = null
-
-        override fun invoke() {
-            job?.cancel()
-            job = scope.launch(handlerTokenException { dispatch(Action.OpenAuthScreen)} ) {
-                wrapperStoreException({
-                    dispatch(Action.CalendarLoading)
-                    val info = getAccountInfoUseCase()
-                    val datePeriod = getPeriodDate(info.createdAt)
-                    val calendar = getInfoDayUseCase(datePeriod.last().toGMTDate())
-                    dispatch(Action.SetListDays(datePeriod))
-                    dispatch(Action.CalendarResult(calendar))
-                }){
-                   dispatch(Action.CalendarError(it))
-                }
-            }
-        }
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {

@@ -202,7 +202,7 @@ private fun Recipes(
             contentAlignment = Alignment.Center
         ) {
             if (screenState == RecipeState.Loading) {
-                CircularProgressIndicator(color = Colors.Purple)
+                CircularProgressIndicator(modifier = Modifier.padding(top = 48.dp), color = Colors.Purple)
             }
             if (screenState == RecipeState.Result) {
                 NotFoundContent(Modifier.padding(horizontal = 20.dp).align(Alignment.Center))

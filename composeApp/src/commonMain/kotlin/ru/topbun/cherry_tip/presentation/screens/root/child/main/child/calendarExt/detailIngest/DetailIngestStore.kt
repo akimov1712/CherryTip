@@ -83,7 +83,7 @@ class DetailIngestStoreFactory(
                 calendarState = State.CalendarTypeState.Initial,
                 recipesState = State.RecipesState.Initial,
             ),
-            bootstrapper = BootstrapperImpl(date, calendarType),
+            bootstrapper = null,
             executorFactory = { ExecutorImpl(date, calendarType) },
             reducer = ReducerImpl
         ) {}
@@ -112,47 +112,6 @@ class DetailIngestStoreFactory(
         data class SetNeedCalories(val calories: Int) : Msg
     }
 
-    private inner class BootstrapperImpl(
-        private val date: LocalDate,
-        private val calendarType: CalendarType
-    ) : CoroutineBootstrapper<Action>() {
-
-        override fun invoke() {
-            scope.launch(handlerTokenException { dispatch(Action.OpenAuth) }) {
-                wrapperStoreException({
-                    dispatch(Action.CalendarLoading)
-                    val calendar = getInfoDayUseCase(date.toGMTDate())
-                    val calories = when(calendarType){
-                        CalendarType.Breakfast -> calendar.breakfast
-                        CalendarType.Lunch -> calendar.lunch
-                        CalendarType.Dinner -> calendar.dinner
-                        CalendarType.Snack -> calendar.snack
-                    }
-                    dispatch(Action.SetNeedCalories(calories))
-                    val calendarRecipes = calendar.recipes.find { it.category == calendarType } ?: throw ConnectException("Not found recipes")
-                    dispatch(Action.CalendarResult(calendarRecipes))
-                    loadRecipes(calendarRecipes)
-                }) {
-                    dispatch(Action.CalendarError(it))
-                }
-            }
-        }
-
-        private suspend fun CoroutineScope.loadRecipes(calendar: CalendarRecipeByTypeEntity) {
-            dispatch(Action.RecipesLoading)
-            val recipes = calendar.recipes.map {
-                async {
-                    try {
-                        getRecipeWithIdUseCase(it.id)
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
-            }.awaitAll().filterNotNull()
-            dispatch(Action.RecipesResult(recipes))
-        }
-
-    }
 
     private inner class ExecutorImpl(private val date: LocalDate, private val calendarType: CalendarType) : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
         override fun executeAction(action: Action) {
@@ -214,10 +173,10 @@ class DetailIngestStoreFactory(
                             val recipes = state.recipeList
                             val newRecipes = recipes.filter { it.id != intent.id }
                             val recipesIds = newRecipes.map{ it.id }
-                            val newCalendar = setRecipeToDayUseCase(date.toGMTDate(), calendarType, recipesIds).recipes.find { it.category == calendarType } ?: throw ConnectException("Not found recipes")
+                            val newCalendar = setRecipeToDayUseCase(date.toGMTDate(), calendarType, recipesIds)
+                            loadRecipes(newCalendar)
                             getInfoDayUseCase(date.toGMTDate())
                             dispatch(Msg.CalendarResult(newCalendar))
-                            dispatch(Msg.RecipesResult(newRecipes))
                         }){
                             dispatch(Msg.CalendarError(it))
                         }

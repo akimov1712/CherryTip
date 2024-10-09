@@ -43,6 +43,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -105,6 +107,7 @@ fun CalendarScreen(
 ) {
     val state by component.state.collectAsState()
     var openChoiceDateModal by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { component.loadCalendar() }
     Column(
         modifier.fillMaxWidth()
             .verticalScroll(rememberScrollState())
@@ -125,7 +128,7 @@ fun CalendarScreen(
                         component.loadCalendar()
                     }
                 }
-                CalendarStore.State.CalendarState.Loading -> CircularProgressIndicator(color = Colors.Purple)
+                CalendarStore.State.CalendarState.Loading -> CircularProgressIndicator(modifier = Modifier.padding(top = 48.dp), color = Colors.Purple)
                 CalendarStore.State.CalendarState.Result -> {
                     Column(
                         modifier = Modifier.fillMaxWidth()
