@@ -1,8 +1,8 @@
 package ru.topbun.cherry_tip.domain.entity.calendar
 
-data class CalendarRecipeByTypeEntity(
+data class MealEntity(
     val id: Int,
-    val category: CalendarType,
+    val calendarType: CalendarType,
     val dayId: Int,
     val recipes: List<CalendarRecipeEntity>
 )

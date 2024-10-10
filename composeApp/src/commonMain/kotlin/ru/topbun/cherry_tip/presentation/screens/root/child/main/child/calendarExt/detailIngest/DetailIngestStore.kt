@@ -3,14 +3,13 @@ package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.calendar
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import ru.topbun.cherry_tip.domain.entity.calendar.CalendarRecipeByTypeEntity
+import ru.topbun.cherry_tip.domain.entity.calendar.MealEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
 import ru.topbun.cherry_tip.domain.entity.recipe.RecipeEntity
 import ru.topbun.cherry_tip.domain.useCases.calendar.GetInfoDayUseCase
@@ -35,7 +34,7 @@ interface DetailIngestStore : Store<Intent, State, Label> {
 
     data class State(
         val needCalories: Int,
-        val calendarRecipes: CalendarRecipeByTypeEntity?,
+        val calendarRecipes: MealEntity?,
         val calendarType: CalendarType,
         val recipeList: List<RecipeEntity>,
         val calendarState: CalendarTypeState,
@@ -93,7 +92,7 @@ class DetailIngestStoreFactory(
 
         data object CalendarLoading : Action
         data class CalendarError(val msg: String) : Action
-        data class CalendarResult(val calendarRecipes: CalendarRecipeByTypeEntity) : Action
+        data class CalendarResult(val calendarRecipes: MealEntity) : Action
 
         data object RecipesLoading : Action
         data class RecipesResult(val recipes: List<RecipeEntity>) : Action
@@ -104,7 +103,7 @@ class DetailIngestStoreFactory(
     private sealed interface Msg {
         data object CalendarLoading : Msg
         data class CalendarError(val msg: String) : Msg
-        data class CalendarResult(val calendarRecipes: CalendarRecipeByTypeEntity) : Msg
+        data class CalendarResult(val calendarRecipes: MealEntity) : Msg
 
         data object RecipesLoading : Msg
         data class RecipesResult(val recipes: List<RecipeEntity>) : Msg
@@ -127,7 +126,7 @@ class DetailIngestStoreFactory(
             }
         }
 
-        private suspend fun CoroutineScope.loadRecipes(calendar: CalendarRecipeByTypeEntity) {
+        private suspend fun CoroutineScope.loadRecipes(calendar: MealEntity) {
             dispatch(Msg.RecipesLoading)
             val recipes = calendar.recipes.map {
                 async {
@@ -159,7 +158,7 @@ class DetailIngestStoreFactory(
                                 CalendarType.Snack -> calendar.snack
                             }
                             dispatch(Msg.SetNeedCalories(calories))
-                            val calendarRecipes = calendar.recipes.find { it.category == calendarType } ?: throw ConnectException("Not found recipes")
+                            val calendarRecipes = calendar.recipes.find { it.calendarType == calendarType } ?: throw ConnectException("Not found recipes")
                             dispatch(Msg.CalendarResult(calendarRecipes))
                             loadRecipes(calendarRecipes)
                         }) {

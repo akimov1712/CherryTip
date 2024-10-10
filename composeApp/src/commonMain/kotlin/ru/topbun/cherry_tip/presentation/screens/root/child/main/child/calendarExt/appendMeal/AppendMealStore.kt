@@ -6,7 +6,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import io.ktor.util.date.GMTDate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -151,7 +150,7 @@ class AppendMealStoreFactory(
             scope.launch(handlerTokenException { dispatch(Action.LogOut) }) {
                 wrapperStoreException({
                     val calendar = getInfoDayUseCase(date.toGMTDate())
-                    val calendarRecipes = calendar.recipes.find { it.category == calendarType } ?: throw ConnectException("Not found recipes")
+                    val calendarRecipes = calendar.recipes.find { it.calendarType == calendarType } ?: throw ConnectException("Not found recipes")
                     val recipes = calendarRecipes.recipes.map {
                         async {
                             try {

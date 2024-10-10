@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
 
 @Serializable
-data class CalendarRecipeByTypeDto(
+data class SetRecipeResponse(
     @SerialName("id") val id: Int,
-    @SerialName("category") val category: CalendarType,
+    @SerialName("category") val calendarType: CalendarType,
     @SerialName("dayId") val dayId: Int,
-    @SerialName("recipes") val recipes: List<CalendarRecipeDto>
+    @SerialName("recipes") val recipes: List<RecipeListResponse>
 )

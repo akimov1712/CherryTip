@@ -6,6 +6,7 @@ import io.ktor.client.call.body
 import ru.topbun.cherry_tip.data.mapper.toDto
 import ru.topbun.cherry_tip.data.mapper.toLogin
 import ru.topbun.cherry_tip.data.source.local.dataStore.AppSettings
+import ru.topbun.cherry_tip.data.source.network.dto.auth.TokenDto
 import ru.topbun.cherry_tip.data.source.network.service.AuthApi
 import ru.topbun.cherry_tip.domain.entity.auth.LoginEntity
 import ru.topbun.cherry_tip.domain.entity.auth.SignUpEntity
@@ -24,7 +25,7 @@ class AuthRepositoryImpl(
         val response = authApi.login(login.toDto()).codeResultWrapper()
         try {
             dataStore.edit {
-                it[AppSettings.KEY_TOKEN] = response.body<String>()
+                it[AppSettings.KEY_TOKEN] = response.body<TokenDto>().token
             }
         } catch (e: Exception){
             throw ParseBackendResponseException()

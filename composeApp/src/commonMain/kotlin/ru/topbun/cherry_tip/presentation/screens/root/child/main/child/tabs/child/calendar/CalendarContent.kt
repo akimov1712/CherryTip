@@ -1,7 +1,6 @@
 package ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.calendar
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -18,33 +16,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CalendarLocale
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerFormatter
-import androidx.compose.material3.DatePickerState
-import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -56,14 +40,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.calendar
-import cherrytip.composeapp.generated.resources.cancel
 import cherrytip.composeapp.generated.resources.carbs
 import cherrytip.composeapp.generated.resources.eaten
 import cherrytip.composeapp.generated.resources.fat
@@ -72,32 +53,19 @@ import cherrytip.composeapp.generated.resources.ic_append
 import cherrytip.composeapp.generated.resources.ic_calendar
 import cherrytip.composeapp.generated.resources.ic_cutlery
 import cherrytip.composeapp.generated.resources.ic_scale
-import cherrytip.composeapp.generated.resources.ok
 import cherrytip.composeapp.generated.resources.protein
 import cherrytip.composeapp.generated.resources.remaining
-import cherrytip.composeapp.generated.resources.retry
-import cherrytip.composeapp.generated.resources.select_date
-import dev.darkokoa.datetimewheelpicker.WheelDatePicker
-import io.ktor.util.date.GMTDate
-import io.ktor.util.date.Month
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
-import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.TabsComponent
 import ru.topbun.cherry_tip.presentation.ui.Colors
-import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.DialogDatePicker
 import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.NutrientsItem
 import ru.topbun.cherry_tip.presentation.ui.components.ProgressBars
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
-import ru.topbun.cherry_tip.utills.getPeriodDate
-import ru.topbun.cherry_tip.utills.now
-import ru.topbun.cherry_tip.utills.toLocalDate
-import ru.topbun.cherry_tip.utills.toStringOrBlank
 import kotlin.math.roundToInt
 
 @Composable
@@ -202,12 +170,12 @@ private fun Ingestion(component: CalendarComponent) {
 }
 
 private fun getValueIngestion(calendar: CalendarEntity, type: CalendarType, kcalIngestion: Int): String{
-    val eatenKcalories = calendar.recipes.filter { it.category == type }.map { it.recipes.map { it.calories } }.flatten().sum()
+    val eatenKcalories = calendar.recipes.filter { it.calendarType == type }.map { it.recipes.map { it.calories } }.flatten().sum()
     return "$eatenKcalories/$kcalIngestion kcal"
 }
 
 private fun getProgressIngestion(calendar: CalendarEntity, type: CalendarType, kcalIngestion: Int): Float{
-    val eatenKcalories = calendar.recipes.filter { it.category == type }.map { it.recipes.map { it.calories } }.flatten().sum()
+    val eatenKcalories = calendar.recipes.filter { it.calendarType == type }.map { it.recipes.map { it.calories } }.flatten().sum()
     return eatenKcalories.toFloat()/kcalIngestion
 }
 

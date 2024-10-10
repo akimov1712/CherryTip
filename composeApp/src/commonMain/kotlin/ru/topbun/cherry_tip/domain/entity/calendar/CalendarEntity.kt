@@ -16,5 +16,5 @@ data class CalendarEntity(
     val dinner: Int,
     val snack: Int,
     val userId: String,
-    val recipes: List<CalendarRecipeByTypeEntity>
+    val recipes: List<MealEntity>
 )

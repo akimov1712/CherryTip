@@ -18,5 +18,5 @@ data class CalendarDto(
     @SerialName("dinner") val dinner: Int,
     @SerialName("snack") val snack: Int,
     @SerialName("userId") val userId: String,
-    @SerialName("recipes") val recipes: List<CalendarRecipeByTypeDto>
+    @SerialName("meals") val recipes: List<MealDto>
 )

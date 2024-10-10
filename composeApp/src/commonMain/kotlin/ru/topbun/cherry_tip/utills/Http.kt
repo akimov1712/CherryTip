@@ -9,6 +9,7 @@ import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.client.statement.readText
+import io.ktor.serialization.JsonConvertException
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -30,6 +31,9 @@ suspend fun <T>exceptionWrapper(block: suspend () -> T): T {
     } catch (e: TimeoutCancellationException){
         e.printStackTrace()
         throw RequestTimeoutException()
+    } catch (e: JsonConvertException){
+        e.printStackTrace()
+        throw ParseBackendResponseException()
     } catch (e: ConnectTimeoutException){
         e.printStackTrace()
         throw RequestTimeoutException()

@@ -31,7 +31,7 @@ suspend fun wrapperStoreException(tryBlock: suspend () -> Unit, onFinally: () ->
     } catch (e: ConnectException){
         onError(e.errorText)
     } catch (e: ParseBackendResponseException) {
-        onError("Error while receiving data from the server")
+        onError("Error receiving response")
     }  finally {
         onFinally()
     }

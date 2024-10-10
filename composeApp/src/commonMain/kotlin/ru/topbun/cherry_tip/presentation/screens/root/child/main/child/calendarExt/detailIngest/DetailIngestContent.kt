@@ -158,7 +158,7 @@ private fun RecipeList(component: DetailIngestComponent, onClickRecipe: (RecipeE
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (state.recipeList.isEmpty()) item { NotFoundContent(modifier = Modifier.align(Alignment.Center).padding(horizontal = 20.dp)) }
-            items(items = state.recipeList, key = { it.id }) {
+            items(items = state.recipeList, key = null) {
                 RecipeShortWithButtonItem(
                     recipe = it,
                     icon = painterResource(Res.drawable.ic_cancel),

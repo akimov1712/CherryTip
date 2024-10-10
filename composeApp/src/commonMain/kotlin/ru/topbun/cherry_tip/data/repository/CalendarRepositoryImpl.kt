@@ -6,11 +6,11 @@ import ru.topbun.cherry_tip.data.mapper.toEntity
 import ru.topbun.cherry_tip.data.source.local.dataStore.Settings
 import ru.topbun.cherry_tip.data.source.local.getToken
 import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarDto
-import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarRecipeByTypeDto
-import ru.topbun.cherry_tip.data.source.network.dto.calendar.SetRecipeToDayResponse
+import ru.topbun.cherry_tip.data.source.network.dto.calendar.MealDto
+import ru.topbun.cherry_tip.data.source.network.dto.calendar.SetRecipeResponse
 import ru.topbun.cherry_tip.data.source.network.service.CalendarApi
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarEntity
-import ru.topbun.cherry_tip.domain.entity.calendar.CalendarRecipeByTypeEntity
+import ru.topbun.cherry_tip.domain.entity.calendar.MealEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
 import ru.topbun.cherry_tip.domain.repository.CalendarRepository
 import ru.topbun.cherry_tip.utills.codeResultWrapper
@@ -26,13 +26,13 @@ class CalendarRepositoryImpl(
         date: GMTDate,
         category: CalendarType,
         recipes: List<Int>
-    ): CalendarRecipeByTypeEntity = exceptionWrapper{
+    ): MealEntity = exceptionWrapper{
         api.setRecipeToDay(
             token = settings.getToken(),
             date = date.toIso8601(),
             category = category,
             recipes = recipes
-        ).codeResultWrapper().body<SetRecipeToDayResponse>().toEntity()
+        ).codeResultWrapper().body<SetRecipeResponse>().toEntity()
     }
 
     override suspend fun getInfoDay(date: GMTDate): CalendarEntity = exceptionWrapper{

@@ -28,7 +28,7 @@ fun ActiveFragmentContent(
     onClickStart: (ActiveType) -> Unit
 ) {
     SurveyComponents.FragmentWrapper(
-        modifier = modifier.verticalScroll(rememberScrollState()),
+        modifier = modifier,
         title = stringResource(Res.string.how_active_you)
     ){
         var selectedType = remember { mutableStateOf(active) }
@@ -36,7 +36,7 @@ fun ActiveFragmentContent(
             modifier = Modifier.fillMaxWidth(),
             selectedType = selectedType,
         )
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.weight(1f))
         SurveyComponents.ButtonsNavigation(
             onClickBack = onClickBack,
             onClickNext = { onClickStart(selectedType.value) },

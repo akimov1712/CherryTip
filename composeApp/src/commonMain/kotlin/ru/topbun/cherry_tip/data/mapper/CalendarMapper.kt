@@ -1,13 +1,13 @@
 package ru.topbun.cherry_tip.data.mapper
 
 import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarDto
-import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarRecipeDto
-import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarRecipeByTypeDto
-import ru.topbun.cherry_tip.data.source.network.dto.calendar.SetRecipeToDayResponse
-import ru.topbun.cherry_tip.data.source.network.dto.recipe.RecipeDto
+import ru.topbun.cherry_tip.data.source.network.dto.calendar.CalendarRecipeListDto
+import ru.topbun.cherry_tip.data.source.network.dto.calendar.MealDto
+import ru.topbun.cherry_tip.data.source.network.dto.calendar.RecipeListResponse
+import ru.topbun.cherry_tip.data.source.network.dto.calendar.SetRecipeResponse
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarRecipeEntity
-import ru.topbun.cherry_tip.domain.entity.calendar.CalendarRecipeByTypeEntity
+import ru.topbun.cherry_tip.domain.entity.calendar.MealEntity
 import ru.topbun.cherry_tip.utills.parseToGMTDate
 
 fun CalendarDto.toEntity() = CalendarEntity(
@@ -26,33 +26,33 @@ fun CalendarDto.toEntity() = CalendarEntity(
     recipes = recipes.map { it.toEntity() },
 )
 
+fun SetRecipeResponse.toEntity() = MealEntity(
+    id = this.id,
+    calendarType = this.calendarType,
+    dayId = this.dayId,
+    recipes = recipes.map { it.toEntity() }
+)
 
-fun CalendarRecipeByTypeDto.toEntity() = CalendarRecipeByTypeEntity(
+fun RecipeListResponse.toEntity() = CalendarRecipeEntity(
+    id = this.recipe.id,
+    calories = this.recipe.calories ?: 0,
+    protein = this.recipe.protein.toString(),
+    fat = this.recipe.fat.toString(),
+    carbs = this.recipe.carbs.toString(),
+)
+
+
+fun MealDto.toEntity() = MealEntity(
     id = id,
-    category = category,
+    calendarType = calendarType,
     dayId = dayId,
     recipes = recipes.map { it.toEntity() },
 )
 
-fun CalendarRecipeDto.toEntity() = CalendarRecipeEntity(
-    id = id,
-    calories = calories,
-    protein = protein,
-    fat = fat,
-    carbs = carbs,
-)
-
-fun SetRecipeToDayResponse.toEntity() = CalendarRecipeByTypeEntity(
-    id = id,
-    category = category,
-    dayId = dayId,
-    recipes = recipes.map { it.toCalendarRecipeEntity() }
-)
-
-fun RecipeDto.toCalendarRecipeEntity() = CalendarRecipeEntity(
-    id = id,
-    calories = calories ?: 0,
-    protein = protein.toString(),
-    fat = fat.toString(),
-    carbs = carbs.toString()
+fun CalendarRecipeListDto.toEntity() = CalendarRecipeEntity(
+    id = this.recipe.id,
+    calories = this.recipe.calories,
+    protein = this.recipe.protein,
+    fat = this.recipe.fat,
+    carbs = this.recipe.carbs,
 )
