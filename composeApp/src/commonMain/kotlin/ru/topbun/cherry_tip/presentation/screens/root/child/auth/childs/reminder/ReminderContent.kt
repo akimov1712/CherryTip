@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -26,6 +28,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cherrytip.composeapp.generated.resources.Res
+import cherrytip.composeapp.generated.resources.get_started
+import cherrytip.composeapp.generated.resources.next
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -40,7 +45,7 @@ fun ReminderScreen(
     component: ReminderComponent,
     modifier: Modifier = Modifier.background(Colors.White)
 ) {
-    setColorStatusBar(Colors.White, true)
+    setColorStatusBar(Colors.Transparent, false)
     val state by component.state.collectAsState()
     Box(modifier) {
         ReminderImage(state.screens[state.indexSelected])
@@ -67,8 +72,11 @@ private fun ReminderCard(component: ReminderComponent, state: ReminderStore.Stat
                 val isLastScreen = state.screens.last() == state.screens[state.indexSelected]
                 Texts.Title(stringResource(state.screens[state.indexSelected].titleRes), fontSize = 30.sp)
                 Spacer(Modifier.height(20.dp))
-                Texts.General(stringResource(state.screens[state.indexSelected].descrRes))
-                Spacer(Modifier.weight(1f))
+                Texts.General(
+                    modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
+                    text = stringResource(state.screens[state.indexSelected].descrRes)
+                )
+                Spacer(Modifier.height(10.dp))
                 IndexState(state.screens.size, state.indexSelected){component.setIndexSelected(it)}
                 Spacer(Modifier.height(20.dp))
                 Buttons.Gray(
@@ -78,7 +86,7 @@ private fun ReminderCard(component: ReminderComponent, state: ReminderStore.Stat
                         else component.finishedAuth()
                     }
                 ) {
-                    val text = if(isLastScreen) "Get Started" else "Next"
+                    val text = stringResource(if(isLastScreen) Res.string.get_started else Res.string.next)
                     Texts.Button(text, fontSize = 16.sp, color = Colors.Purple)
                 }
             }

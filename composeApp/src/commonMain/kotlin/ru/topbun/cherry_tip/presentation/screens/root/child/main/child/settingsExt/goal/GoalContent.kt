@@ -30,7 +30,10 @@ import cherrytip.composeapp.generated.resources.gain_weight
 import cherrytip.composeapp.generated.resources.goal_active
 import cherrytip.composeapp.generated.resources.goal_calorie
 import cherrytip.composeapp.generated.resources.goal_goal
+import cherrytip.composeapp.generated.resources.high
 import cherrytip.composeapp.generated.resources.lose_weight
+import cherrytip.composeapp.generated.resources.low
+import cherrytip.composeapp.generated.resources.medium
 import cherrytip.composeapp.generated.resources.save
 import cherrytip.composeapp.generated.resources.settings_goals
 import cherrytip.composeapp.generated.resources.stay_healthy
@@ -39,6 +42,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.active.ActiveObjects
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.active.ActiveType
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.active.ActiveType.*
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalObjects
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType
 import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType.Gain
@@ -95,7 +99,13 @@ fun GoalScreen(
                                         Stay -> stringResource(Res.string.stay_healthy)
                                         Gain -> stringResource(Res.string.gain_weight)
                                     }
-                                    Active -> state.active.toString()
+                                    Active -> stringResource(
+                                        when(state.active){
+                                            Low -> Res.string.low
+                                            Medium -> Res.string.medium
+                                            High -> Res.string.high
+                                        }
+                                    )
                                     Calorie -> "${state.calorie} kcal"
                                 },
                                 onClickable = item != Calorie,

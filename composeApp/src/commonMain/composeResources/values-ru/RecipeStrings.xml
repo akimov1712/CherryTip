@@ -1,0 +1,48 @@
+<resources>
+    <string name="recipes">Рецепты</string>
+    <string name="my_recipes">Мои рецепты</string>
+    <string name="search">Поиск</string>
+    <string name="unknown">Неизвестно</string>
+
+    <string name="protein">Белки</string>
+    <string name="carbs">Углеводы</string>
+    <string name="fat">Жиры</string>
+
+    <string name="empty">Пусто</string>
+    <string name="filter">Фильтр</string>
+    <string name="add_recipe">Добавить рецепт</string>
+    <string name="delete_recipe">Удалить рецепт</string>
+
+    <string name="details">Детали</string>
+    <string name="recipe_name">Название рецепта</string>
+    <string name="short_descr">Краткое описание</string>
+    <string name="numerical_indicators">Числовые показатели</string>
+    <string name="preparation_time">Время приготовления (мин)</string>
+    <string name="protein_100">Белки на 100 г</string>
+    <string name="carbs_100">Углеводы на 100 г</string>
+    <string name="fat_100">Жиры на 100 г</string>
+    <string name="kcal_100">Ккал на 100 г</string>
+
+    <string name="0_min">0 мин</string>
+    <string name="0_g">0 г</string>
+
+    <string name="not_selected">Не выбрано</string>
+    <string name="difficulty">Сложность</string>
+
+    <string name="meals">Категория</string>
+    <string name="preparation_method">Способ приготовления</string>
+    <string name="diets">Диеты</string>
+
+    <string name="clear">Очистить</string>
+    <string name="add">Добавить</string>
+
+    <string name="recipe_add_error_name">Длина названия должна быть от 1 до 40 символов</string>
+    <string name="recipe_add_error_image">Добавьте фото рецепта</string>
+    <string name="recipe_add_error_kcal">Укажите калорийность блюда</string>
+    <string name="recipe_add_error_protein">Введите количество белков на 100 граммов блюда</string>
+    <string name="recipe_add_error_carbs">Введите количество углеводов на 100 граммов блюда</string>
+    <string name="recipe_add_error_fat">Введите количество жиров на 100 граммов блюда</string>
+
+    <string name="tag_loading_error">Ошибка загрузки тегов</string>
+    <string name="retry">Повторить</string>
+</resources>

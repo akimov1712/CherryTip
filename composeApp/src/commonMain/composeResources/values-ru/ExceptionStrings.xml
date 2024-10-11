@@ -1,0 +1,15 @@
+<resources>
+    <string name="account_info_not_complete">Информация об аккаунте не полная</string>
+    <string name="oops_error">Упс, что-то пошло не так</string>
+    <string name="try_again">Попробуйте снова</string>
+
+    <string name="no_result_found">Результатов не найдено</string>
+    <string name="we_cant_find">Мы не можем найти данные, соответствующие вашему запросу</string>
+
+    <string name="error_response">Ошибка получения ответа</string>
+    <string name="timed_out">Время ожидания истекло</string>
+    <string name="check_internet_connection">Не удалось подключиться к серверу, проверьте соединение с интернетом</string>
+    <string name="account_not_complete">Информация о аккаунте неполная</string>
+    <string name="error_sending_data">Ошибка при отправки данных</string>
+
+</resources>

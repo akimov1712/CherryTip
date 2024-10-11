@@ -23,4 +23,8 @@
     <string name="units_height">Height</string>
     <string name="units_blood_glucose">Blood Glucose</string>
 
+
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">high</string>
 </resources>

@@ -43,11 +43,15 @@ import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.add_meal
 import cherrytip.composeapp.generated.resources.breakfast
+import cherrytip.composeapp.generated.resources.calories
+import cherrytip.composeapp.generated.resources.carbs
 import cherrytip.composeapp.generated.resources.dinner
 import cherrytip.composeapp.generated.resources.empty
+import cherrytip.composeapp.generated.resources.fat
 import cherrytip.composeapp.generated.resources.ic_add
 import cherrytip.composeapp.generated.resources.ic_cancel
 import cherrytip.composeapp.generated.resources.lunch
+import cherrytip.composeapp.generated.resources.protein
 import cherrytip.composeapp.generated.resources.snack
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -155,7 +159,8 @@ private fun RecipeList(component: DetailIngestComponent, onClickRecipe: (RecipeE
         }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             if (state.recipeList.isEmpty()) item { NotFoundContent(modifier = Modifier.align(Alignment.Center).padding(horizontal = 20.dp)) }
             items(items = state.recipeList, key = null) {
@@ -185,7 +190,7 @@ private fun Information(component: DetailIngestComponent) {
                 fontSize = 16.sp
             )
             Texts.Light(
-                text = "Calories",
+                text = stringResource(Res.string.calories),
                 fontSize = 14.sp
             )
         }
@@ -195,15 +200,15 @@ private fun Information(component: DetailIngestComponent) {
             val fat = calendar.recipes.sumOf { it.fat.toFloat().roundToInt() }
             ValueWithProperty(
                 value = protein.toString(),
-                property = "Protein"
+                property = stringResource(Res.string.protein),
             )
             ValueWithProperty(
                 value = carbs.toString(),
-                property = "Carbs"
+                property = stringResource(Res.string.carbs),
             )
             ValueWithProperty(
                 value = fat.toString(),
-                property = "Fat"
+                property = stringResource(Res.string.fat),
             )
         }
     }

@@ -54,12 +54,9 @@ object ProgressBars{
         trackColor: Color = Colors.PurpleBackground,
         strokeCap: StrokeCap = StrokeCap.Round
     ) {
-        val progressValue = value * percentFillRound
-        val rotateDegrees = 180f + (360 * (1 - percentFillRound)) / 2
-        val animProgress by animateFloatAsState(
-            targetValue = progressValue,
-            animationSpec = tween(15000, easing = LinearOutSlowInEasing)
-        )
+        fun Float.calculateFilledProgress() = 180f + (360 * (1 - this)) / 2
+        val progressValue = value.coerceIn(0f, 1f) * percentFillRound
+        val rotateDegrees = percentFillRound.calculateFilledProgress()
         CircularProgressIndicator(
             modifier = modifier.rotate(rotateDegrees),
             progress = { percentFillRound },
@@ -69,11 +66,13 @@ object ProgressBars{
         )
         CircularProgressIndicator(
             modifier = modifier.rotate(rotateDegrees),
-            progress = { animProgress },
+            progress = { progressValue },
             color = color,
             strokeWidth = strokeWidth,
             strokeCap = strokeCap
         )
+
+
     }
 
 }

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -45,7 +46,7 @@ fun CustomTabRow(
                     .background(background),
                 selected = selected,
                 onClick = { onSelectedChange(index) },
-                text = { Texts.Button(text = text, fontSize = 16.sp, color = textColor) }
+                text = { Texts.Button(text = text, fontSize = 16.sp, color = textColor, maxLines = 1, overflow = TextOverflow.Ellipsis) }
             )
         }
     }

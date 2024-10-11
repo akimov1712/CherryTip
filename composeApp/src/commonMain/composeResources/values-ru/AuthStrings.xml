@@ -1,0 +1,61 @@
+<resources>
+    <string name="welcome_cherry_tip">Добро пожаловать в Cherry Tip</string>
+    <string name="welcome_cherry_tip_descr">Начните путь к здоровой жизни с Cherry Tip! Приложение для поддержки пути к здоровью.</string>
+
+    <string name="sign_apple">Зарегистрироваться с Apple</string>
+    <string name="sign_facebook">Зарегистрироваться с Facebook</string>
+    <string name="sign_google">Зарегистрироваться с Google</string>
+    <string name="sign_email">Зарегистрироваться с Эл. почтой</string>
+
+    <string name="have_account">Уже есть аккаунт? </string>
+    <string name="dont_have_account">Нет аккаунта? </string>
+
+    <string name="step">Шаг</string>
+    <string name="what_your_name">Как вас зовут?</string>
+    <string name="what_your_goal">Какая у вас цель?</string>
+    <string name="what_your_gender">Ваш пол?</string>
+    <string name="how_old_are_you">Сколько вам лет?</string>
+    <string name="what_your_height">Ваш рост?</string>
+    <string name="what_your_weight">Ваш вес?</string>
+    <string name="what_your_target_weight">Желаемый вес?</string>
+    <string name="how_active_you">Насколько вы активны?</string>
+    <string name="dietary_preference">Предпочтения в питании</string>
+
+    <string name="continue_string">Продолжить</string>
+    <string name="start_now">Начать сейчас</string>
+
+    <string name="lose_weight">Сбросить вес</string>
+    <string name="stay_healthy">Поддерживать здоровье</string>
+    <string name="gain_weight">Набрать вес</string>
+
+    <string name="female">Женский</string>
+    <string name="male">Мужской</string>
+
+    <string name="warning_about_changing_values">Не волнуйтесь, если не знаете точно – это можно будет изменить.</string>
+
+    <string name="inactive_title">Малоподвижный</string>
+    <string name="inactive_descr">У меня сидячий образ жизни.</string>
+    <string name="moderate_title">Умеренно активный</string>
+    <string name="moderate_descr">Часть дня я провожу на ногах.</string>
+    <string name="active_title">Активный</string>
+    <string name="active_descr">Большую часть дня занимаюсь физической работой.</string>
+
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="login">Войти</string>
+
+    <string name="username">Имя пользователя</string>
+    <string name="email">Эл. почта</string>
+    <string name="password">Пароль</string>
+    <string name="confirm_password">Подтвердить пароль</string>
+
+    <string name="sign_up_descr">Привет! Зарегистрируйтесь, чтобы начать</string>
+    <string name="login_descr">С возвращением! Рад вас видеть!</string>
+
+    <string name="or_sign_up">Или зарегистрируйтесь через</string>
+    <string name="or_login">Или войдите через</string>
+
+    <string name="username_error">Имя должно содержать от 2 до 20 символов</string>
+    <string name="email_error">Неверный формат эл. почты</string>
+    <string name="password_error">Пароль должен содержать от 4 до 24 символов</string>
+    <string name="confirm_password_error">Пароли не совпадают</string>
+</resources>

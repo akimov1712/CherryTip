@@ -38,8 +38,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
+import cherrytip.composeapp.generated.resources.active
+import cherrytip.composeapp.generated.resources.all
 import cherrytip.composeapp.generated.resources.challenges
 import cherrytip.composeapp.generated.resources.challenges_is_empty
+import cherrytip.composeapp.generated.resources.finished
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_clock
 import cherrytip.composeapp.generated.resources.ic_lightning
@@ -49,6 +52,7 @@ import coil3.compose.AsyncImagePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
+import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons.BackWithTitle
@@ -69,7 +73,15 @@ fun ChallengeScreen(
         BackWithTitle(stringResource(Res.string.challenges)) { component.clickBack() }
         Spacer(Modifier.height(30.dp))
         CustomTabRow(
-            items = state.items.map { it.toString() },
+            items = state.items.map {
+                stringResource(
+                    when(it){
+                        ChallengeStatus.Active -> Res.string.active
+                        ChallengeStatus.Finished -> Res.string.finished
+                        else -> Res.string.all
+                    }
+                )
+            },
             selectedIndex = state.selectedIndex
         ) {
             component.choiceChallengeStatus(it)

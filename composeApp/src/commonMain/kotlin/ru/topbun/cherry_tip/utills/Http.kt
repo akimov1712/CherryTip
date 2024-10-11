@@ -1,5 +1,7 @@
 package ru.topbun.cherry_tip.utills
 
+import cherrytip.composeapp.generated.resources.Res
+import cherrytip.composeapp.generated.resources.error_sending_data
 import io.ktor.client.call.DoubleReceiveException
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
@@ -17,6 +19,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
+import org.jetbrains.compose.resources.getString
 import ru.topbun.cherry_tip.data.source.network.dto.ErrorDto
 
 suspend fun <T>exceptionWrapper(block: suspend () -> T): T {
@@ -54,7 +57,7 @@ suspend fun <T>exceptionWrapper(block: suspend () -> T): T {
         throw RequestTimeoutException()
     } catch (e: IllegalStateException){
         e.printStackTrace()
-        throw ConnectException("Error sending data")
+        throw ConnectException(getString(Res.string.error_sending_data))
     } catch (e: Exception){
         e.printStackTrace()
         throw ConnectException()

@@ -1,0 +1,22 @@
+<resources>
+    <string name="nutrition_tips">Советы по питанию</string>
+    <string name="challenges">Челленджи</string>
+    <string name="see_all">Посмотреть все</string>
+    <string name="water_consumption">Потребление воды</string>
+    <string name="remember_hydrated">Не забывайте пить воду!</string>
+    <string name="more">Больше</string>
+    <string name="failed_get_drink">Не удалось получить данные о стаканах воды</string>
+    <string name="challenges_is_empty">Челленджи не найдены</string>
+    <string name="error">Ошибка</string>
+    <string name="loading">Загрузка</string>
+    <string name="preparing_challenge">Подготовка к челленджу</string>
+    <string name="stop">Остановить</string>
+    <string name="start">Начать</string>
+    <string name="start_again">Начать снова</string>
+    <string name="challenge_completed">Вы завершили челлендж. Вы можете начать его снова</string>
+
+
+    <string name="all">Все</string>
+    <string name="active">Активные</string>
+    <string name="finished">Завершённые</string>
+</resources>

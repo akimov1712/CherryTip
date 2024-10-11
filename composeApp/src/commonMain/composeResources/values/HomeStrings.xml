@@ -14,4 +14,8 @@
     <string name="start">Start</string>
     <string name="start_again">Start again</string>
     <string name="challenge_completed">You have completed the challenge. You can start it again</string>
+
+    <string name="all">All</string>
+    <string name="active">Active</string>
+    <string name="finished">Finished</string>
 </resources>

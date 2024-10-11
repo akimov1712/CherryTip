@@ -1,4 +1,4 @@
-<resources>
+<resources >
     <string name="calendar">Calendar</string>
     <string name="eaten">Eaten</string>
     <string name="remaining">Remaining</string>
@@ -12,4 +12,8 @@
     <string name="cancel">Cancel</string>
     <string name="select_date">Select date</string>
     <string name="added">Added</string>
+    <string name="calories">Calories</string>
+    <string name="lose">Lose</string>
+    <string name="stay">Stay</string>
+    <string name="gain">Gain</string>
 </resources>

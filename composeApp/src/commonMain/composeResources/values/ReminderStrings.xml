@@ -8,4 +8,7 @@
     <string name="reminder_title_3">Get ready to take on the weight loss challenge!</string>
     <string name="reminder_descr_3">Take on our challenges and achieve your goals with Cherry Tip! We offer challenges to help you gradually eliminate certain foods from your diet, such as sugar or bread.</string>
 
+
+    <string name="next">Next</string>
+    <string name="get_started">Get Started</string>
 </resources>

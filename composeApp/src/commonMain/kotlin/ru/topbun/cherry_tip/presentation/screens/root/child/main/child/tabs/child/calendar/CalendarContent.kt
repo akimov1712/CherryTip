@@ -48,18 +48,23 @@ import cherrytip.composeapp.generated.resources.calendar
 import cherrytip.composeapp.generated.resources.carbs
 import cherrytip.composeapp.generated.resources.eaten
 import cherrytip.composeapp.generated.resources.fat
+import cherrytip.composeapp.generated.resources.gain
 import cherrytip.composeapp.generated.resources.goal_goal
 import cherrytip.composeapp.generated.resources.ic_append
 import cherrytip.composeapp.generated.resources.ic_calendar
 import cherrytip.composeapp.generated.resources.ic_cutlery
 import cherrytip.composeapp.generated.resources.ic_scale
+import cherrytip.composeapp.generated.resources.lose
 import cherrytip.composeapp.generated.resources.protein
 import cherrytip.composeapp.generated.resources.remaining
+import cherrytip.composeapp.generated.resources.stay
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarEntity
 import ru.topbun.cherry_tip.domain.entity.calendar.CalendarType
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType
+import ru.topbun.cherry_tip.presentation.screens.root.child.auth.childs.survey.fragments.goal.GoalType.*
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.DialogDatePicker
 import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
@@ -290,7 +295,11 @@ private fun MainInformation(component: CalendarComponent) {
         IconWithValue(
             icon = painterResource(Res.drawable.ic_scale),
             title = stringResource(Res.string.goal_goal),
-            value = calendar.goal.toString()
+            value = stringResource(when(calendar.goal){
+                Lose -> Res.string.lose
+                Stay -> Res.string.stay
+                Gain -> Res.string.gain
+            })
         )
     }
 }

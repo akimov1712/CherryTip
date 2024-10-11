@@ -1,0 +1,31 @@
+<resources>
+    <string name="settings_account">Аккаунт</string>
+    <string name="settings_profile">Профиль</string>
+    <string name="settings_goals">Мои цели</string>
+    <string name="settings_units">Единицы измерения</string>
+    <string name="account">Аккаунт</string>
+    <string name="logout">Выйти</string>
+    <string name="save">Сохранить</string>
+    <string name="apply">Применить</string>
+
+    <string name="profile_first_name">Имя</string>
+    <string name="profile_last_name">Фамилия</string>
+    <string name="profile_city">Город</string>
+    <string name="profile_sex">Пол</string>
+    <string name="profile_date_birth">Дата рождения</string>
+
+    <string name="goal_goal">Цель</string>
+    <string name="goal_active">Уровень активности</string>
+    <string name="goal_calorie">Дневная норма калорий</string>
+
+    <string name="units_weight">Вес</string>
+    <string name="units_target_weight">Желаемый вес</string>
+    <string name="units_height">Рост</string>
+    <string name="units_blood_glucose">Уровень глюкозы в крови</string>
+
+    <string name="low">Низкий</string>
+    <string name="medium">Средний</string>
+    <string name="high">Высокий</string>
+
+
+</resources>
