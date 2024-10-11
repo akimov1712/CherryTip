@@ -163,12 +163,12 @@ private fun RecipeList(component: DetailIngestComponent, onClickRecipe: (RecipeE
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             if (state.recipeList.isEmpty()) item { NotFoundContent(modifier = Modifier.align(Alignment.Center).padding(horizontal = 20.dp)) }
-            items(items = state.recipeList, key = null) {
+            items(items = state.recipeList, key = null) { meal ->
                 RecipeShortWithButtonItem(
-                    recipe = it,
+                    recipe = meal,
                     icon = painterResource(Res.drawable.ic_cancel),
                     onClickItem = onClickRecipe
-                ) { component.cancelRecipe(it) }
+                ) { meal.mealId?.let { component.cancelRecipe(it) } }
             }
         }
     }

@@ -76,7 +76,7 @@ import kotlin.math.roundToInt
 @Composable
 fun CalendarScreen(
     component: CalendarComponent,
-    modifier: Modifier = Modifier.statusBarsPadding()
+    modifier: Modifier = Modifier
 ) {
     val state by component.state.collectAsState()
     var openChoiceDateModal by remember { mutableStateOf(false) }

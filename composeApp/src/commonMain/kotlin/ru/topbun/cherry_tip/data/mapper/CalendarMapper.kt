@@ -34,7 +34,8 @@ fun SetRecipeResponse.toEntity() = MealEntity(
 )
 
 fun RecipeListResponse.toEntity() = CalendarRecipeEntity(
-    id = this.recipe.id,
+    id = this.id,
+    recipeId = this.recipe.id,
     calories = this.recipe.calories ?: 0,
     protein = this.recipe.protein.toString(),
     fat = this.recipe.fat.toString(),
@@ -50,7 +51,8 @@ fun MealDto.toEntity() = MealEntity(
 )
 
 fun CalendarRecipeListDto.toEntity() = CalendarRecipeEntity(
-    id = this.recipe.id,
+    id = this.id,
+    recipeId = this.recipe.id,
     calories = this.recipe.calories,
     protein = this.recipe.protein,
     fat = this.recipe.fat,

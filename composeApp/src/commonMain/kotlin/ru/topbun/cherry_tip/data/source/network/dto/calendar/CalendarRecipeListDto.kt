@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CalendarRecipeListDto(
+    @SerialName("id") val id: Int,
     @SerialName("recipe") val recipe: CalendarRecipeDto
 )

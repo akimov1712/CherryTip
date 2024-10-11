@@ -4,6 +4,7 @@ import ru.topbun.cherry_tip.domain.entity.Difficulty
 
 data class RecipeEntity(
     val id: Int,
+    val mealId: Int? = null,
     val title: String,
     val descr: String?,
     val image: String,

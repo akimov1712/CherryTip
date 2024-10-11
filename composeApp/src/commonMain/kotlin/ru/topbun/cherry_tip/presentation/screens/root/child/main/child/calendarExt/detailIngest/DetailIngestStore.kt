@@ -128,10 +128,10 @@ class DetailIngestStoreFactory(
 
         private suspend fun CoroutineScope.loadRecipes(calendar: MealEntity) {
             dispatch(Msg.RecipesLoading)
-            val recipes = calendar.recipes.map {
+            val recipes = calendar.recipes.map { meal ->
                 async {
                     try {
-                        getRecipeWithIdUseCase(it.id)
+                        getRecipeWithIdUseCase(meal.recipeId).copy(mealId = meal.id)
                     } catch (e: Exception) {
                         null
                     }
@@ -159,6 +159,7 @@ class DetailIngestStoreFactory(
                             }
                             dispatch(Msg.SetNeedCalories(calories))
                             val calendarRecipes = calendar.recipes.find { it.calendarType == calendarType } ?: throw ConnectException("Not found recipes")
+                            println(calendarRecipes)
                             dispatch(Msg.CalendarResult(calendarRecipes))
                             loadRecipes(calendarRecipes)
                         }) {
@@ -170,7 +171,7 @@ class DetailIngestStoreFactory(
                     scope.launch(handlerTokenException { publish(Label.OpenAuth) }) {
                         wrapperStoreException({
                             val recipes = state.recipeList
-                            val newRecipes = recipes.filter { it.id != intent.id }
+                            val newRecipes = recipes.filter { it.mealId != intent.id }
                             val recipesIds = newRecipes.map{ it.id }
                             val newCalendar = setRecipeToDayUseCase(date.toGMTDate(), calendarType, recipesIds)
                             loadRecipes(newCalendar)
@@ -182,7 +183,6 @@ class DetailIngestStoreFactory(
                     }
                 }
 
-                else -> {}
             }
         }
     }
