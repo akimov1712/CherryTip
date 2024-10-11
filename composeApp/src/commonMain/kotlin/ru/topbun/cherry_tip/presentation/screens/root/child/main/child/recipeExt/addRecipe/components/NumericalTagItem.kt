@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.domain.entity.recipe.TagEntity
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
+import ru.topbun.cherry_tip.utills.resolveDomain
 
 
 @Composable
@@ -73,17 +75,19 @@ fun NumericalTagItem(
                     .weight(1f)
                     .clip(RoundedCornerShape(13.dp))
                     .clickable { if (!isLoading) onClickChangeTag() }
-                    .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(13.dp)),
+                    .border(1.dp, Colors.PurpleBackground, RoundedCornerShape(13.dp))
+                    .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 AsyncImage(
-                    modifier = Modifier.size(12.dp),
-                    model = tag?.icon,
+                    modifier = Modifier.size(24.dp),
+                    model = tag?.icon?.resolveDomain(),
                     contentDescription = null
                 )
                 Spacer(Modifier.width(10.dp))
                 Texts.Button(
+                    modifier = Modifier.weight(1f),
                     text = tag?.title ?: stringResource(Res.string.not_selected),
                     color = if (tag != null) Colors.Black else Colors.Gray,
                     maxLines = 1,

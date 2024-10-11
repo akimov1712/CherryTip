@@ -8,3 +8,4 @@ fun String.validEmail() = Regex("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$").matches(th
 fun String.isNumber() = this.matches(Regex("^\\d+\$"))
 
 fun Any?.toStringOrBlank() = this?.toString() ?: ""
+fun String.resolveDomain() = Const.BASE_URL + this.drop(1)

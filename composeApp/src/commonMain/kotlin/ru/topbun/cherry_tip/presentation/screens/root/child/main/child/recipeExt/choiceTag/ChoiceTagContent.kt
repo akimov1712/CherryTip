@@ -66,6 +66,7 @@ import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.AppModalBottomSheet
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
+import ru.topbun.cherry_tip.utills.resolveDomain
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -257,7 +258,7 @@ private fun TagItem(tag: TagEntity, isSelected: Boolean, onClick: (Int) -> Unit)
     ) {
         AsyncImage(
             modifier = Modifier.size(24.dp),
-            model = tag.icon,
+            model = tag.icon.resolveDomain(),
             contentDescription = null
         )
         Spacer(Modifier.width(7.dp))
