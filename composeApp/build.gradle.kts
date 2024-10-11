@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.room)
     id("com.google.devtools.ksp")
     kotlin("plugin.serialization") version "2.0.0"
 }
@@ -38,6 +37,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.analytics)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -66,11 +66,6 @@ kotlin {
             //Koin
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-
-            //Room
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.sqlite.bundled)
-            implementation(libs.sqlite)
 
             // MVIKotlin
             implementation (libs.mvikotlin)
@@ -132,16 +127,4 @@ android {
         debugImplementation(compose.uiTooling)
         implementation(libs.kotlinx.coroutines.android)
     }
-}
-
-dependencies {
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspCommonMainMetadata", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosX64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
-}
-
-room {
-    schemaDirectory("$projectDir/schemas")
 }
