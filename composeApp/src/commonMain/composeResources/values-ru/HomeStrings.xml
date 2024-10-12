@@ -15,8 +15,21 @@
     <string name="start_again">Начать снова</string>
     <string name="challenge_completed">Вы завершили челлендж. Вы можете начать его снова</string>
 
-
     <string name="all">Все</string>
     <string name="active">Активные</string>
     <string name="finished">Завершённые</string>
+
+    <string name="easy">Легкая</string>
+    <string name="normal">Средняя</string>
+    <string name="hard">Сложная</string>
+
+    <string name="single_day">день</string>
+    <string name="alone_day">дня</string>
+    <string name="many_days">дней</string>
+
+    <string name="time_start">Старт</string>
+    <string name="time_end">Конец</string>
+    <string name="after">после</string>
+
+
 </resources>

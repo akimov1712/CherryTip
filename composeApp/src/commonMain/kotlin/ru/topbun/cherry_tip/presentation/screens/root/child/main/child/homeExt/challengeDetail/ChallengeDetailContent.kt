@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
+import cherrytip.composeapp.generated.resources.after
 import cherrytip.composeapp.generated.resources.challenge_completed
 import cherrytip.composeapp.generated.resources.challenges
 import cherrytip.composeapp.generated.resources.ic_back
@@ -43,6 +44,8 @@ import cherrytip.composeapp.generated.resources.preparing_challenge
 import cherrytip.composeapp.generated.resources.start
 import cherrytip.composeapp.generated.resources.start_again
 import cherrytip.composeapp.generated.resources.stop
+import cherrytip.composeapp.generated.resources.time_end
+import cherrytip.composeapp.generated.resources.time_start
 import io.ktor.util.date.GMTDate
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -53,6 +56,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.utills.Const
+import ru.topbun.cherry_tip.utills.getResourceEndingDays
 
 @Composable
 fun ChallengeDetailScreen(
@@ -234,12 +238,12 @@ private fun InfoDateChallenge(challenge: ChallengeEntity) {
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         val date = formatDate(challenge)
-        TextWithDate("Start", date.startDate)
+        TextWithDate(stringResource(Res.string.time_start), date.startDate)
         Row {
             Box(Modifier.weight(1f).height(1.dp).padding(end = 10.dp).background(Colors.GrayLight))
             Spacer(Modifier.weight(1f))
         }
-        TextWithDate("End (after ${challenge.durationDays} days)", date.endDate)
+        TextWithDate("${stringResource(Res.string.time_end)} (${stringResource(Res.string.after)} ${challenge.durationDays} ${stringResource(challenge.durationDays.getResourceEndingDays())})", date.endDate)
     }
 }
 

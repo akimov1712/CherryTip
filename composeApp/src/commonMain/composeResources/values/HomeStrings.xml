@@ -18,4 +18,18 @@
     <string name="all">All</string>
     <string name="active">Active</string>
     <string name="finished">Finished</string>
+
+    <string name="easy">Easy</string>
+    <string name="normal">Normal</string>
+    <string name="hard">Hard</string>
+
+
+    <string name="single_day">day</string>
+    <string name="alone_day">days</string>
+    <string name="many_days">days</string>
+
+
+    <string name="time_start">Start</string>
+    <string name="time_end">End</string>
+    <string name="after">after</string>
 </resources>

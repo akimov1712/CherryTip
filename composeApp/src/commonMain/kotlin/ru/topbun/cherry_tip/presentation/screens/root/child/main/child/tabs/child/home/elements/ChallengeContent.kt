@@ -40,21 +40,27 @@ import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.challenges
 import cherrytip.composeapp.generated.resources.challenges_is_empty
+import cherrytip.composeapp.generated.resources.easy
+import cherrytip.composeapp.generated.resources.hard
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_clock
 import cherrytip.composeapp.generated.resources.ic_lightning
 import cherrytip.composeapp.generated.resources.more
+import cherrytip.composeapp.generated.resources.normal
 import cherrytip.composeapp.generated.resources.see_all
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.domain.entity.Difficulty
+import ru.topbun.cherry_tip.domain.entity.Difficulty.*
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeComponent
 import ru.topbun.cherry_tip.presentation.screens.root.child.main.child.tabs.child.home.HomeStore
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
+import ru.topbun.cherry_tip.utills.getResourceEndingDays
 
 @Composable
 fun Challenge(component: HomeComponent) {
@@ -154,11 +160,17 @@ private fun InfoChallenge(
         )
         IconWithText(
             painter = painterResource(Res.drawable.ic_clock),
-            text = "${challenge.durationDays} days"
+            text = "${challenge.durationDays} ${stringResource(challenge.durationDays.getResourceEndingDays())}"
         )
         IconWithText(
             painter = painterResource(Res.drawable.ic_lightning),
-            text = challenge.difficulty.name
+            text = stringResource(
+                when(challenge.difficulty){
+                    Easy -> Res.string.easy
+                    Normal -> Res.string.normal
+                    Hard -> Res.string.hard
+                }
+            )
         )
         Buttons.Button(
             onClick = onClickMore,

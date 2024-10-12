@@ -42,15 +42,21 @@ import cherrytip.composeapp.generated.resources.active
 import cherrytip.composeapp.generated.resources.all
 import cherrytip.composeapp.generated.resources.challenges
 import cherrytip.composeapp.generated.resources.challenges_is_empty
+import cherrytip.composeapp.generated.resources.easy
 import cherrytip.composeapp.generated.resources.finished
+import cherrytip.composeapp.generated.resources.hard
 import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_clock
 import cherrytip.composeapp.generated.resources.ic_lightning
 import cherrytip.composeapp.generated.resources.more
+import cherrytip.composeapp.generated.resources.normal
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.topbun.cherry_tip.domain.entity.Difficulty.Easy
+import ru.topbun.cherry_tip.domain.entity.Difficulty.Hard
+import ru.topbun.cherry_tip.domain.entity.Difficulty.Normal
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeEntity
 import ru.topbun.cherry_tip.domain.entity.challenge.ChallengeStatus
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -60,6 +66,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.CustomTabRow
 import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.NotFoundContent
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
+import ru.topbun.cherry_tip.utills.getResourceEndingDays
 
 @Composable
 fun ChallengeScreen(
@@ -167,11 +174,17 @@ private fun InfoChallenge(challenge: ChallengeEntity, modifier: Modifier, onClic
         )
         IconWithText(
             painter = painterResource(Res.drawable.ic_clock),
-            text = "${challenge.durationDays} days",
+            text = "${challenge.durationDays} ${stringResource(challenge.durationDays.getResourceEndingDays())}"
         )
         IconWithText(
             painter = painterResource(Res.drawable.ic_lightning),
-            text = challenge.difficulty.toString()
+            text = stringResource(
+                when(challenge.difficulty){
+                    Easy -> Res.string.easy
+                    Normal -> Res.string.normal
+                    Hard -> Res.string.hard
+                }
+            )
         )
         Buttons.Button(
             onClick = onClickMore,
