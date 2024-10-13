@@ -247,15 +247,15 @@ fun SignUpFields(
                 component.changeConfirmPasswordError(it != state.password)
                 component.changeConfirmPassword(it)
             },
-            visualTransformation = if (state.isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (state.isVisibleConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
             supportingText = if (state.confirmPasswordIsError) { { Texts.Error(stringResource(Res.string.confirm_password_error))} } else null,
             placeholderText = stringResource(Res.string.confirm_password),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             trailingIcon = {
                 IconButton(
-                    onClick = {component.changeVisiblePassword(!state.isVisiblePassword)}
+                    onClick = {component.changeVisibleConfirmPassword(!state.isVisibleConfirmPassword)}
                 ){ Icon(
-                    painterResource(if(state.isVisiblePassword) Res.drawable.ic_show else Res.drawable.ic_hide),
+                    painterResource(if(state.isVisibleConfirmPassword) Res.drawable.ic_show else Res.drawable.ic_hide),
                     contentDescription = null,
                     tint = Colors.Gray
                 ) }

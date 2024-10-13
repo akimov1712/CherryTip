@@ -44,5 +44,6 @@ class SignUpComponentImpl(
     override fun changeConfirmPassword(confirmPassword: String)  = store.accept(SignUpStore.Intent.ChangeConfirmPassword(confirmPassword))
     override fun changeConfirmPasswordError(value: Boolean) = store.accept(SignUpStore.Intent.ChangeConfirmPasswordError(value))
     override fun changeVisiblePassword(value: Boolean)  = store.accept(SignUpStore.Intent.ChangeVisiblePassword(value))
+    override fun changeVisibleConfirmPassword(value: Boolean)  = store.accept(SignUpStore.Intent.ChangeVisibleConfirmPassword(value))
 
 }

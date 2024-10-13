@@ -27,6 +27,7 @@ interface SignUpStore : Store<Intent, State, Label> {
         data class ChangeConfirmPassword(val confirmPassword: String) : Intent
         data class ChangeConfirmPasswordError(val value: Boolean) : Intent
         data class ChangeVisiblePassword(val value: Boolean) : Intent
+        data class ChangeVisibleConfirmPassword(val value: Boolean) : Intent
     }
 
     data class State(
@@ -39,6 +40,7 @@ interface SignUpStore : Store<Intent, State, Label> {
         val confirmPassword: String,
         val confirmPasswordIsError: Boolean,
         val isVisiblePassword: Boolean,
+        val isVisibleConfirmPassword: Boolean,
         val isValidPassword: Boolean,
         val signUpState: SignUpState,
     ) {
@@ -77,6 +79,7 @@ class SignUpStoreFactory(
             confirmPasswordIsError = false,
             isVisiblePassword = false,
             isValidPassword = false,
+            isVisibleConfirmPassword = false,
             signUpState = State.SignUpState.Initial
         ),
         bootstrapper = null,
@@ -94,6 +97,7 @@ class SignUpStoreFactory(
         data class ChangePassword(val password: String) : Msg
         data class ChangeConfirmPassword(val confirmPassword: String) : Msg
         data class ChangeVisiblePassword(val value: Boolean) : Msg
+        data class ChangeVisibleConfirmPassword(val value: Boolean) : Msg
         data class ChangeUsernameError(val value: Boolean) : Msg
         data class ChangeEmailError(val value: Boolean) : Msg
         data class ChangePasswordError(val value: Boolean) : Msg
@@ -112,6 +116,7 @@ class SignUpStoreFactory(
                 is Intent.ChangePassword -> dispatch(Msg.ChangePassword(intent.password))
                 is Intent.ChangeConfirmPassword -> dispatch(Msg.ChangeConfirmPassword(intent.confirmPassword))
                 is Intent.ChangeVisiblePassword -> dispatch(Msg.ChangeVisiblePassword(intent.value))
+                is Intent.ChangeVisibleConfirmPassword -> dispatch(Msg.ChangeVisibleConfirmPassword(intent.value))
                 Intent.ClickBack -> publish(Label.ClickBack)
                 Intent.ClickLogin -> publish(Label.ClickLogin)
                 is Intent.OnSignUp -> {
@@ -189,8 +194,11 @@ class SignUpStoreFactory(
                 confirmPasswordIsError = false,
                 isVisiblePassword = false,
                 isValidPassword = false,
+                isVisibleConfirmPassword = false,
                 signUpState = State.SignUpState.Initial
             )
+
+            is Msg.ChangeVisibleConfirmPassword -> copy(isVisibleConfirmPassword = msg.value).also { println(msg.value) }
         }
     }
 

@@ -18,5 +18,6 @@ interface SignUpComponent {
     fun changeConfirmPassword(confirmPassword: String)
     fun changeConfirmPasswordError(value: Boolean)
     fun changeVisiblePassword(value: Boolean)
+    fun changeVisibleConfirmPassword(value: Boolean)
 
 }
