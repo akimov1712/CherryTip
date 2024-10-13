@@ -60,9 +60,10 @@ fun TabsScreen(
                 containerColor = Colors.White,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Colors.White)
-                    .padding(bottom = 12.dp, start = 20.dp, end = 20.dp)
+                    .padding(horizontal = 20.dp)
                     .clip(RoundedCornerShape(24.dp))
+                    .background(Colors.White)
+                    .padding(bottom = 12.dp)
                     .border(1.5.dp, Colors.PurpleBackground, RoundedCornerShape(24.dp))
                     .padding(vertical = 4.dp)
             ) {

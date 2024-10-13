@@ -153,10 +153,9 @@ object SurveyComponents{
         startDate: LocalDate = LocalDate.now(),
         onSnappedDate: (snappedDate: LocalDate) -> Unit = {}
     ) {
-        val now = LocalDate.now()
         DefaultWheelDatePicker(
             startDate = startDate,
-            yearsRange = (1900..now.year),
+            yearsRange = (1900..LocalDate.now().year - 10),
             textColor = Colors.Purple,
             selectorProperties = WheelPickerDefaults.selectorProperties(borderColor = Colors.Purple),
             onSnappedDate = {
@@ -164,23 +163,6 @@ object SurveyComponents{
                 null
             }
         )
-//        WheelDatePicker(
-//            modifier = Modifier.fillMaxWidth(),
-//            startDate = startDate,
-//            maxDate = maxDate,
-//            minDate = minDate,
-//            textStyle = TextStyle(
-//                fontSize = 18.sp,
-//                fontFamily = Fonts.sfRegular
-//            ),
-//            size = DpSize(310.dp, 140.dp),
-//            textColor = Colors.Purple,
-//            selectorProperties = WheelPickerDefaults.selectorProperties(
-//                color = Colors.PurpleBackground,
-//                border = BorderStroke(1.dp, Colors.Purple)
-//            ),
-//            onSnappedDate = onSnappedDate
-//        )
     }
     
     @Composable

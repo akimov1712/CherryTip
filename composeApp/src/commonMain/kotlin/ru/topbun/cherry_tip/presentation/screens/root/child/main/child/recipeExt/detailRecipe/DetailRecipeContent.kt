@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
@@ -216,7 +217,8 @@ private fun RowScope.IconWithText(icon: DrawableResource, text: String) {
         Texts.Option(
             text = text,
             fontSize = 16.sp,
-            color = Colors.DarkGray
+            color = Colors.DarkGray,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

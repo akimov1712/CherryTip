@@ -90,7 +90,7 @@ class SurveyStoreFactory(
             name = "",
             goalType = GoalType.Lose,
             gender = Gender.Male,
-            age = LocalDate(now.year, now.month, now.dayOfMonth).toGMTDate(),
+            age = LocalDate(now.year - 10, now.month, now.dayOfMonth).toGMTDate(),
             height = 100,
             weight = 20,
             targetWeight = 20,
@@ -145,7 +145,7 @@ class SurveyStoreFactory(
                             sendGoal(state)
                             publish(Label.SendSurvey)
                         }){
-                            Msg.SurveyError(it)
+                            dispatch(Msg.SurveyError(it))
                         }
                     }
                 }

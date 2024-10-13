@@ -57,6 +57,7 @@ import ru.topbun.cherry_tip.presentation.ui.components.Buttons
 import ru.topbun.cherry_tip.presentation.ui.components.ErrorContent
 import ru.topbun.cherry_tip.presentation.ui.components.Texts
 import ru.topbun.cherry_tip.utills.Const
+import ru.topbun.cherry_tip.utills.getResourceDeclinationEndingDays
 import ru.topbun.cherry_tip.utills.getResourceEndingDays
 
 @Composable
@@ -244,7 +245,7 @@ private fun InfoDateChallenge(challenge: ChallengeEntity) {
             Box(Modifier.weight(1f).height(1.dp).padding(end = 10.dp).background(Colors.GrayLight))
             Spacer(Modifier.weight(1f))
         }
-        TextWithDate("${stringResource(Res.string.time_end)} (${stringResource(Res.string.after)} ${challenge.durationDays} ${stringResource(Res.string.many_days)})", date.endDate)
+        TextWithDate("${stringResource(Res.string.time_end)} (${stringResource(Res.string.after)} ${challenge.durationDays} ${stringResource(challenge.durationDays.getResourceDeclinationEndingDays())})", date.endDate)
     }
 }
 

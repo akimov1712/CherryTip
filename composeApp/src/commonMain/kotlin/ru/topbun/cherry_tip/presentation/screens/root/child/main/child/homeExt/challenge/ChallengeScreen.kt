@@ -118,6 +118,9 @@ fun ChallengeScreen(
                             items(items = screenState.challenges, key = { it.id }) {
                                 ChallengeItem(challenge = it) { component.openChallengeDetail(it.id) }
                             }
+                            item {
+                                Spacer(Modifier.height(16.dp))
+                            }
                         }
                     }
                 }

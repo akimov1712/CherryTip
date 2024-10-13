@@ -27,6 +27,9 @@
     <string name="alone_day">дня</string>
     <string name="many_days">дней</string>
 
+    <string name="declination_single_days">дня</string>
+    <string name="declination_many_days">дней</string>
+
     <string name="time_start">Старт</string>
     <string name="time_end">Конец</string>
     <string name="after">после</string>

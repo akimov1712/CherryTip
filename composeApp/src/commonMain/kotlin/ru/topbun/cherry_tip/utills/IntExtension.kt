@@ -2,6 +2,8 @@ package ru.topbun.cherry_tip.utills
 
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.alone_day
+import cherrytip.composeapp.generated.resources.declination_many_days
+import cherrytip.composeapp.generated.resources.declination_single_days
 import cherrytip.composeapp.generated.resources.many_days
 import cherrytip.composeapp.generated.resources.single_day
 import org.jetbrains.compose.resources.StringResource
@@ -27,4 +29,8 @@ fun Int.getResourceEndingDays(): StringResource {
         2, 3, 4 -> (Res.string.alone_day)
         else -> (Res.string.many_days)
     }
+}
+
+fun Int.getResourceDeclinationEndingDays(): StringResource {
+    return if (this == 1) Res.string.declination_single_days else Res.string.declination_many_days
 }

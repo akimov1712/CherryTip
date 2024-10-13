@@ -46,12 +46,12 @@ fun TipsDetailScreen(
                 text = stringResource(tips.descr),
                 color = tips.textColor
             )
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.weight(1f))
             Image(
-                modifier = Modifier.weight(1f).fillMaxWidth().padding(bottom = 64.dp),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 64.dp),
                 painter = painterResource(tips.image),
                 contentScale = ContentScale.FillWidth,
-                alignment = Alignment.BottomCenter,
+                alignment = Alignment.TopCenter,
                 contentDescription = null
             )
         }
