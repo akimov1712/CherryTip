@@ -50,12 +50,12 @@ kotlin {
             implementation(libs.serialization)
             implementation(libs.kotlinx.datetime)
             implementation(libs.compottie)
-            implementation(libs.datetime.wheel.picker)
-            implementation(libs.datetime.wheel.picker)
             implementation(libs.datastore.preferences)
             implementation(libs.datastore.preferences.core)
             implementation(libs.atomicfu)
             implementation(libs.peekaboo.image.picker)
+            implementation(libs.kmp.date.time.picker)
+
 
             // Ktor
             implementation(libs.ktor.client.core)

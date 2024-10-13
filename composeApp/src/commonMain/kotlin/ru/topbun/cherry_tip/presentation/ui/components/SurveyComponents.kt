@@ -3,7 +3,6 @@ package ru.topbun.cherry_tip.presentation.ui.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateSizeAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -54,7 +54,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
@@ -63,9 +62,12 @@ import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_info
 import cherrytip.composeapp.generated.resources.ic_pointer
 import cherrytip.composeapp.generated.resources.warning_about_changing_values
-import dev.darkokoa.datetimewheelpicker.WheelDatePicker
-import dev.darkokoa.datetimewheelpicker.core.WheelPickerDefaults
 import kotlinx.datetime.LocalDate
+
+import network.chaintech.kmp_date_time_picker.ui.datepicker.DefaultWheelDatePicker
+import network.chaintech.kmp_date_time_picker.ui.datepicker.WheelDatePickerComponent
+import network.chaintech.kmp_date_time_picker.ui.datepicker.WheelDatePickerView
+import network.chaintech.kmp_date_time_picker.utils.WheelPickerDefaults
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -131,7 +133,7 @@ object SurveyComponents{
     }
 
     @Composable
-    fun FragmentWrapper(
+    fun  FragmentWrapper(
         modifier: Modifier = Modifier,
         title: String,
         content: @Composable ColumnScope.() -> Unit
@@ -148,28 +150,37 @@ object SurveyComponents{
 
     @Composable
     fun WheelDatePicker(
-        startDate: LocalDate,
-        maxDate: LocalDate = LocalDate(LocalDate.now().year, 12, 31),
-        minDate: LocalDate = LocalDate(1900, 1, 1),
+        startDate: LocalDate = LocalDate.now(),
         onSnappedDate: (snappedDate: LocalDate) -> Unit = {}
     ) {
-        WheelDatePicker(
-            modifier = Modifier.fillMaxWidth(),
+        val now = LocalDate.now()
+        DefaultWheelDatePicker(
             startDate = startDate,
-            maxDate = maxDate,
-            minDate = minDate,
-            textStyle = TextStyle(
-                fontSize = 18.sp,
-                fontFamily = Fonts.sfRegular
-            ),
-            size = DpSize(310.dp, 140.dp),
+            yearsRange = (1900..now.year),
             textColor = Colors.Purple,
-            selectorProperties = WheelPickerDefaults.selectorProperties(
-                color = Colors.PurpleBackground,
-                border = BorderStroke(1.dp, Colors.Purple)
-            ),
-            onSnappedDate = onSnappedDate
+            selectorProperties = WheelPickerDefaults.selectorProperties(borderColor = Colors.Purple),
+            onSnappedDate = {
+                onSnappedDate(it.snappedLocalDate)
+                null
+            }
         )
+//        WheelDatePicker(
+//            modifier = Modifier.fillMaxWidth(),
+//            startDate = startDate,
+//            maxDate = maxDate,
+//            minDate = minDate,
+//            textStyle = TextStyle(
+//                fontSize = 18.sp,
+//                fontFamily = Fonts.sfRegular
+//            ),
+//            size = DpSize(310.dp, 140.dp),
+//            textColor = Colors.Purple,
+//            selectorProperties = WheelPickerDefaults.selectorProperties(
+//                color = Colors.PurpleBackground,
+//                border = BorderStroke(1.dp, Colors.Purple)
+//            ),
+//            onSnappedDate = onSnappedDate
+//        )
     }
     
     @Composable

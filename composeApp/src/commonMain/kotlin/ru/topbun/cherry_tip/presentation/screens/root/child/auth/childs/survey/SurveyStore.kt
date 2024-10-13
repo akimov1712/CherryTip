@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.ktor.util.date.GMTDate
 import io.ktor.util.date.getTimeMillis
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import ru.topbun.cherry_tip.domain.entity.user.GoalEntity
 import ru.topbun.cherry_tip.domain.entity.user.ProfileEntity
 import ru.topbun.cherry_tip.domain.entity.user.UnitsEntity
@@ -26,6 +27,8 @@ import ru.topbun.cherry_tip.utills.ParseBackendResponseException
 import ru.topbun.cherry_tip.utills.RequestTimeoutException
 import ru.topbun.cherry_tip.utills.ServerException
 import ru.topbun.cherry_tip.utills.handlerTokenException
+import ru.topbun.cherry_tip.utills.now
+import ru.topbun.cherry_tip.utills.toGMTDate
 import ru.topbun.cherry_tip.utills.wrapperStoreException
 
 interface SurveyStore: Store<Intent, State, Label> {
@@ -79,6 +82,7 @@ class SurveyStoreFactory(
     private val createGoalUseCase: CreateGoalUseCase,
     private val createUnitsUseCase: CreateUnitsUseCase,
 ){
+    private val now = LocalDate.now()
 
     val store: Store<Intent, State, Label> = storeFactory.create(
         name = "SurveyStore",
@@ -86,7 +90,7 @@ class SurveyStoreFactory(
             name = "",
             goalType = GoalType.Lose,
             gender = Gender.Male,
-            age = GMTDate(getTimeMillis()),
+            age = LocalDate(now.year, now.month, now.dayOfMonth).toGMTDate(),
             height = 100,
             weight = 20,
             targetWeight = 20,
