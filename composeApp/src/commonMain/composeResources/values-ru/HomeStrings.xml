@@ -34,5 +34,7 @@
     <string name="time_end">Конец</string>
     <string name="after">после</string>
 
+    <string name="reminder_drink_water_title">Время пить воду!</string>
+    <string name="reminder_drink_water_descr">Не забывайте пить воду, чтобы поддерживать водный баланс в организме.</string>
 
 </resources>

@@ -34,4 +34,8 @@
     <string name="time_start">Start</string>
     <string name="time_end">End</string>
     <string name="after">after</string>
+
+    <string name="reminder_drink_water_title">Time to drink water!</string>
+    <string name="reminder_drink_water_descr">Don't forget to drink water to keep your body hydrated</string>
+
 </resources>
