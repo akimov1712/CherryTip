@@ -59,5 +59,6 @@
     <string name="password_error">Password must contain from 4 to 24 characters</string>
     <string name="confirm_password_error">Password mismatch</string>
 
+    <string name="added_soon_check_updates">Will be added soon. Stay tuned for updates</string>
 
 </resources>

@@ -116,11 +116,6 @@ private fun ChallengeItem(challenge: ChallengeEntity, onClickMore: () -> Unit) {
     Box(
         Modifier.width(310.dp).height(IntrinsicSize.Min).background(color = challenge.color, shape = RoundedCornerShape(20.dp))
     ){
-        InfoChallenge(
-            modifier = Modifier.align(Alignment.TopStart),
-            challenge = challenge,
-            onClickMore = onClickMore
-        )
         Box(
             Modifier.fillMaxWidth(0.6f).align(Alignment.CenterEnd)
         ) {
@@ -137,6 +132,11 @@ private fun ChallengeItem(challenge: ChallengeEntity, onClickMore: () -> Unit) {
                 contentDescription = challenge.title
             )
         }
+        InfoChallenge(
+            modifier = Modifier.align(Alignment.TopStart),
+            challenge = challenge,
+            onClickMore = onClickMore
+        )
 
     }
 

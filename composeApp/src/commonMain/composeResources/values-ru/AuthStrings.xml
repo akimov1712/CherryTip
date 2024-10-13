@@ -58,4 +58,6 @@
     <string name="email_error">Неверный формат эл. почты</string>
     <string name="password_error">Пароль должен содержать от 4 до 24 символов</string>
     <string name="confirm_password_error">Пароли не совпадают</string>
+
+    <string name="added_soon_check_updates">Скоро будет добавлено. Следите за обновлениями!</string>
 </resources>

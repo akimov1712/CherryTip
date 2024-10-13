@@ -12,6 +12,7 @@ androidx-core-ktx = "1.13.1"
 androidx-espresso-core = "3.5.1"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.1.5"
+cmptoast = "1.0.1"
 compose-plugin = "1.6.10"
 compottie = "1.1.2"
 datetimeWheelPicker = "1.0.0"
@@ -36,6 +37,7 @@ coilComposeCore = "3.0.0-alpha06"
 
 [libraries]
 analytics = { module = "io.appmetrica.analytics:analytics", version.ref = "analytics" }
+cmptoast = { module = "network.chaintech:cmptoast", version.ref = "cmptoast" }
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 datetime-wheel-picker = { module = "io.github.darkokoa:datetime-wheel-picker", version.ref = "datetimeWheelPicker" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

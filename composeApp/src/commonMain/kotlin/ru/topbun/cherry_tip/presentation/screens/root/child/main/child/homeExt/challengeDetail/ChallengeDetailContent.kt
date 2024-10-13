@@ -40,6 +40,7 @@ import cherrytip.composeapp.generated.resources.ic_back
 import cherrytip.composeapp.generated.resources.ic_bulb
 import cherrytip.composeapp.generated.resources.ic_play
 import cherrytip.composeapp.generated.resources.ic_stop
+import cherrytip.composeapp.generated.resources.many_days
 import cherrytip.composeapp.generated.resources.preparing_challenge
 import cherrytip.composeapp.generated.resources.start
 import cherrytip.composeapp.generated.resources.start_again
@@ -243,7 +244,7 @@ private fun InfoDateChallenge(challenge: ChallengeEntity) {
             Box(Modifier.weight(1f).height(1.dp).padding(end = 10.dp).background(Colors.GrayLight))
             Spacer(Modifier.weight(1f))
         }
-        TextWithDate("${stringResource(Res.string.time_end)} (${stringResource(Res.string.after)} ${challenge.durationDays} ${stringResource(challenge.durationDays.getResourceEndingDays())})", date.endDate)
+        TextWithDate("${stringResource(Res.string.time_end)} (${stringResource(Res.string.after)} ${challenge.durationDays} ${stringResource(Res.string.many_days)})", date.endDate)
     }
 }
 

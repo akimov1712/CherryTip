@@ -18,12 +18,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -31,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cherrytip.composeapp.generated.resources.Res
+import cherrytip.composeapp.generated.resources.added_soon_check_updates
 import cherrytip.composeapp.generated.resources.have_account
 import cherrytip.composeapp.generated.resources.login
 import cherrytip.composeapp.generated.resources.welcome_cherry_tip
@@ -39,6 +42,7 @@ import io.github.alexzhirkevich.compottie.LottieAnimation
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
@@ -54,28 +58,38 @@ fun SplashScreen(
     modifier: Modifier = Modifier.background(Colors.White)
 ) {
     setColorStatusBar(Colors.Purple, false)
-    val state by component.state.collectAsState()
-    val showModal = state.splashState is SplashStore.State.SplashState.NotAuth
-    Box(
-        modifier = modifier.fillMaxSize().background(Colors.Purple)
+    val snackbarState = SnackbarHostState()
+    val coroutineSnackbar = rememberCoroutineScope()
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarState) }
     ) {
-        Column {
-            when(val screenState = state.splashState){
-                is SplashStore.State.SplashState.Error -> {
-                    ErrorModal(text = screenState.message){
-                        component.runChecks()
+        val state by component.state.collectAsState()
+        val showModal = state.splashState is SplashStore.State.SplashState.NotAuth
+        Box(
+            modifier = modifier.fillMaxSize().background(Colors.Purple)
+        ) {
+            Column {
+                when(val screenState = state.splashState){
+                    is SplashStore.State.SplashState.Error -> {
+                        ErrorModal(text = screenState.message){
+                            component.runChecks()
+                        }
                     }
+                    else -> {}
                 }
-                else -> {}
+                val msgAddedSoon = stringResource(Res.string.added_soon_check_updates)
+                Logo(component)
+                AnimatedModal(showModal, component){
+                    coroutineSnackbar.launch { snackbarState.showSnackbar(msgAddedSoon) }
+                }
             }
-            Logo(component)
-            AnimatedModal(showModal, component)
         }
     }
+
 }
 
 @Composable
-private fun AnimatedModal(show: Boolean, component: SplashComponent) {
+private fun AnimatedModal(show: Boolean, component: SplashComponent, onClickAddedSoon: () -> Unit) {
     val targetHeight = if (show) Modifier.wrapContentHeight() else Modifier.height(0.dp)
     Column(
         modifier = Modifier
@@ -90,7 +104,7 @@ private fun AnimatedModal(show: Boolean, component: SplashComponent) {
             Spacer(Modifier.height(24.dp))
             ModalText()
             Spacer(Modifier.height(20.dp))
-            ButtonList(component)
+            ButtonList(component, onClickAddedSoon)
             Spacer(Modifier.height(20.dp))
             TextHaveAccount(component)
             Spacer(Modifier.height(20.dp))
@@ -109,7 +123,7 @@ private fun TextHaveAccount(component: SplashComponent) {
 }
 
 @Composable
-private fun ButtonList(component: SplashComponent) {
+private fun ButtonList(component: SplashComponent, onClickAddedSoon: () -> Unit) {
     val authItems = listOf(AuthItems.Apple, AuthItems.Facebook, AuthItems.Google, AuthItems.Email)
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -120,10 +134,8 @@ private fun ButtonList(component: SplashComponent) {
                 icon = painterResource(it.iconRes)
             ) {
                 when(it){
-                    AuthItems.Apple -> {}
-                    AuthItems.Facebook -> {}
-                    AuthItems.Google -> {}
                     AuthItems.Email -> { component.onSignUpEmail() }
+                    else -> { onClickAddedSoon() }
                 }
             }
         }
