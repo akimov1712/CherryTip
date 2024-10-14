@@ -1,26 +1,23 @@
 package ru.topbun.cherry_tip
 
+import android.Manifest
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.Activity
-import android.os.Build
-import ru.topbun.cherry_tip.presentation.screens.AppScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.defaultComponentContext
-import ru.topbun.cherry_tip.presentation.screens.root.child.auth.AuthComponentImpl
+import ru.topbun.cherry_tip.presentation.screens.AppScreen
 import ru.topbun.cherry_tip.presentation.screens.root.RootComponentImpl
 import ru.topbun.cherry_tip.presentation.ui.Colors
 
@@ -30,6 +27,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         val rootComponent = RootComponentImpl(defaultComponentContext())
         setContent {
+            requestPermissionNotify()
             val view = LocalView.current
             if (!view.isInEditMode) {
                 SideEffect {
@@ -41,6 +39,15 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 AppScreen(rootComponent)
             }
+        }
+    }
+
+    @Composable
+    private fun requestPermissionNotify(){
+        val contract = ActivityResultContracts.RequestMultiplePermissions()
+        val launcher = rememberLauncherForActivityResult(contract = contract) { }
+        SideEffect {
+            launcher.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.SET_ALARM) )
         }
     }
 }

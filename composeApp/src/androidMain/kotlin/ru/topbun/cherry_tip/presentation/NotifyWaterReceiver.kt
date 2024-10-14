@@ -1,7 +1,5 @@
-package ru.topbun.cherry_tip
+package ru.topbun.cherry_tip.presentation
 
-import android.app.AlarmManager
-import android.app.Application.ALARM_SERVICE
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -13,11 +11,11 @@ import androidx.core.content.ContextCompat.getSystemService
 import cherrytip.composeapp.generated.resources.Res
 import cherrytip.composeapp.generated.resources.reminder_drink_water_descr
 import cherrytip.composeapp.generated.resources.reminder_drink_water_title
-import coil3.compose.AsyncImagePainter.State.Empty.painter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import ru.topbun.cherry_tip.R
 
 class NotifyWaterReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
