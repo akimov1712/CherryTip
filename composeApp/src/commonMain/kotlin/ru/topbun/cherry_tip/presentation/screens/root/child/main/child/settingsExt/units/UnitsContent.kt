@@ -114,15 +114,18 @@ fun UnitsScreen(
                 when(choiceDialogItem){
                     Weight -> DialogChangeNumber(
                         number = state.weight,
-                        range = 0..300
+                        range = 20..300,
+                        unit = "kg"
                     ){ component.changeWeight(it); onDismissDialog()}
                     TargetWeight -> DialogChangeNumber(
                         number = state.targetWeight,
-                        range = 0..300
+                        range = 20..300,
+                        unit = "kg"
                     ){ component.changeTargetWeight(it); onDismissDialog()}
                     Height -> DialogChangeNumber(
                         number = state.height,
-                        range = 0..250
+                        range = 100..250,
+                        unit = "cm"
                     ){ component.changeHeight(it); onDismissDialog()}
                     BloodGlucose -> DialogChangeNumber(
                         number = state.bloodGlucose,
@@ -132,6 +135,36 @@ fun UnitsScreen(
             }
         }
     }
+
+@Composable
+private fun DialogChangeNumber(
+    number: Int,
+    unit: String,
+    range: IntRange,
+    onClickApply: (Int) -> Unit
+) {
+    var number by remember{
+        mutableStateOf(number)
+    }
+    SurveyComponents.NumberSlidePicker(
+        modifier = Modifier.fillMaxWidth(),
+        startValue = number,
+        minValue = range.first,
+        maxValue = range.last,
+        unit = unit
+    ){
+        number = it
+    }
+    Spacer(Modifier.height(32.dp))
+    Buttons.Purple(
+        modifier = Modifier.fillMaxWidth().height(57.dp),
+        onClick = { onClickApply(number) }
+    ){
+        Texts.Button(
+            text = stringResource(Res.string.apply)
+        )
+    }
+}
 
 @Composable
 private fun DialogChangeNumber(
@@ -162,6 +195,7 @@ private fun DialogChangeNumber(
         )
     }
 }
+
 
 private enum class UnitsButtons(
     val stringRes: StringResource

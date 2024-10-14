@@ -32,6 +32,7 @@ fun HeightFragmentContent(
             modifier = Modifier.fillMaxWidth(),
             minValue = 100,
             maxValue = 250,
+            startValue = height,
             unit = "cm"
         ){
             height = it

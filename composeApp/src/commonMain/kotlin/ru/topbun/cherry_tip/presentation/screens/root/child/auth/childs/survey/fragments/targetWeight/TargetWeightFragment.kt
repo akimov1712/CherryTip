@@ -32,6 +32,7 @@ fun TargetWeightFragmentContent(
             modifier = Modifier.padding(horizontal = 20.dp),
             minValue = 20,
             maxValue = 300,
+            startValue = weight,
             unit = "kg"
         ){
             weight = it

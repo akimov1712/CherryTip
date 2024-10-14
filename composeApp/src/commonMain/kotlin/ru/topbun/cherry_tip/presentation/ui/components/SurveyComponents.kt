@@ -28,6 +28,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -35,6 +37,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -72,8 +75,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.topbun.cherry_tip.presentation.ui.Colors
 import ru.topbun.cherry_tip.presentation.ui.Fonts
+import ru.topbun.cherry_tip.presentation.ui.utills.getScreenSizeInfo
 import ru.topbun.cherry_tip.utills.now
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.round
 
 object SurveyComponents{
@@ -155,7 +160,7 @@ object SurveyComponents{
     ) {
         DefaultWheelDatePicker(
             startDate = startDate,
-            yearsRange = (1900..LocalDate.now().year - 10),
+            yearsRange = (1900..LocalDate.now().year),
             textColor = Colors.Purple,
             selectorProperties = WheelPickerDefaults.selectorProperties(borderColor = Colors.Purple),
             onSnappedDate = {
@@ -218,6 +223,7 @@ object SurveyComponents{
         modifier: Modifier = Modifier,
         minValue: Int,
         maxValue: Int,
+        startValue: Int = maxValue / 2,
         unit: String,
         onValueChange: (Int) -> Unit
     ) {
@@ -228,7 +234,7 @@ object SurveyComponents{
         val visibleSize by remember {
             derivedStateOf {
                 val visibleSize = state.layoutInfo.visibleItemsInfo.size
-                difference = round(visibleSize / 2f).toInt() - 1
+                difference = ceil(visibleSize / 2f).toInt() - 1
                 visibleSize
             }
         }
@@ -258,10 +264,12 @@ object SurveyComponents{
             }
             Spacer(modifier = Modifier.height(20.dp))
 
+            val configuration = getScreenSizeInfo()
+            val screenWidth = configuration.wDP
             LazyRow(
                 state = state,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(screenWidth - (screenWidth.value % 12).dp)
                     .defaultMinSize(minHeight = 55.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -285,7 +293,7 @@ object SurveyComponents{
                     }
                     val animateSize by animateSizeAsState(targetValue = size, tween(durationMillis = 300))
 
-                    val color = Color(114, 101, 227)
+                    val color = Colors.Purple
                     val background = when {
                         number % 10 == 0 && remotely <= 0 -> color.copy(alpha = 1f)
                         number % 10 == 0 -> color.copy(alpha = 0.7f)
@@ -307,8 +315,11 @@ object SurveyComponents{
             Icon(
                 painter = painterResource(Res.drawable.ic_pointer),
                 contentDescription = null,
-                tint = Color(114, 101, 227)
+                tint = Colors.Purple
             )
+            LaunchedEffect(Unit) {
+                state.scrollToItem(startValue.coerceIn(minValue, maxValue) - minValue)
+            }
         }
     }
 
