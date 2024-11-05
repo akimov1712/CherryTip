@@ -56,6 +56,7 @@ kotlin {
             implementation(libs.peekaboo.image.picker)
             implementation(libs.kmp.date.time.picker)
 
+            implementation("co.touchlab:stately-common:2.0.5")
 
             // Ktor
             implementation(libs.ktor.client.core)
@@ -102,8 +103,8 @@ android {
         applicationId = "ru.topbun.cherry_tip"
         minSdkVersion(libs.versions.android.minSdk.get().toInt())
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.1.1"
     }
     packaging {
         resources {
